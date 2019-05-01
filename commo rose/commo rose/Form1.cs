@@ -23,6 +23,12 @@ namespace commo_rose
         public Form1()
         {
             InitializeComponent();
+
+            BackColor = Color.Lime;
+            TransparencyKey = Color.Lime;
+            FormBorderStyle = FormBorderStyle.None;
+            button1.TabStop = false;
+
             action_button = Keys.PrintScreen;
             ghk = new KeyHandler(action_button, this);
             ghk.Register();
