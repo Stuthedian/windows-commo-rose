@@ -18,11 +18,13 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        private Keys action_button;
         private KeyHandler ghk;
         public Form1()
         {
             InitializeComponent();
-            ghk = new KeyHandler(Keys.PrintScreen, this);
+            action_button = Keys.PrintScreen;
+            ghk = new KeyHandler(action_button, this);
             ghk.Register();
         }
 
@@ -33,12 +35,8 @@ namespace commo_rose
 
         private void HandleHotkey()
         {
-            //const int SW_SHOWNORMAL = 1;
-            // Do stuff...
-            //MessageBox.Show("Reacted!");
             SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, 1);
-            //GetAsyncKeyState
+            ShowWindow(this.Handle, 1);//SW_SHOWNORMAL = 1
         }
 
         protected override void WndProc(ref Message m)
@@ -50,9 +48,9 @@ namespace commo_rose
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.PrintScreen)
+            if(e.KeyCode == action_button)
             {
-                ShowWindow(this.Handle, 0);//0 — hide
+                ShowWindow(this.Handle, 0);//SW_HIDE = 0
             }
         }
     }
