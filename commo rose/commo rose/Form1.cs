@@ -30,6 +30,9 @@ namespace commo_rose
             //button1.TabStop = false;
             button1.Enabled = false;
 
+            notifyIcon1.Text = "Commo rose";
+            notifyIcon1.Icon = SystemIcons.Application;
+
             action_button = Keys.PrintScreen;
             ghk = new KeyHandler(action_button, this);
             ghk.Register();
