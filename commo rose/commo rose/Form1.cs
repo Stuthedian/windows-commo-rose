@@ -27,6 +27,8 @@ namespace commo_rose
             BackColor = Color.Lime;
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
+            ShowInTaskbar = false;
+
             //button1.TabStop = false;
             button1.Enabled = false;
 
