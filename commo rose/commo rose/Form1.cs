@@ -23,6 +23,10 @@ namespace commo_rose
         public Form1()
         {
             InitializeComponent();
+            BackColor = Color.Lime;
+            TransparencyKey = Color.Lime;
+            FormBorderStyle = FormBorderStyle.None;
+
             action_button = Keys.PrintScreen;
             ghk = new KeyHandler(action_button, this);
             ghk.Register();
@@ -52,6 +56,11 @@ namespace commo_rose
             {
                 ShowWindow(this.Handle, 0);//SW_HIDE = 0
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Hello there");
         }
     }
 }
