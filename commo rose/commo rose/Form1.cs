@@ -27,7 +27,8 @@ namespace commo_rose
             BackColor = Color.Lime;
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
-            button1.TabStop = false;
+            //button1.TabStop = false;
+            button1.Enabled = false;
 
             action_button = Keys.PrintScreen;
             ghk = new KeyHandler(action_button, this);
@@ -58,11 +59,6 @@ namespace commo_rose
             {
                 ShowWindow(this.Handle, 0);//SW_HIDE = 0
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Hello there");
         }
     }
 }
