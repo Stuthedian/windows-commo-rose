@@ -30,6 +30,8 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
+            customButton1.BackColor = Color.FromArgb(201, 120, 0);
+            customButton1.ForeColor = Color.FromArgb(247, 218, 2);
             
             customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
 

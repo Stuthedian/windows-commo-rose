@@ -10,19 +10,21 @@ namespace commo_rose
 {
     class CustomButton : Button
     {
-        Color forecolor, backcolor;
         public CustomButton() : base()
         {
             Selected = false;
-            forecolor = Color.Black;
-            backcolor = Color.White;
-            BackColor = backcolor;
-            ForeColor = forecolor;
             FlatStyle = FlatStyle.Flat;
+            Font = new Font("Consolas", 14.25F, FontStyle.Regular);
+            MouseEnter += customButton_MouseEnter;
+            MouseLeave += customButton_MouseLeave;
+            BackColorChanged += CustomButton_BackColorChanged;
+        }
+
+        private void CustomButton_BackColorChanged(object sender, EventArgs e)
+        {
             FlatAppearance.BorderColor = BackColor;
-            FlatAppearance.MouseDownBackColor = ForeColor;
-            MouseEnter += new EventHandler(customButton_MouseEnter);
-            MouseLeave += new EventHandler(customButton_MouseLeave);
+            FlatAppearance.MouseOverBackColor = BackColor;
+            FlatAppearance.MouseDownBackColor = BackColor;
         }
 
         public bool Selected { get; private set; }
@@ -33,17 +35,17 @@ namespace commo_rose
         private void customButton_MouseEnter(object sender, EventArgs e)
         {
             Selected = true;
-            BackColor = forecolor;
-            ForeColor = backcolor;
-            FlatAppearance.BorderColor = BackColor;
+            Color tmp = BackColor;
+            BackColor = ForeColor;
+            ForeColor = tmp;
         }
 
         private void customButton_MouseLeave(object sender, EventArgs e)
         {
             Selected = false;
-            BackColor = backcolor;
-            ForeColor = forecolor;
-            FlatAppearance.BorderColor = BackColor;
+            Color tmp = BackColor;
+            BackColor = ForeColor;
+            ForeColor = tmp;
         }
         /*
         protected override void OnPaint(PaintEventArgs pevent)
