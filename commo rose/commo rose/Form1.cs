@@ -35,6 +35,8 @@ namespace commo_rose
             button1.ForeColor = Color.Black;
             button1.FlatAppearance.BorderColor = button1.BackColor;
 
+            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
+
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
@@ -68,9 +70,9 @@ namespace commo_rose
             if(e.KeyCode == action_button)
             {
                 ShowWindow(this.Handle, SW_HIDE);
-                if(button_selected)
+                if(customButton1.Selected)
                 {
-                    button_action();
+                    customButton1.Act();
                 }
             }
             e.Handled = true;

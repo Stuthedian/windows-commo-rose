@@ -33,7 +33,7 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.customShapedButton1 = new commo_rose.CustomShapedButton();
+            this.customButton1 = new commo_rose.CustomButton();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,20 +70,20 @@
             this.toolStripMenuItem1.Text = "Exit";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
-            // customShapedButton1
+            // customButton1
             // 
-            this.customShapedButton1.Location = new System.Drawing.Point(458, 77);
-            this.customShapedButton1.Name = "customShapedButton1";
-            this.customShapedButton1.Size = new System.Drawing.Size(145, 64);
-            this.customShapedButton1.TabIndex = 1;
-            this.customShapedButton1.Text = "customShapedButton1";
-            this.customShapedButton1.UseVisualStyleBackColor = true;
+            this.customButton1.Location = new System.Drawing.Point(399, 145);
+            this.customButton1.Name = "customButton1";
+            this.customButton1.Size = new System.Drawing.Size(103, 23);
+            this.customButton1.TabIndex = 1;
+            this.customButton1.Text = "customButton1";
+            this.customButton1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.customShapedButton1);
+            this.Controls.Add(this.customButton1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -101,7 +101,7 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private CustomShapedButton customShapedButton1;
+        private CustomButton customButton1;
     }
 }
 
