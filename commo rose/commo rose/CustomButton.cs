@@ -10,11 +10,10 @@ namespace commo_rose
 {
     class CustomButton : Button
     {
-        private bool selected;
         Color forecolor, backcolor;
         public CustomButton() : base()
         {
-            selected = false;
+            Selected = false;
             forecolor = Color.Black;
             backcolor = Color.White;
             BackColor = backcolor;
@@ -26,14 +25,14 @@ namespace commo_rose
             MouseLeave += new EventHandler(customButton_MouseLeave);
         }
 
-        public bool Selected => selected;
+        public bool Selected { get; private set; }
 
         public delegate void Button_action();
         public Button_action Act;
 
         private void customButton_MouseEnter(object sender, EventArgs e)
         {
-            selected = true;
+            Selected = true;
             BackColor = forecolor;
             ForeColor = backcolor;
             FlatAppearance.BorderColor = BackColor;
@@ -41,7 +40,7 @@ namespace commo_rose
 
         private void customButton_MouseLeave(object sender, EventArgs e)
         {
-            selected = false;
+            Selected = false;
             BackColor = backcolor;
             ForeColor = forecolor;
             FlatAppearance.BorderColor = BackColor;
