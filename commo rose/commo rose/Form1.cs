@@ -32,6 +32,7 @@ namespace commo_rose
 
             button1.BackColor = Color.White;
             button1.ForeColor = Color.Black;
+            button1.FlatAppearance.BorderColor = button1.BackColor;
 
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
@@ -80,6 +81,8 @@ namespace commo_rose
         {
             button1.BackColor = Color.Black;
             button1.ForeColor = Color.White;
+            button1.FlatAppearance.MouseDownBackColor = button1.BackColor;
+            button1.FlatAppearance.BorderColor = button1.BackColor;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -91,6 +94,7 @@ namespace commo_rose
         {
             button1.BackColor = Color.White;
             button1.ForeColor = Color.Black;
+            button1.FlatAppearance.BorderColor = button1.BackColor;
         }
     }
 }
