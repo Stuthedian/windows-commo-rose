@@ -18,6 +18,7 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
+        const int SW_SHOWNORMAL = 1, SW_HIDE = 0;
         private Keys action_button;
         private KeyHandler ghk;
         public Form1()
@@ -29,14 +30,17 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
-            //button1.TabStop = false;
-            button1.Enabled = false;
+            customButton1.BackColor = Color.FromArgb(201, 120, 0);
+            customButton1.ForeColor = Color.FromArgb(247, 218, 2);
+            
+            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
 
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
             action_button = Keys.PrintScreen;
+            KeyPreview = true;
             ghk = new KeyHandler(action_button, this);
             ghk.Register();
         }
@@ -49,7 +53,7 @@ namespace commo_rose
         private void HandleHotkey()
         {
             SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, 1);//SW_SHOWNORMAL = 1
+            ShowWindow(this.Handle, SW_SHOWNORMAL);
         }
 
         protected override void WndProc(ref Message m)
@@ -63,14 +67,24 @@ namespace commo_rose
         {
             if(e.KeyCode == action_button)
             {
-                ShowWindow(this.Handle, 0);//SW_HIDE = 0
+                ShowWindow(this.Handle, SW_HIDE);
+                if(customButton1.Selected)
+                {
+                    customButton1.Act();
+                }
             }
+            e.Handled = true;
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ghk.Unregister();
             this.Close();
+        }
+
+        
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
         }
     }
 }
