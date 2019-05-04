@@ -56,6 +56,9 @@ namespace commo_rose
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
+            //hide button if one of its corners invisible
+            check_button_bounds();
+            
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
         }
@@ -71,8 +74,9 @@ namespace commo_rose
         {
             if(e.KeyCode == action_button)
             {
-                ShowWindow(this.Handle, SW_HIDE);
-                if(customButton1.Selected)
+                //ShowWindow(this.Handle, SW_HIDE);
+                Hide();
+                if (customButton1.Selected)
                 {
                     customButton1.Act();
                 }
@@ -86,7 +90,19 @@ namespace commo_rose
             this.Close();
         }
 
-        
+        private void check_button_bounds()
+        {
+            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            {
+                Rectangle screen = Screen.PrimaryScreen.WorkingArea;
+                if (!screen.Contains(RectangleToScreen(button.Bounds)))
+                {
+                    button.Visible = false;
+                }
+                else { button.Visible = true; }
+            }
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
