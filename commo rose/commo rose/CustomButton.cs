@@ -18,6 +18,8 @@ namespace commo_rose
             MouseEnter += customButton_MouseEnter;
             MouseLeave += customButton_MouseLeave;
             BackColorChanged += CustomButton_BackColorChanged;
+            BackColor = Color.White;
+            ForeColor = Color.Black;
         }
 
         private void CustomButton_BackColorChanged(object sender, EventArgs e)
