@@ -52,6 +52,10 @@ namespace commo_rose
 
         private void HandleHotkey()
         {
+            Point center = MousePosition;
+            center.X -= Width / 2;
+            center.Y -= Height / 2;
+            Location = center;
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
         }

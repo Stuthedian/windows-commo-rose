@@ -60,10 +60,11 @@
             this.customButton1.BackColor = System.Drawing.Color.White;
             this.customButton1.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.customButton1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
+            this.customButton1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
             this.customButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.customButton1.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.customButton1.ForeColor = System.Drawing.Color.Black;
-            this.customButton1.Location = new System.Drawing.Point(265, 99);
+            this.customButton1.Location = new System.Drawing.Point(96, 12);
             this.customButton1.Name = "customButton1";
             this.customButton1.Size = new System.Drawing.Size(154, 30);
             this.customButton1.TabIndex = 1;
@@ -73,7 +74,7 @@
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(358, 106);
             this.Controls.Add(this.customButton1);
             this.Name = "Form1";
             this.Text = "Form1";
