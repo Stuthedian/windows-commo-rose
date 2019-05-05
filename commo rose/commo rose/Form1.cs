@@ -14,6 +14,8 @@ namespace commo_rose
     public partial class Form1 : Form
     {
         [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -21,6 +23,7 @@ namespace commo_rose
         const int SW_SHOWNORMAL = 1, SW_HIDE = 0;
         private Keys action_button;
         private KeyHandler ghk;
+        private IntPtr current_window;
         public Form1()
         {
             InitializeComponent();
@@ -30,11 +33,9 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
-            customButton1.BackColor = Color.FromArgb(201, 120, 0);
-            customButton1.ForeColor = Color.FromArgb(247, 218, 2);
+            set_buttons_style();
+            set_buttons_actions();
             
-            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
-
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
@@ -52,6 +53,14 @@ namespace commo_rose
 
         private void HandleHotkey()
         {
+            Point center = MousePosition;
+            center.X -= Width / 2;
+            center.Y -= Height / 2;
+            Location = center;
+
+            check_button_bounds();
+
+            current_window = GetForegroundWindow();
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
         }
@@ -67,11 +76,10 @@ namespace commo_rose
         {
             if(e.KeyCode == action_button)
             {
-                ShowWindow(this.Handle, SW_HIDE);
-                if(customButton1.Selected)
-                {
-                    customButton1.Act();
-                }
+                //ShowWindow(this.Handle, SW_HIDE);
+                Hide();
+                
+                activate_selected_button();
             }
             e.Handled = true;
         }
@@ -82,7 +90,56 @@ namespace commo_rose
             this.Close();
         }
 
-        
+        private void check_button_bounds()
+        {
+            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            {
+                Rectangle screen = Screen.PrimaryScreen.WorkingArea;
+                if (!screen.Contains(RectangleToScreen(button.Bounds)))
+                {
+                    button.Visible = false;
+                }
+                else { button.Visible = true; }
+            }
+        }
+
+        private void activate_selected_button()
+        {
+            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            {
+                if(button.Selected)
+                {
+                    button.Act();
+                    break;
+                }
+            }
+        }
+
+        private void set_buttons_style()
+        {
+            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            {
+
+                button.BackColor = Color.FromArgb(201, 120, 0);
+                button.ForeColor = Color.FromArgb(247, 218, 2);
+            }
+        }
+
+        private void set_buttons_actions()
+        {
+            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
+            customButton3.Act = () =>
+            {
+                SetForegroundWindow(current_window);
+                SendKeys.SendWait("^(c)");
+            };
+            customButton4.Act = () =>
+            {
+                SetForegroundWindow(current_window);
+                SendKeys.SendWait("^(v)");
+            };
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();

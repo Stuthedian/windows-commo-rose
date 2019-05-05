@@ -20,6 +20,7 @@ namespace commo_rose
         private int key;
         private IntPtr hWnd;
         private int id;
+        private const int MOD_NOREPEAT = 0x4000;
 
         public KeyHandler(Keys key, Form form)
         {
@@ -35,7 +36,7 @@ namespace commo_rose
 
         public bool Register()
         {
-            return RegisterHotKey(hWnd, id, 0, key);
+            return RegisterHotKey(hWnd, id, MOD_NOREPEAT, key);
         }
 
         public bool Unregister()
