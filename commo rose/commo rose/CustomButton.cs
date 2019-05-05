@@ -13,6 +13,7 @@ namespace commo_rose
         public CustomButton() : base()
         {
             Selected = false;
+            Act = () => { };
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
             MouseEnter += customButton_MouseEnter;
