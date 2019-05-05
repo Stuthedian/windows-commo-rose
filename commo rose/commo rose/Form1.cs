@@ -23,6 +23,7 @@ namespace commo_rose
         const int SW_SHOWNORMAL = 1, SW_HIDE = 0;
         private Keys action_button;
         private KeyHandler ghk;
+        private MouseHook mouseHook;
         private IntPtr current_window;
         public Form1()
         {
@@ -33,13 +34,15 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
+            mouseHook = new MouseHook(LowLevelMouseProc);
+
             set_buttons_style();
             set_buttons_actions();
             
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-
+            
             action_button = Keys.PrintScreen;
             KeyPreview = true;
             ghk = new KeyHandler(action_button, this);
@@ -88,6 +91,31 @@ namespace commo_rose
         {
             ghk.Unregister();
             this.Close();
+        }
+
+        public int LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0)
+            {
+                // Get the mouse WM from the wParam parameter
+                var wmMouse = (MouseMessage)wParam;
+                if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
+                {
+                    //System.Windows.Forms.MessageBox.Show("WM_MBUTTONDOWN!!!");
+                    SetForegroundWindow(this.Handle);
+                    ShowWindow(this.Handle, SW_SHOWNORMAL);
+                    return 1;
+                }
+                if (wmMouse == MouseMessage.WM_XBUTTONUP)
+                {
+                    Hide();
+                    //System.Windows.Forms.MessageBox.Show("WM_MBUTTONUP!!!");
+                    return 1;
+                }
+            }
+
+            // Pass the hook information to the next hook procedure in chain
+            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlMouseHook, nCode, wParam, lParam);
         }
 
         private void check_button_bounds()
