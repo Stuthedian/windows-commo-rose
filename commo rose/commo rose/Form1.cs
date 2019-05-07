@@ -20,9 +20,10 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_SHOWNORMAL = 1, SW_HIDE = 0;
+        const int SW_SHOWNORMAL = 1;
         private Keys action_button;
         private KeyHandler ghk;
+        private MouseHook mouseHook;
         private IntPtr current_window;
         public Form1()
         {
@@ -33,13 +34,15 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
+            mouseHook = new MouseHook(LowLevelMouseProc);
+
             set_buttons_style();
             set_buttons_actions();
             
             notifyIcon1.Text = "Commo rose";
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-
+            
             action_button = Keys.PrintScreen;
             KeyPreview = true;
             ghk = new KeyHandler(action_button, this);
@@ -53,16 +56,7 @@ namespace commo_rose
 
         private void HandleHotkey()
         {
-            Point center = MousePosition;
-            center.X -= Width / 2;
-            center.Y -= Height / 2;
-            Location = center;
-
-            check_button_bounds();
-
-            current_window = GetForegroundWindow();
-            SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, SW_SHOWNORMAL);
+            on_form_show();
         }
 
         protected override void WndProc(ref Message m)
@@ -76,10 +70,7 @@ namespace commo_rose
         {
             if(e.KeyCode == action_button)
             {
-                //ShowWindow(this.Handle, SW_HIDE);
-                Hide();
-                
-                activate_selected_button();
+                on_form_hide();
             }
             e.Handled = true;
         }
@@ -88,6 +79,28 @@ namespace commo_rose
         {
             ghk.Unregister();
             this.Close();
+        }
+
+        public int LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0)
+            {
+                // Get the mouse WM from the wParam parameter
+                var wmMouse = (MouseMessage)wParam;
+                if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
+                {
+                    on_form_show();
+                    return 1;
+                }
+                if (wmMouse == MouseMessage.WM_XBUTTONUP)
+                {
+                    on_form_hide();
+                    return 1;
+                }
+            }
+
+            // Pass the hook information to the next hook procedure in chain
+            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlMouseHook, nCode, wParam, lParam);
         }
 
         private void check_button_bounds()
@@ -128,6 +141,7 @@ namespace commo_rose
         private void set_buttons_actions()
         {
             customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
+            customButton2.Act = () => SendKeys.SendWait("+%");
             customButton3.Act = () =>
             {
                 SetForegroundWindow(current_window);
@@ -138,6 +152,26 @@ namespace commo_rose
                 SetForegroundWindow(current_window);
                 SendKeys.SendWait("^(v)");
             };
+        }
+
+        private void on_form_show()
+        {
+            Point center = MousePosition;
+            center.X -= Width / 2;
+            center.Y -= Height / 2;
+            Location = center;
+
+            check_button_bounds();
+
+            current_window = GetForegroundWindow();
+            SetForegroundWindow(this.Handle);
+            ShowWindow(this.Handle, SW_SHOWNORMAL);
+        }
+
+        private void on_form_hide()
+        {
+            Hide();
+            activate_selected_button();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
