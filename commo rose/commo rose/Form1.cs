@@ -20,7 +20,7 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_SHOWNORMAL = 1, SW_HIDE = 0;
+        const int SW_SHOWNORMAL = 1;
         private Keys action_button;
         private KeyHandler ghk;
         private MouseHook mouseHook;
@@ -56,16 +56,7 @@ namespace commo_rose
 
         private void HandleHotkey()
         {
-            Point center = MousePosition;
-            center.X -= Width / 2;
-            center.Y -= Height / 2;
-            Location = center;
-
-            check_button_bounds();
-
-            current_window = GetForegroundWindow();
-            SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, SW_SHOWNORMAL);
+            on_form_show();
         }
 
         protected override void WndProc(ref Message m)
@@ -79,10 +70,7 @@ namespace commo_rose
         {
             if(e.KeyCode == action_button)
             {
-                //ShowWindow(this.Handle, SW_HIDE);
-                Hide();
-                
-                activate_selected_button();
+                on_form_hide();
             }
             e.Handled = true;
         }
@@ -101,15 +89,12 @@ namespace commo_rose
                 var wmMouse = (MouseMessage)wParam;
                 if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
                 {
-                    //System.Windows.Forms.MessageBox.Show("WM_MBUTTONDOWN!!!");
-                    SetForegroundWindow(this.Handle);
-                    ShowWindow(this.Handle, SW_SHOWNORMAL);
+                    on_form_show();
                     return 1;
                 }
                 if (wmMouse == MouseMessage.WM_XBUTTONUP)
                 {
-                    Hide();
-                    //System.Windows.Forms.MessageBox.Show("WM_MBUTTONUP!!!");
+                    on_form_hide();
                     return 1;
                 }
             }
@@ -156,6 +141,7 @@ namespace commo_rose
         private void set_buttons_actions()
         {
             customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
+            customButton2.Act = () => SendKeys.SendWait("+%");
             customButton3.Act = () =>
             {
                 SetForegroundWindow(current_window);
@@ -166,6 +152,26 @@ namespace commo_rose
                 SetForegroundWindow(current_window);
                 SendKeys.SendWait("^(v)");
             };
+        }
+
+        private void on_form_show()
+        {
+            Point center = MousePosition;
+            center.X -= Width / 2;
+            center.Y -= Height / 2;
+            Location = center;
+
+            check_button_bounds();
+
+            current_window = GetForegroundWindow();
+            SetForegroundWindow(this.Handle);
+            ShowWindow(this.Handle, SW_SHOWNORMAL);
+        }
+
+        private void on_form_hide()
+        {
+            Hide();
+            activate_selected_button();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

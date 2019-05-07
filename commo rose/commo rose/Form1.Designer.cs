@@ -82,11 +82,11 @@
             this.customButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.customButton2.Font = new System.Drawing.Font("Consolas", 14.25F);
             this.customButton2.ForeColor = System.Drawing.Color.Black;
-            this.customButton2.Location = new System.Drawing.Point(12, 58);
+            this.customButton2.Location = new System.Drawing.Point(12, 12);
             this.customButton2.Name = "customButton2";
-            this.customButton2.Size = new System.Drawing.Size(105, 31);
+            this.customButton2.Size = new System.Drawing.Size(105, 77);
             this.customButton2.TabIndex = 2;
-            this.customButton2.Text = "fake";
+            this.customButton2.Text = "Switch keyboard layout";
             this.customButton2.UseVisualStyleBackColor = true;
             // 
             // customButton3
