@@ -27,6 +27,10 @@ namespace commo_rose
                 panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
                 panel1.Controls[panel1.Controls.Count - 1].MouseMove += Button_MouseMove;
             }
+            foreach (var item in Enum.GetNames(typeof(Action_type)))
+            {
+                comboBox1.Items.Add(item);
+            }
         }
 
         public void set_settings(CustomButton[] buttons)
@@ -36,8 +40,6 @@ namespace commo_rose
                 var a = panel1.Controls.OfType<CustomButton>().ToArray();
                 for (int i = 0; i < buttons.Length; i++)
                 {
-                    //buttons[i].Location = a[i].Location;
-                    //buttons[i].Text = a[i].Text;
                     customButton.OverWrite(buttons[i], a[i]);
                 }
             }
@@ -53,11 +55,8 @@ namespace commo_rose
                 MouseDownLocation = e.Location;
                 customButton = (CustomButton)sender;
                 textBox1.Text = customButton.Text;
-                if(customButton.action_Type == Action_type.Run
-                    || customButton.action_Type == Action_type.Run_as_admin)
-                {
-                    textBox2.Text = customButton.Parameters;
-                }
+                textBox2.Text = customButton.Parameters;
+                comboBox1.SelectedItem = customButton.action_Type.ToString();
             }
         }
 
@@ -76,6 +75,8 @@ namespace commo_rose
             {
                 customButton.Text = textBox1.Text;
                 customButton.Parameters = textBox2.Text;
+                customButton.action_Type =
+                    (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
             }
         }
     }

@@ -123,7 +123,7 @@ namespace commo_rose
             {
                 if(button.Selected)
                 {
-                    button.Act();
+                    button.Act(current_window);
                     break;
                 }
             }
@@ -141,21 +141,10 @@ namespace commo_rose
 
         private void set_buttons_actions()
         {
-            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
-            customButton2.Act = () => SendKeys.SendWait("+%");
-            customButton3.Act = () =>
-            {
-                SetForegroundWindow(current_window);
-                SendKeys.SendWait("^(c)");
-            };
-            customButton4.Act = () =>
-            {
-                SetForegroundWindow(current_window);
-                SendKeys.SendWait("^(v)");
-            };
-            customButton6.action_Type = Action_type.Run;
+            customButton1.action_Type = Action_type.Run;
+            customButton1.Parameters = "cmd";
+            customButton6.action_Type = Action_type.Run_as_admin;
             customButton6.Parameters = "cmd";
-            customButton6.Act = () => { System.Diagnostics.Process.Start(customButton6.Parameters); };
         }
 
         private void on_form_show()
