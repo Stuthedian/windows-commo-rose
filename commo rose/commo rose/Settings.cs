@@ -16,55 +16,66 @@ namespace commo_rose
         public Settings(Form1 main)
         {
             InitializeComponent();
-            //panel1.Width = main.Width / 2;
-            //panel1.Height = main.Height / 2;
             this.main = main;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
+            
+            
             foreach (CustomButton button in main.Controls.OfType<CustomButton>().ToArray())
             {
-                //PictureBox pictureBox = new PictureBox();
-                //pictureBox.BackColor = Color.Red;
-                //pictureBox.Location = button.Location;
-                //pictureBox.Width = button.Width;
-                //pictureBox.Height = button.Height;
-                //pictureBox.MouseDown += pictureBox1_MouseDown;
-                //pictureBox.MouseMove += pictureBox1_MouseMove;
                 panel1.Controls.Add(button.Clone());
-                //button.MouseDown += Button_MouseDown;
-                //button.MouseMove += Button_MouseMove;
-                panel1.Controls[panel1.Controls.Count - 1].MouseDown += pictureBox1_MouseDown;
-                panel1.Controls[panel1.Controls.Count - 1].MouseMove += pictureBox1_MouseMove;
+                panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
+                panel1.Controls[panel1.Controls.Count - 1].MouseMove += Button_MouseMove;
             }
         }
 
         public void set_settings(CustomButton[] buttons)
         {
-            var a = panel1.Controls.OfType<CustomButton>().ToArray();
-            for (int i = 0; i < buttons.Length; i++)
+            if (customButton != null)
             {
-                buttons[i].Location = a[i].Location;
+                var a = panel1.Controls.OfType<CustomButton>().ToArray();
+                for (int i = 0; i < buttons.Length; i++)
+                {
+                    //buttons[i].Location = a[i].Location;
+                    //buttons[i].Text = a[i].Text;
+                    customButton.OverWrite(buttons[i], a[i]);
+                }
             }
         }
         private Point MouseDownLocation;
-        private CustomButton box;
+        private CustomButton customButton;
 
 
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        private void Button_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 MouseDownLocation = e.Location;
-                box = (CustomButton)sender;
+                customButton = (CustomButton)sender;
+                textBox1.Text = customButton.Text;
+                if(customButton.action_Type == Action_type.Run
+                    || customButton.action_Type == Action_type.Run_as_admin)
+                {
+                    textBox2.Text = customButton.Parameters;
+                }
             }
         }
 
-        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        private void Button_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && box != null)
+            if (e.Button == MouseButtons.Left && customButton != null)
             {
-                box.Left = e.X + box.Left - MouseDownLocation.X;
-                box.Top = e.Y + box.Top - MouseDownLocation.Y;
+                customButton.Left = e.X + customButton.Left - MouseDownLocation.X;
+                customButton.Top = e.Y + customButton.Top - MouseDownLocation.Y;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (customButton != null)
+            {
+                customButton.Text = textBox1.Text;
+                customButton.Parameters = textBox2.Text;
             }
         }
     }

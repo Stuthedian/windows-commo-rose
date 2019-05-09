@@ -153,6 +153,9 @@ namespace commo_rose
                 SetForegroundWindow(current_window);
                 SendKeys.SendWait("^(v)");
             };
+            customButton6.action_Type = Action_type.Run;
+            customButton6.Parameters = "cmd";
+            customButton6.Act = () => { System.Diagnostics.Process.Start(customButton6.Parameters); };
         }
 
         private void on_form_show()
