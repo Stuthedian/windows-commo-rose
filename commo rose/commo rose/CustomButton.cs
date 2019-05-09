@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace commo_rose
 {
-    class CustomButton : Button
+    public class CustomButton : Button
     {
         public CustomButton() : base()
         {
@@ -49,6 +49,18 @@ namespace commo_rose
             Color tmp = BackColor;
             BackColor = ForeColor;
             ForeColor = tmp;
+        }
+
+        public CustomButton Clone()
+        {
+            CustomButton customButton = new CustomButton();
+            customButton.BackColor = BackColor;
+            customButton.ForeColor = ForeColor;
+            customButton.Width = Width;
+            customButton.Height = Height;
+            customButton.Text = Text;
+            customButton.Location = Location;
+            return customButton;
         }
         /*
         protected override void OnPaint(PaintEventArgs pevent)

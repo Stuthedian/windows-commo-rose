@@ -21,6 +21,7 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_SHOWNORMAL = 1;
+        private Settings settings;
         private Keys action_button;
         private KeyHandler ghk;
         private MouseHook mouseHook;
@@ -162,7 +163,8 @@ namespace commo_rose
             Location = center;
 
             check_button_bounds();
-
+            if (settings != null)
+                settings.set_settings(Controls.OfType<CustomButton>().ToArray());
             current_window = GetForegroundWindow();
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
@@ -177,6 +179,12 @@ namespace commo_rose
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            settings = new Settings(this);
+            settings.ShowDialog();
         }
     }
 }

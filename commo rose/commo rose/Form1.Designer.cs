@@ -38,6 +38,7 @@
             this.customButton4 = new commo_rose.CustomButton();
             this.customButton5 = new commo_rose.CustomButton();
             this.customButton6 = new commo_rose.CustomButton();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,14 +50,15 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
             this.toolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(93, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(92, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "Exit";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
@@ -141,6 +143,13 @@
             this.customButton6.Text = "fake";
             this.customButton6.UseVisualStyleBackColor = true;
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Text = "Settings";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -172,6 +181,7 @@
         private CustomButton customButton4;
         private CustomButton customButton5;
         private CustomButton customButton6;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }
 }
 
