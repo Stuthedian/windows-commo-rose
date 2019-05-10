@@ -7,19 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace commo_rose
 {
     public partial class Settings : Form
     {
         private Form1 main;
-        public Settings(Form1 main)
+        private XmlDocument doc;
+        public Settings(Form1 main, XmlDocument doc)
         {
             InitializeComponent();
             this.main = main;
+            this.doc = doc;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
-            
+
             
             foreach (CustomButton button in main.Controls.OfType<CustomButton>().ToArray())
             {
@@ -77,6 +80,10 @@ namespace commo_rose
                 customButton.Parameters = textBox2.Text;
                 customButton.action_Type =
                     (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
+                XmlNode node = doc.DocumentElement.SelectSingleNode("customButton1");
+                node.Attributes["customButton1.Location.X"].Value = customButton.Location.X.ToString();
+                node.Attributes["customButton1.Location.Y"].Value = customButton.Location.Y.ToString();
+                doc.Save(Form1.settings_filename);
             }
         }
     }

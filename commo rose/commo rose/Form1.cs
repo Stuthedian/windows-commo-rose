@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Xml;
+using System.IO;
 
 namespace commo_rose
 {
@@ -21,11 +23,13 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_SHOWNORMAL = 1;
+        public const string settings_filename = ".settings.xml";
         private Settings settings;
         private Keys action_button;
         private KeyHandler ghk;
         private MouseHook mouseHook;
         private IntPtr current_window;
+        private XmlDocument doc;
         public Form1()
         {
             InitializeComponent();
@@ -35,7 +39,7 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
-            mouseHook = new MouseHook(LowLevelMouseProc);
+            //mouseHook = new MouseHook(LowLevelMouseProc);
 
             set_buttons_style();
             set_buttons_actions();
@@ -48,6 +52,51 @@ namespace commo_rose
             KeyPreview = true;
             ghk = new KeyHandler(action_button, this);
             ghk.Register();
+
+            load_settings();
+        }
+
+        private void load_settings()
+        {
+            if(!File.Exists(settings_filename))
+            {
+                //create and populate
+                XmlWriter writer = XmlWriter.Create(settings_filename);
+                writer.WriteStartDocument();
+                writer.WriteStartElement("CustomButtons");
+                writer.WriteStartElement(customButton1.Name);
+                writer.WriteAttributeString("customButton1.Location.X", customButton1.Location.X.ToString());
+                writer.WriteAttributeString("customButton1.Location.Y", customButton1.Location.Y.ToString());
+                writer.WriteEndElement();
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+                writer.Close();
+            }
+            else
+            {
+                //load
+                doc = new XmlDocument();
+                doc.Load(settings_filename);
+                XmlNode node = doc.DocumentElement.SelectSingleNode(customButton1.Name);
+                //string[] coords = node.Attributes["customButton1.Location"].Value.ToString().Split(',');
+                //customButton1.Location = new Point(int.Parse(coords[0]), int.Parse(coords[1]));
+                Point point = new Point();
+                point.X = int.Parse(node.Attributes["customButton1.Location.X"].Value);
+                point.Y = int.Parse(node.Attributes["customButton1.Location.Y"].Value);
+                customButton1.Location = point;
+            }
+            //XmlWriter writer = XmlWriter.Create("settings.xml");
+            //writer.WriteStartDocument();
+            //writer.WriteElementString("ServerIP", Settings.Default.ServerIP);
+            //writer.WriteElementString("ServerPort", Settings.Default.ServerPort.ToString());
+            //writer.WriteEndDocument();
+            //XmlDocument doc = new XmlDocument();
+            //doc.Load("c:\\temp.xml");
+            //XmlNode node = doc.DocumentElement.SelectSingleNode("/book/title");
+            //string text = node.InnerText;
+            //writer.Flush();
+            //writer.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -175,7 +224,7 @@ namespace commo_rose
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            settings = new Settings(this);
+            settings = new Settings(this, doc);
             settings.ShowDialog();
         }
     }
