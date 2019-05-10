@@ -80,9 +80,21 @@ namespace commo_rose
                 customButton.Parameters = textBox2.Text;
                 customButton.action_Type =
                     (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
-                XmlNode node = doc.DocumentElement.SelectSingleNode("customButton1");
-                node.Attributes["customButton1.Location.X"].Value = customButton.Location.X.ToString();
-                node.Attributes["customButton1.Location.Y"].Value = customButton.Location.Y.ToString();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            button1_Click(new object(), EventArgs.Empty);
+            XmlNode node;
+            foreach (CustomButton button in panel1.Controls.OfType<CustomButton>().ToArray())
+            {
+                node = doc.DocumentElement.SelectSingleNode(button.Name);
+                node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
+                node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
+                node.Attributes[button.Name + ".Text"].Value = button.Text;
+                node.Attributes[button.Name + ".action_Type"].Value = button.action_Type.ToString();
+                node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
                 doc.Save(Form1.settings_filename);
             }
         }

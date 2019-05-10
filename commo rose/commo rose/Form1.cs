@@ -64,10 +64,18 @@ namespace commo_rose
                 XmlWriter writer = XmlWriter.Create(settings_filename);
                 writer.WriteStartDocument();
                 writer.WriteStartElement("CustomButtons");
-                writer.WriteStartElement(customButton1.Name);
-                writer.WriteAttributeString("customButton1.Location.X", customButton1.Location.X.ToString());
-                writer.WriteAttributeString("customButton1.Location.Y", customButton1.Location.Y.ToString());
-                writer.WriteEndElement();
+                writer.WriteString("\n");
+                foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+                {
+                    writer.WriteStartElement(button.Name);
+                    writer.WriteAttributeString(button.Name+".Location.X", button.Location.X.ToString());
+                    writer.WriteAttributeString(button.Name + ".Location.Y", button.Location.Y.ToString());
+                    writer.WriteAttributeString(button.Name + ".Text", button.Text);
+                    writer.WriteAttributeString(button.Name + ".action_Type", button.action_Type.ToString());
+                    writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
+                    writer.WriteEndElement();
+                    writer.WriteString("\n");
+                }
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
                 writer.Flush();
@@ -78,13 +86,19 @@ namespace commo_rose
                 //load
                 doc = new XmlDocument();
                 doc.Load(settings_filename);
-                XmlNode node = doc.DocumentElement.SelectSingleNode(customButton1.Name);
-                //string[] coords = node.Attributes["customButton1.Location"].Value.ToString().Split(',');
-                //customButton1.Location = new Point(int.Parse(coords[0]), int.Parse(coords[1]));
+                XmlNode node;
                 Point point = new Point();
-                point.X = int.Parse(node.Attributes["customButton1.Location.X"].Value);
-                point.Y = int.Parse(node.Attributes["customButton1.Location.Y"].Value);
-                customButton1.Location = point;
+                foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+                {
+                    node = doc.DocumentElement.SelectSingleNode(button.Name);
+                    point.X = int.Parse(node.Attributes[button.Name + ".Location.X"].Value);
+                    point.Y = int.Parse(node.Attributes[button.Name + ".Location.Y"].Value);
+                    button.Location = point;
+                    button.Text = node.Attributes[button.Name + ".Text"].Value;
+                    button.action_Type =
+                        (Action_type)Enum.Parse(typeof(Action_type), node.Attributes[button.Name + ".action_Type"].Value);
+                    button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
+                }
             }
             //XmlWriter writer = XmlWriter.Create("settings.xml");
             //writer.WriteStartDocument();

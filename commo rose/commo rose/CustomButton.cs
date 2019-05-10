@@ -60,6 +60,7 @@ namespace commo_rose
             destination.ForeColor = source.ForeColor;
             destination.Width = source.Width;
             destination.Height = source.Height;
+            destination.Name = source.Name;
             destination.Text = source.Text;
             destination.Location = source.Location;
             destination.action_Type = source.action_Type;
