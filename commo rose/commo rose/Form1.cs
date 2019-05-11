@@ -23,6 +23,7 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_SHOWNORMAL = 1;
+        public const string app_name = "Commo rose";
         public const string settings_filename = ".settings.xml";
         private Settings settings;
         private Keys action_button;
@@ -43,7 +44,7 @@ namespace commo_rose
             set_buttons_style();
             set_buttons_actions();
             
-            notifyIcon1.Text = "Commo rose";
+            notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
             
