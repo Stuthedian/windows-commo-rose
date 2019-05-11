@@ -29,11 +29,10 @@ namespace commo_rose
         private KeyHandler ghk;
         private MouseHook mouseHook;
         private IntPtr current_window;
-        private XmlDocument doc;
+        public XmlDocument doc;
         public Form1()
         {
             InitializeComponent();
-
             BackColor = Color.Lime;
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
@@ -54,6 +53,7 @@ namespace commo_rose
             ghk.Register();
 
             load_settings();
+            settings = new Settings(this);
         }
 
         private void load_settings()
@@ -100,17 +100,6 @@ namespace commo_rose
                     button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
                 }
             }
-            //XmlWriter writer = XmlWriter.Create("settings.xml");
-            //writer.WriteStartDocument();
-            //writer.WriteElementString("ServerIP", Settings.Default.ServerIP);
-            //writer.WriteElementString("ServerPort", Settings.Default.ServerPort.ToString());
-            //writer.WriteEndDocument();
-            //XmlDocument doc = new XmlDocument();
-            //doc.Load("c:\\temp.xml");
-            //XmlNode node = doc.DocumentElement.SelectSingleNode("/book/title");
-            //string text = node.InnerText;
-            //writer.Flush();
-            //writer.Close();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -218,8 +207,6 @@ namespace commo_rose
             Location = center;
 
             check_button_bounds();
-            if (settings != null)
-                settings.set_settings(Controls.OfType<CustomButton>().ToArray());
             current_window = GetForegroundWindow();
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
@@ -238,7 +225,6 @@ namespace commo_rose
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            settings = new Settings(this, doc);
             settings.ShowDialog();
         }
     }

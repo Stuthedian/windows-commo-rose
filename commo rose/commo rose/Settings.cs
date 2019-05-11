@@ -14,17 +14,18 @@ namespace commo_rose
     public partial class Settings : Form
     {
         private Form1 main;
-        private XmlDocument doc;
-        public Settings(Form1 main, XmlDocument doc)
+        private CustomButton[] buttons;
+
+        public Settings(Form1 main)
         {
             InitializeComponent();
             this.main = main;
-            this.doc = doc;
+            buttons = main.Controls.OfType<CustomButton>().ToArray();
             panel1.Width = main.Width;
             panel1.Height = main.Height;
 
             
-            foreach (CustomButton button in main.Controls.OfType<CustomButton>().ToArray())
+            foreach (CustomButton button in buttons)
             {
                 panel1.Controls.Add(button.Clone());
                 panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
@@ -36,15 +37,12 @@ namespace commo_rose
             }
         }
 
-        public void set_settings(CustomButton[] buttons)
+        private void set_setting()
         {
             if (customButton != null)
             {
-                var a = panel1.Controls.OfType<CustomButton>().ToArray();
-                for (int i = 0; i < buttons.Length; i++)
-                {
-                    customButton.OverWrite(buttons[i], a[i]);
-                }
+                var target_button = buttons.Where(x => x.Name == customButton.Name).ToArray()[0];
+                CustomButton.OverWrite(target_button, customButton);
             }
         }
         private Point MouseDownLocation;
@@ -72,7 +70,7 @@ namespace commo_rose
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Applybutton_Click(object sender, EventArgs e)
         {
             if (customButton != null)
             {
@@ -80,22 +78,24 @@ namespace commo_rose
                 customButton.Parameters = textBox2.Text;
                 customButton.action_Type =
                     (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
+                //button location already set 
+                set_setting();
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Savebutton_Click(object sender, EventArgs e)
         {
-            button1_Click(new object(), EventArgs.Empty);
+            Applybutton_Click(new object(), EventArgs.Empty);
             XmlNode node;
             foreach (CustomButton button in panel1.Controls.OfType<CustomButton>().ToArray())
             {
-                node = doc.DocumentElement.SelectSingleNode(button.Name);
+                node = main.doc.DocumentElement.SelectSingleNode(button.Name);
                 node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
                 node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
                 node.Attributes[button.Name + ".action_Type"].Value = button.action_Type.ToString();
                 node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
-                doc.Save(Form1.settings_filename);
+                main.doc.Save(Form1.settings_filename);
             }
         }
     }

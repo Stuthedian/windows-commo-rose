@@ -54,7 +54,7 @@ namespace commo_rose
             return customButton;
         }
 
-        public void OverWrite(CustomButton destination, CustomButton source)
+        public static void OverWrite(CustomButton destination, CustomButton source)
         {
             destination.BackColor = source.BackColor;
             destination.ForeColor = source.ForeColor;
