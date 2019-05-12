@@ -26,13 +26,18 @@ namespace commo_rose
             buttons = main.Controls.OfType<CustomButton>().ToArray();
             panel1.Width = main.Width;
             panel1.Height = main.Height;
+            tabControl1.SelectTab("Style");
 
+            //fix, if we have registry with the same name but with different path this would still yield true
+            //check if registry entry contains app_name and that value of it equals path to current executable
             var b = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
             if (b.GetValueNames().Contains(Form1.app_name))
                 checkBox1.Checked = true;
             else checkBox1.Checked = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+
+            ActionButtonBox.Text = main.action_button.ToString();
 
             foreach (CustomButton button in buttons)
             {
@@ -62,8 +67,8 @@ namespace commo_rose
             {
                 MouseDownLocation = e.Location;
                 currentButton = (CustomButton)sender;
-                textBox1.Text = currentButton.Text;
-                textBox2.Text = currentButton.Parameters;
+                ButtonTextBox.Text = currentButton.Text;
+                ButtonParametersBox.Text = currentButton.Parameters;
                 comboBox1.SelectedItem = currentButton.action_Type.ToString();
             }
         }
@@ -81,8 +86,8 @@ namespace commo_rose
         {
             if (currentButton != null)
             {
-                currentButton.Text = textBox1.Text;
-                currentButton.Parameters = textBox2.Text;
+                currentButton.Text = ButtonTextBox.Text;
+                currentButton.Parameters = ButtonParametersBox.Text;
                 currentButton.action_Type =
                     (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
                 //button location already set 
@@ -126,6 +131,19 @@ namespace commo_rose
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void ActionButtonBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            ActionButtonBox.KeyDown += ActionButtonBox_KeyDown;
+        }
+
+        private void ActionButtonBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            string received_key = e.KeyCode.ToString();
+            ActionButtonBox.Text = received_key == "Next" ? "PageDown" : received_key;
+            ActionButtonBox.KeyDown -= ActionButtonBox_KeyDown;
+            main.change_action_button(e.KeyCode);
         }
     }
 }

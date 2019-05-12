@@ -26,7 +26,7 @@ namespace commo_rose
         public const string app_name = "Commo rose";
         public const string settings_filename = ".settings.xml";
         private Settings settings;
-        private Keys action_button;
+        public Keys action_button;
         private KeyHandler ghk;
         private MouseHook mouseHook;
         private IntPtr current_window;
@@ -54,14 +54,12 @@ namespace commo_rose
             ghk.Register();
 
             load_settings();
-            settings = new Settings(this);
         }
 
         private void load_settings()
         {
             if(!File.Exists(settings_filename))
             {
-                //create and populate
                 XmlWriter writer = XmlWriter.Create(settings_filename);
                 writer.WriteStartDocument();
                 writer.WriteStartElement("CustomButtons");
@@ -84,7 +82,6 @@ namespace commo_rose
             }
             else
             {
-                //load
                 doc = new XmlDocument();
                 doc.Load(settings_filename);
                 XmlNode node;
@@ -101,6 +98,7 @@ namespace commo_rose
                     button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
                 }
             }
+            settings = new Settings(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -227,6 +225,14 @@ namespace commo_rose
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             settings.ShowDialog();
+        }
+
+        public void change_action_button(Keys key)
+        {
+            ghk.Unregister();
+            action_button = key;
+            ghk = new KeyHandler(action_button, this);
+            ghk.Register();
         }
     }
 }
