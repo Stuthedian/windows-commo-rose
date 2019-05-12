@@ -28,8 +28,8 @@ namespace commo_rose
         public MouseButtons action_button_mouse;
         public XmlDocument doc;
         private Settings settings;
-        private KeyHandler ghk;
-        private MouseHook mouseHook;
+        public KeyHandler ghk;
+        public MouseHook mouseHook;
         public Hook_target hook_target;
         private IntPtr current_window;
         public Form1()
@@ -42,7 +42,7 @@ namespace commo_rose
 
             mouseHook = new MouseHook(LowLevelMouseProc);
             hook_target = Hook_target.Mouse;
-            action_button_mouse = MouseButtons.Middle;
+            action_button_mouse = MouseButtons.XButton1;
             set_buttons_style();
             //set_buttons_actions();
 
@@ -50,11 +50,11 @@ namespace commo_rose
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
-            //hook_target = Hook_target.Keyboard;
             action_button_keyboard = Keys.PrintScreen;
             KeyPreview = true;
-            ghk = new KeyHandler(action_button_keyboard, this);
-            ghk.Register();
+            //hook_target = Hook_target.Keyboard;
+            //ghk = new KeyHandler(action_button_keyboard, this);
+            //ghk.Register();
 
             load_settings();
         }
@@ -132,8 +132,12 @@ namespace commo_rose
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            ghk.Unregister();
+            if (ghk != null)
+                ghk.Unregister();
+            if (mouseHook != null)
+                mouseHook.ClearHook();
             this.Close();
+            Application.Exit();
         }
 
         public int LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -142,26 +146,14 @@ namespace commo_rose
             {
                 MSLLHOOKSTRUCT a = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
                 int xbutton_id = a.mouseData >> 16;
-                // Get the mouse WM from the wParam parameter
-                //var wmMouse = (MouseMessage)wParam;
-                //if (wmMouse == MouseMessage.WM_XBUTTONDOWN && b == XBUTTON2)
-                //{
-                //    on_form_show();
-                //    return 1;
-                //}
-                //if (wmMouse == MouseMessage.WM_XBUTTONUP && b == XBUTTON2)
-                //{
-                //    on_form_hide();
-                //    return 1;
-                //}
                 MouseMessage wmMouse = (MouseMessage)wParam;
                 if (wmMouse == mouse_button_to_message_down(action_button_mouse))
                 {
-                    
+
                     if (wmMouse != MouseMessage.WM_MBUTTONDOWN)
                     {
                         int id = mouse_xbutton_to_id(action_button_mouse);
-                        if(xbutton_id == id)
+                        if (xbutton_id == id)
                         {
                             on_form_show();
                             return 1;
@@ -191,8 +183,6 @@ namespace commo_rose
                     }
                 }
             }
-
-            // Pass the hook information to the next hook procedure in chain
             return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlMouseHook, nCode, wParam, lParam);
         }
 
@@ -261,7 +251,7 @@ namespace commo_rose
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            //Application.Exit();
         }
 
         private void SettingsMenuItem_Click(object sender, EventArgs e)

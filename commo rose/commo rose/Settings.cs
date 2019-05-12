@@ -176,6 +176,19 @@ namespace commo_rose
         {
             MouseButtonsBox.Visible = !MouseButtonsBox.Visible;
             ActionButtonBox.Visible = !ActionButtonBox.Visible;
+            if(main.hook_target == Hook_target.Mouse)
+            {
+                main.mouseHook.ClearHook();
+                main.ghk = new KeyHandler(main.action_button_keyboard, main);
+                main.ghk.Register();
+                main.hook_target = Hook_target.Keyboard;
+            }
+            else if(main.hook_target == Hook_target.Keyboard)
+            {
+                main.ghk.Unregister();
+                main.mouseHook = new MouseHook(main.LowLevelMouseProc);
+                main.hook_target = Hook_target.Mouse;
+            }
         }
 
         private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)

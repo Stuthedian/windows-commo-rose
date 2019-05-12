@@ -41,7 +41,7 @@ namespace commo_rose
 
         public bool Unregister()
         {
-            return UnregisterHotKey(hWnd, id);
+                return UnregisterHotKey(hWnd, id);
         }
     }
 }

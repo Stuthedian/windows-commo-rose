@@ -32,7 +32,7 @@ namespace commo_rose
     ///     not receive hook notifications and may behave incorrectly as a result. If the
     ///     hook procedure does not call CallNextHookEx, the return value should be zero.
     /// </returns>
-    internal delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+    public delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
     internal class NativeMethods
     {
@@ -204,7 +204,7 @@ namespace commo_rose
         WM_SYSKEYUP = 0x0105
     }
 
-    class MouseHook
+    public class MouseHook
     {
         public IntPtr _hGlobalLlMouseHook;
         public HookProc _globalLlMouseHookCallback;
@@ -234,7 +234,7 @@ namespace commo_rose
             }
         }
 
-        private void ClearHook()
+        public void ClearHook()
         {
             if (_hGlobalLlMouseHook != IntPtr.Zero)
             {
