@@ -169,6 +169,7 @@
             this.MouseButtonsBox.Name = "MouseButtonsBox";
             this.MouseButtonsBox.Size = new System.Drawing.Size(100, 21);
             this.MouseButtonsBox.TabIndex = 7;
+            this.MouseButtonsBox.SelectedIndexChanged += new System.EventHandler(this.MouseButtonsBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -200,7 +201,6 @@
             this.MouseradioButton.TabStop = true;
             this.MouseradioButton.Text = "Mouse";
             this.MouseradioButton.UseVisualStyleBackColor = true;
-            this.MouseradioButton.CheckedChanged += new System.EventHandler(this.MouseradioButton_CheckedChanged);
             // 
             // label3
             // 

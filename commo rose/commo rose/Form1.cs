@@ -24,8 +24,8 @@ namespace commo_rose
 
         public const string app_name = "Commo rose";
         public const string settings_filename = ".settings.xml";
-        const int SW_SHOWNORMAL = 1;
-        public Keys action_button;
+        public Keys action_button_keyboard;
+        public MouseButtons action_button_mouse;
         public XmlDocument doc;
         private Settings settings;
         private KeyHandler ghk;
@@ -40,19 +40,20 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
-            //mouseHook = new MouseHook(LowLevelMouseProc);
-
+            mouseHook = new MouseHook(LowLevelMouseProc);
+            hook_target = Hook_target.Mouse;
+            action_button_mouse = MouseButtons.Middle;
             set_buttons_style();
-            set_buttons_actions();
-            
+            //set_buttons_actions();
+
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
-            hook_target = Hook_target.Keyboard;
-            action_button = Keys.PrintScreen;
+            //hook_target = Hook_target.Keyboard;
+            action_button_keyboard = Keys.PrintScreen;
             KeyPreview = true;
-            ghk = new KeyHandler(action_button, this);
+            ghk = new KeyHandler(action_button_keyboard, this);
             ghk.Register();
 
             load_settings();
@@ -60,7 +61,7 @@ namespace commo_rose
 
         private void load_settings()
         {
-            if(!File.Exists(settings_filename))
+            if (!File.Exists(settings_filename))
             {
                 XmlWriter writer = XmlWriter.Create(settings_filename);
                 writer.WriteStartDocument();
@@ -69,7 +70,7 @@ namespace commo_rose
                 foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
                 {
                     writer.WriteStartElement(button.Name);
-                    writer.WriteAttributeString(button.Name+".Location.X", button.Location.X.ToString());
+                    writer.WriteAttributeString(button.Name + ".Location.X", button.Location.X.ToString());
                     writer.WriteAttributeString(button.Name + ".Location.Y", button.Location.Y.ToString());
                     writer.WriteAttributeString(button.Name + ".Text", button.Text);
                     writer.WriteAttributeString(button.Name + ".action_Type", button.action_Type.ToString());
@@ -122,7 +123,7 @@ namespace commo_rose
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == action_button)
+            if (e.KeyCode == action_button_keyboard)
             {
                 on_form_hide();
             }
@@ -139,17 +140,55 @@ namespace commo_rose
         {
             if (nCode >= 0)
             {
+                MSLLHOOKSTRUCT a = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+                int xbutton_id = a.mouseData >> 16;
                 // Get the mouse WM from the wParam parameter
-                var wmMouse = (MouseMessage)wParam;
-                if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
+                //var wmMouse = (MouseMessage)wParam;
+                //if (wmMouse == MouseMessage.WM_XBUTTONDOWN && b == XBUTTON2)
+                //{
+                //    on_form_show();
+                //    return 1;
+                //}
+                //if (wmMouse == MouseMessage.WM_XBUTTONUP && b == XBUTTON2)
+                //{
+                //    on_form_hide();
+                //    return 1;
+                //}
+                MouseMessage wmMouse = (MouseMessage)wParam;
+                if (wmMouse == mouse_button_to_message_down(action_button_mouse))
                 {
-                    on_form_show();
-                    return 1;
+                    
+                    if (wmMouse != MouseMessage.WM_MBUTTONDOWN)
+                    {
+                        int id = mouse_xbutton_to_id(action_button_mouse);
+                        if(xbutton_id == id)
+                        {
+                            on_form_show();
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        on_form_show();
+                        return 1;
+                    }
                 }
-                if (wmMouse == MouseMessage.WM_XBUTTONUP)
+                if (wmMouse == mouse_button_to_message_up(action_button_mouse))
                 {
-                    on_form_hide();
-                    return 1;
+                    if (wmMouse != MouseMessage.WM_MBUTTONUP)
+                    {
+                        int id = mouse_xbutton_to_id(action_button_mouse);
+                        if (xbutton_id == id)
+                        {
+                            on_form_hide();
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        on_form_hide();
+                        return 1;
+                    }
                 }
             }
 
@@ -174,7 +213,7 @@ namespace commo_rose
         {
             foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
             {
-                if(button.Selected)
+                if (button.Selected)
                 {
                     button.Act(current_window);
                     break;
@@ -202,12 +241,13 @@ namespace commo_rose
 
         private void on_form_show()
         {
+            const int SW_SHOWNORMAL = 1;
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
 
-            check_button_bounds();
+            //check_button_bounds();
             current_window = GetForegroundWindow();
             SetForegroundWindow(this.Handle);
             ShowWindow(this.Handle, SW_SHOWNORMAL);
@@ -232,9 +272,38 @@ namespace commo_rose
         public void change_action_button(Keys key)
         {
             ghk.Unregister();
-            action_button = key;
-            ghk = new KeyHandler(action_button, this);
+            action_button_keyboard = key;
+            ghk = new KeyHandler(action_button_keyboard, this);
             ghk.Register();
+        }
+
+        private MouseMessage mouse_button_to_message_down(MouseButtons button)
+        {
+            if (button == MouseButtons.Middle)
+                return MouseMessage.WM_MBUTTONDOWN;
+            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+                return MouseMessage.WM_XBUTTONDOWN;
+            else throw new NotImplementedException();
+        }
+
+        private MouseMessage mouse_button_to_message_up(MouseButtons button)
+        {
+            if (button == MouseButtons.Middle)
+                return MouseMessage.WM_MBUTTONUP;
+            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+                return MouseMessage.WM_XBUTTONUP;
+            else throw new NotImplementedException();
+        }
+
+        private int mouse_xbutton_to_id(MouseButtons button)
+        {
+            const int XBUTTON1 = 0x0001;
+            const int XBUTTON2 = 0x0002;
+            if (button == MouseButtons.XButton1)
+                return XBUTTON1;
+            else if (button == MouseButtons.XButton2)
+                return XBUTTON2;
+            else throw new NotImplementedException();
         }
     }
 

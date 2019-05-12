@@ -17,16 +17,22 @@ namespace commo_rose
         private Form1 main;
         private Point MouseDownLocation;
         private CustomButton currentButton;
-        private CustomButton[] buttons;
+        private CustomButton[] main_buttons;
 
         public Settings(Form1 main)
         {
             InitializeComponent();
             this.main = main;
-            buttons = main.Controls.OfType<CustomButton>().ToArray();
+            main_buttons = main.Controls.OfType<CustomButton>().ToArray();
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             tabControl1.SelectTab("Style");
+            MouseButtonsBox.Location = ActionButtonBox.Location;
+            MouseButtonsBox.Width = ActionButtonBox.Width;
+            MouseButtonsBox.Height = ActionButtonBox.Height;
+            MouseButtonsBox.Items.Add(MouseButtons.Middle.ToString());
+            MouseButtonsBox.Items.Add(MouseButtons.XButton1.ToString());
+            MouseButtonsBox.Items.Add(MouseButtons.XButton2.ToString());
 
             RegistryKey subkey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
@@ -38,16 +44,27 @@ namespace commo_rose
             else checkBox1.Checked = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 
-            ActionButtonBox.Text = main.action_button.ToString();
+            if(main.hook_target == Hook_target.Keyboard)
+            {
+                MouseradioButton.Checked = false;
+                KeyboardradioButton.Checked = true;
+                ActionButtonBox.Visible = true;
+                MouseButtonsBox.Visible = false;
+            }
+            else if (main.hook_target == Hook_target.Mouse)
+            {
+                MouseradioButton.Checked = true;
+                KeyboardradioButton.Checked = false;
+                ActionButtonBox.Visible = false;
+                MouseButtonsBox.Visible = true;
+            }
+            MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
 
-            MouseButtonsBox.Location = ActionButtonBox.Location;
-            MouseButtonsBox.Width = ActionButtonBox.Width;
-            MouseButtonsBox.Height = ActionButtonBox.Height;
-            KeyboardradioButton.Checked = true;
-            MouseButtonsBox.Visible = false;
-            ActionButtonBox.Visible = true;
+            MouseButtonsBox.SelectedItem = main.action_button_mouse.ToString();
+            ActionButtonBox.Text = main.action_button_keyboard.ToString();
 
-            foreach (CustomButton button in buttons)
+
+            foreach (CustomButton button in main_buttons)
             {
                 panel1.Controls.Add(button.Clone());
                 panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
@@ -63,7 +80,7 @@ namespace commo_rose
         {
             if (currentButton != null)
             {
-                var target_button = buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
+                CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
                 CustomButton.OverWrite(target_button, currentButton);
             }
         }
@@ -154,11 +171,17 @@ namespace commo_rose
             ActionButtonBox.KeyDown -= ActionButtonBox_KeyDown;
             main.change_action_button(e.KeyCode);
         }
-
+       
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
             MouseButtonsBox.Visible = !MouseButtonsBox.Visible;
             ActionButtonBox.Visible = !ActionButtonBox.Visible;
+        }
+
+        private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            main.action_button_mouse =
+                (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseButtonsBox.SelectedItem.ToString());
         }
     }
 }
