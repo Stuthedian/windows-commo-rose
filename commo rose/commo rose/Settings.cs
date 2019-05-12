@@ -28,16 +28,24 @@ namespace commo_rose
             panel1.Height = main.Height;
             tabControl1.SelectTab("Style");
 
-            //fix, if we have registry with the same name but with different path this would still yield true
-            //check if registry entry contains app_name and that value of it equals path to current executable
-            var b = Registry.CurrentUser.OpenSubKey
+            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            if (b.GetValueNames().Contains(Form1.app_name))
-                checkBox1.Checked = true;
+            object value = subkey.GetValue(Form1.app_name);
+            if (value != null && value.ToString() == Application.ExecutablePath)
+            {
+                    checkBox1.Checked = true;
+            }   
             else checkBox1.Checked = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 
             ActionButtonBox.Text = main.action_button.ToString();
+
+            MouseButtonsBox.Location = ActionButtonBox.Location;
+            MouseButtonsBox.Width = ActionButtonBox.Width;
+            MouseButtonsBox.Height = ActionButtonBox.Height;
+            KeyboardradioButton.Checked = true;
+            MouseButtonsBox.Visible = false;
+            ActionButtonBox.Visible = true;
 
             foreach (CustomButton button in buttons)
             {
@@ -47,7 +55,7 @@ namespace commo_rose
             }
             foreach (var item in Enum.GetNames(typeof(Action_type)))
             {
-                comboBox1.Items.Add(item);
+                Action_typeBox.Items.Add(item);
             }
         }
 
@@ -69,7 +77,7 @@ namespace commo_rose
                 currentButton = (CustomButton)sender;
                 ButtonTextBox.Text = currentButton.Text;
                 ButtonParametersBox.Text = currentButton.Parameters;
-                comboBox1.SelectedItem = currentButton.action_Type.ToString();
+                Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
             }
         }
 
@@ -89,7 +97,7 @@ namespace commo_rose
                 currentButton.Text = ButtonTextBox.Text;
                 currentButton.Parameters = ButtonParametersBox.Text;
                 currentButton.action_Type =
-                    (Action_type)Enum.Parse(typeof(Action_type), comboBox1.SelectedItem.ToString());
+                    (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
                 //button location already set 
                 set_setting();
             }
@@ -126,6 +134,7 @@ namespace commo_rose
                 {
                     rk.DeleteValue(Form1.app_name, false);
                 }
+                rk.Close();
             }
             catch (Exception ex)
             {
@@ -144,6 +153,12 @@ namespace commo_rose
             ActionButtonBox.Text = received_key == "Next" ? "PageDown" : received_key;
             ActionButtonBox.KeyDown -= ActionButtonBox_KeyDown;
             main.change_action_button(e.KeyCode);
+        }
+
+        private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            MouseButtonsBox.Visible = !MouseButtonsBox.Visible;
+            ActionButtonBox.Visible = !ActionButtonBox.Visible;
         }
     }
 }

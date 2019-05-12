@@ -22,15 +22,16 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_SHOWNORMAL = 1;
         public const string app_name = "Commo rose";
         public const string settings_filename = ".settings.xml";
-        private Settings settings;
+        const int SW_SHOWNORMAL = 1;
         public Keys action_button;
+        public XmlDocument doc;
+        private Settings settings;
         private KeyHandler ghk;
         private MouseHook mouseHook;
+        public Hook_target hook_target;
         private IntPtr current_window;
-        public XmlDocument doc;
         public Form1()
         {
             InitializeComponent();
@@ -47,7 +48,8 @@ namespace commo_rose
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            
+
+            hook_target = Hook_target.Keyboard;
             action_button = Keys.PrintScreen;
             KeyPreview = true;
             ghk = new KeyHandler(action_button, this);
@@ -127,7 +129,7 @@ namespace commo_rose
             e.Handled = true;
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ExitMenuItem_Click(object sender, EventArgs e)
         {
             ghk.Unregister();
             this.Close();
@@ -222,7 +224,7 @@ namespace commo_rose
             Application.Exit();
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
             settings.ShowDialog();
         }
@@ -235,4 +237,6 @@ namespace commo_rose
             ghk.Register();
         }
     }
+
+    public enum Hook_target { Mouse, Keyboard }
 }

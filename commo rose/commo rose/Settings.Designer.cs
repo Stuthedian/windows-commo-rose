@@ -35,14 +35,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ButtonParametersBox = new System.Windows.Forms.TextBox();
             this.Applybutton = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.Action_typeBox = new System.Windows.Forms.ComboBox();
             this.Savebutton = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
-            this.Style = new System.Windows.Forms.TabPage();
-            this.ActionButtonBox = new System.Windows.Forms.TextBox();
+            this.MouseButtonsBox = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
+            this.MouseradioButton = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
+            this.ActionButtonBox = new System.Windows.Forms.TextBox();
+            this.Style = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.General.SuspendLayout();
             this.Style.SuspendLayout();
@@ -100,14 +104,14 @@
             this.Applybutton.UseVisualStyleBackColor = true;
             this.Applybutton.Click += new System.EventHandler(this.Applybutton_Click);
             // 
-            // comboBox1
+            // Action_typeBox
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(467, 67);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(85, 21);
-            this.comboBox1.TabIndex = 6;
+            this.Action_typeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Action_typeBox.FormattingEnabled = true;
+            this.Action_typeBox.Location = new System.Drawing.Point(467, 67);
+            this.Action_typeBox.Name = "Action_typeBox";
+            this.Action_typeBox.Size = new System.Drawing.Size(85, 21);
+            this.Action_typeBox.TabIndex = 6;
             // 
             // Savebutton
             // 
@@ -142,6 +146,10 @@
             // 
             // General
             // 
+            this.General.Controls.Add(this.MouseButtonsBox);
+            this.General.Controls.Add(this.label4);
+            this.General.Controls.Add(this.KeyboardradioButton);
+            this.General.Controls.Add(this.MouseradioButton);
             this.General.Controls.Add(this.label3);
             this.General.Controls.Add(this.ActionButtonBox);
             this.General.Controls.Add(this.checkBox1);
@@ -153,10 +161,70 @@
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
             // 
+            // MouseButtonsBox
+            // 
+            this.MouseButtonsBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MouseButtonsBox.FormattingEnabled = true;
+            this.MouseButtonsBox.Location = new System.Drawing.Point(107, 153);
+            this.MouseButtonsBox.Name = "MouseButtonsBox";
+            this.MouseButtonsBox.Size = new System.Drawing.Size(100, 21);
+            this.MouseButtonsBox.TabIndex = 7;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 46);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Action button on:";
+            // 
+            // KeyboardradioButton
+            // 
+            this.KeyboardradioButton.AutoSize = true;
+            this.KeyboardradioButton.Location = new System.Drawing.Point(25, 87);
+            this.KeyboardradioButton.Name = "KeyboardradioButton";
+            this.KeyboardradioButton.Size = new System.Drawing.Size(70, 17);
+            this.KeyboardradioButton.TabIndex = 5;
+            this.KeyboardradioButton.TabStop = true;
+            this.KeyboardradioButton.Text = "Keyboard";
+            this.KeyboardradioButton.UseVisualStyleBackColor = true;
+            // 
+            // MouseradioButton
+            // 
+            this.MouseradioButton.AutoSize = true;
+            this.MouseradioButton.Location = new System.Drawing.Point(25, 63);
+            this.MouseradioButton.Name = "MouseradioButton";
+            this.MouseradioButton.Size = new System.Drawing.Size(57, 17);
+            this.MouseradioButton.TabIndex = 4;
+            this.MouseradioButton.TabStop = true;
+            this.MouseradioButton.Text = "Mouse";
+            this.MouseradioButton.UseVisualStyleBackColor = true;
+            this.MouseradioButton.CheckedChanged += new System.EventHandler(this.MouseradioButton_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 131);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Action button key";
+            // 
+            // ActionButtonBox
+            // 
+            this.ActionButtonBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.ActionButtonBox.Location = new System.Drawing.Point(107, 127);
+            this.ActionButtonBox.Name = "ActionButtonBox";
+            this.ActionButtonBox.ReadOnly = true;
+            this.ActionButtonBox.Size = new System.Drawing.Size(100, 20);
+            this.ActionButtonBox.TabIndex = 2;
+            this.ActionButtonBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ActionButtonBox_MouseDown);
+            // 
             // Style
             // 
             this.Style.Controls.Add(this.panel1);
-            this.Style.Controls.Add(this.comboBox1);
+            this.Style.Controls.Add(this.Action_typeBox);
             this.Style.Controls.Add(this.Savebutton);
             this.Style.Controls.Add(this.ButtonParametersBox);
             this.Style.Controls.Add(this.Applybutton);
@@ -170,25 +238,6 @@
             this.Style.TabIndex = 1;
             this.Style.Text = "Style";
             this.Style.UseVisualStyleBackColor = true;
-            // 
-            // ActionButtonBox
-            // 
-            this.ActionButtonBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.ActionButtonBox.Location = new System.Drawing.Point(105, 39);
-            this.ActionButtonBox.Name = "ActionButtonBox";
-            this.ActionButtonBox.ReadOnly = true;
-            this.ActionButtonBox.Size = new System.Drawing.Size(100, 20);
-            this.ActionButtonBox.TabIndex = 2;
-            this.ActionButtonBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ActionButtonBox_MouseDown);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 39);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Action button key";
             // 
             // Settings
             // 
@@ -215,7 +264,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox ButtonParametersBox;
         private System.Windows.Forms.Button Applybutton;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox Action_typeBox;
         private System.Windows.Forms.Button Savebutton;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TabControl tabControl1;
@@ -223,5 +272,9 @@
         private System.Windows.Forms.TabPage Style;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox ActionButtonBox;
+        private System.Windows.Forms.RadioButton KeyboardradioButton;
+        private System.Windows.Forms.RadioButton MouseradioButton;
+        private System.Windows.Forms.ComboBox MouseButtonsBox;
+        private System.Windows.Forms.Label label4;
     }
 }
