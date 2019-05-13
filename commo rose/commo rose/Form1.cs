@@ -32,6 +32,9 @@ namespace commo_rose
         public MouseHook mouseHook;
         public Hook_target hook_target;
         private IntPtr current_window;
+        public IntPtr form_handle;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -39,8 +42,11 @@ namespace commo_rose
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
+            form_handle = this.Handle;
 
             mouseHook = new MouseHook(LowLevelMouseProc);
+
+
             hook_target = Hook_target.Mouse;
             action_button_mouse = MouseButtons.XButton1;
             set_buttons_style();
@@ -53,7 +59,7 @@ namespace commo_rose
             action_button_keyboard = Keys.PrintScreen;
             KeyPreview = true;
             //hook_target = Hook_target.Keyboard;
-            //ghk = new KeyHandler(action_button_keyboard, this);
+            //ghk = new KeyHandler(action_button_keyboard, form_handle);
             //ghk.Register();
 
             load_settings();
@@ -137,7 +143,6 @@ namespace commo_rose
             if (mouseHook != null)
                 mouseHook.ClearHook();
             this.Close();
-            Application.Exit();
         }
 
         public int LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -237,10 +242,11 @@ namespace commo_rose
             center.Y -= Height / 2;
             Location = center;
 
+
             //check_button_bounds();
             current_window = GetForegroundWindow();
-            SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, SW_SHOWNORMAL);
+            SetForegroundWindow(form_handle);
+            ShowWindow(form_handle, SW_SHOWNORMAL);
         }
 
         private void on_form_hide()
@@ -251,7 +257,7 @@ namespace commo_rose
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //Application.Exit();
+            Application.Exit();
         }
 
         private void SettingsMenuItem_Click(object sender, EventArgs e)
@@ -263,7 +269,7 @@ namespace commo_rose
         {
             ghk.Unregister();
             action_button_keyboard = key;
-            ghk = new KeyHandler(action_button_keyboard, this);
+            ghk = new KeyHandler(action_button_keyboard, form_handle);
             ghk.Register();
         }
 
