@@ -27,6 +27,12 @@ namespace commo_rose
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             tabControl1.SelectTab("Style");
+            Point point = panel1.Location;
+            point.X += panel1.Width /2;
+            point.Y += panel1.Height /2;
+            point.X -= pictureBox1.Width / 2;
+            point.Y -= pictureBox1.Height / 2;
+            pictureBox1.Location = point;
             MouseButtonsBox.Location = ActionButtonBox.Location;
             MouseButtonsBox.Width = ActionButtonBox.Width;
             MouseButtonsBox.Height = ActionButtonBox.Height;
