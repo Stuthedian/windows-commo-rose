@@ -15,12 +15,14 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        public bool property_changed;
         public bool Selected { get; private set; }
         public Action_type action_Type;
         public string Parameters;
 
         public CustomButton() : base()
         {
+            property_changed = false;
             Selected = false;
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
@@ -91,6 +93,7 @@ namespace commo_rose
             }
             catch (Exception e) { MessageBox.Show(e.Message); }
         }
+
     }
 
     public enum Action_type { Null, Send_keys, Run, Run_as_admin }

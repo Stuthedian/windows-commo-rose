@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ButtonTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -47,12 +48,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.ActionButtonBox = new System.Windows.Forms.TextBox();
             this.Style = new System.Windows.Forms.TabPage();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.SaveCancelAllpanel = new System.Windows.Forms.Panel();
+            this.CancelAllbutton = new System.Windows.Forms.Button();
+            this.ApplyCancelpanel = new System.Windows.Forms.Panel();
+            this.Cancelbutton = new System.Windows.Forms.Button();
+            this.Editpanel = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.General.SuspendLayout();
             this.Style.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SaveCancelAllpanel.SuspendLayout();
+            this.ApplyCancelpanel.SuspendLayout();
+            this.Editpanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -66,9 +74,20 @@
             this.panel1.Size = new System.Drawing.Size(405, 232);
             this.panel1.TabIndex = 0;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(166, 110);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(12, 19);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // ButtonTextBox
             // 
-            this.ButtonTextBox.Location = new System.Drawing.Point(467, 16);
+            this.ButtonTextBox.Location = new System.Drawing.Point(53, 7);
             this.ButtonTextBox.Name = "ButtonTextBox";
             this.ButtonTextBox.Size = new System.Drawing.Size(100, 20);
             this.ButtonTextBox.TabIndex = 1;
@@ -76,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(417, 19);
+            this.label1.Location = new System.Drawing.Point(3, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 2;
@@ -85,7 +104,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(417, 70);
+            this.label2.Location = new System.Drawing.Point(3, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 3;
@@ -93,14 +112,14 @@
             // 
             // ButtonParametersBox
             // 
-            this.ButtonParametersBox.Location = new System.Drawing.Point(558, 67);
+            this.ButtonParametersBox.Location = new System.Drawing.Point(144, 58);
             this.ButtonParametersBox.Name = "ButtonParametersBox";
             this.ButtonParametersBox.Size = new System.Drawing.Size(100, 20);
             this.ButtonParametersBox.TabIndex = 4;
             // 
             // Applybutton
             // 
-            this.Applybutton.Location = new System.Drawing.Point(593, 215);
+            this.Applybutton.Location = new System.Drawing.Point(3, 3);
             this.Applybutton.Name = "Applybutton";
             this.Applybutton.Size = new System.Drawing.Size(75, 23);
             this.Applybutton.TabIndex = 5;
@@ -112,14 +131,14 @@
             // 
             this.Action_typeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Action_typeBox.FormattingEnabled = true;
-            this.Action_typeBox.Location = new System.Drawing.Point(467, 67);
+            this.Action_typeBox.Location = new System.Drawing.Point(53, 58);
             this.Action_typeBox.Name = "Action_typeBox";
             this.Action_typeBox.Size = new System.Drawing.Size(85, 21);
             this.Action_typeBox.TabIndex = 6;
             // 
             // Savebutton
             // 
-            this.Savebutton.Location = new System.Drawing.Point(512, 215);
+            this.Savebutton.Location = new System.Drawing.Point(3, 3);
             this.Savebutton.Name = "Savebutton";
             this.Savebutton.Size = new System.Drawing.Size(75, 23);
             this.Savebutton.TabIndex = 7;
@@ -130,6 +149,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
+            this.checkBox1.Enabled = false;
             this.checkBox1.Location = new System.Drawing.Point(6, 6);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(109, 17);
@@ -227,14 +247,10 @@
             // 
             // Style
             // 
+            this.Style.Controls.Add(this.SaveCancelAllpanel);
+            this.Style.Controls.Add(this.ApplyCancelpanel);
+            this.Style.Controls.Add(this.Editpanel);
             this.Style.Controls.Add(this.panel1);
-            this.Style.Controls.Add(this.Action_typeBox);
-            this.Style.Controls.Add(this.Savebutton);
-            this.Style.Controls.Add(this.ButtonParametersBox);
-            this.Style.Controls.Add(this.Applybutton);
-            this.Style.Controls.Add(this.label2);
-            this.Style.Controls.Add(this.label1);
-            this.Style.Controls.Add(this.ButtonTextBox);
             this.Style.Location = new System.Drawing.Point(4, 22);
             this.Style.Name = "Style";
             this.Style.Padding = new System.Windows.Forms.Padding(3);
@@ -243,16 +259,55 @@
             this.Style.Text = "Style";
             this.Style.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // SaveCancelAllpanel
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(166, 110);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(12, 19);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.SaveCancelAllpanel.Controls.Add(this.Savebutton);
+            this.SaveCancelAllpanel.Controls.Add(this.CancelAllbutton);
+            this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 166);
+            this.SaveCancelAllpanel.Name = "SaveCancelAllpanel";
+            this.SaveCancelAllpanel.Size = new System.Drawing.Size(165, 33);
+            this.SaveCancelAllpanel.TabIndex = 12;
+            // 
+            // CancelAllbutton
+            // 
+            this.CancelAllbutton.Location = new System.Drawing.Point(84, 3);
+            this.CancelAllbutton.Name = "CancelAllbutton";
+            this.CancelAllbutton.Size = new System.Drawing.Size(75, 23);
+            this.CancelAllbutton.TabIndex = 11;
+            this.CancelAllbutton.Text = "CancelAll";
+            this.CancelAllbutton.UseVisualStyleBackColor = true;
+            this.CancelAllbutton.Click += new System.EventHandler(this.CancelAll_Click);
+            // 
+            // ApplyCancelpanel
+            // 
+            this.ApplyCancelpanel.Controls.Add(this.Cancelbutton);
+            this.ApplyCancelpanel.Controls.Add(this.Applybutton);
+            this.ApplyCancelpanel.Location = new System.Drawing.Point(423, 205);
+            this.ApplyCancelpanel.Name = "ApplyCancelpanel";
+            this.ApplyCancelpanel.Size = new System.Drawing.Size(165, 33);
+            this.ApplyCancelpanel.TabIndex = 10;
+            // 
+            // Cancelbutton
+            // 
+            this.Cancelbutton.Location = new System.Drawing.Point(84, 3);
+            this.Cancelbutton.Name = "Cancelbutton";
+            this.Cancelbutton.Size = new System.Drawing.Size(75, 23);
+            this.Cancelbutton.TabIndex = 9;
+            this.Cancelbutton.Text = "Cancel";
+            this.Cancelbutton.UseVisualStyleBackColor = true;
+            this.Cancelbutton.Click += new System.EventHandler(this.Cancelbutton_Click);
+            // 
+            // Editpanel
+            // 
+            this.Editpanel.Controls.Add(this.label1);
+            this.Editpanel.Controls.Add(this.ButtonTextBox);
+            this.Editpanel.Controls.Add(this.Action_typeBox);
+            this.Editpanel.Controls.Add(this.label2);
+            this.Editpanel.Controls.Add(this.ButtonParametersBox);
+            this.Editpanel.Location = new System.Drawing.Point(417, 9);
+            this.Editpanel.Name = "Editpanel";
+            this.Editpanel.Size = new System.Drawing.Size(253, 100);
+            this.Editpanel.TabIndex = 8;
             // 
             // Settings
             // 
@@ -263,12 +318,15 @@
             this.Name = "Settings";
             this.Text = "Settings";
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.General.ResumeLayout(false);
             this.General.PerformLayout();
             this.Style.ResumeLayout(false);
-            this.Style.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.SaveCancelAllpanel.ResumeLayout(false);
+            this.ApplyCancelpanel.ResumeLayout(false);
+            this.Editpanel.ResumeLayout(false);
+            this.Editpanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -294,5 +352,10 @@
         private System.Windows.Forms.ComboBox MouseButtonsBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel Editpanel;
+        private System.Windows.Forms.Button Cancelbutton;
+        private System.Windows.Forms.Panel ApplyCancelpanel;
+        private System.Windows.Forms.Panel SaveCancelAllpanel;
+        private System.Windows.Forms.Button CancelAllbutton;
     }
 }

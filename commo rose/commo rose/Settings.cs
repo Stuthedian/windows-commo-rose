@@ -18,7 +18,6 @@ namespace commo_rose
         private Point MouseDownLocation;
         private CustomButton currentButton;
         private CustomButton[] main_buttons;
-
         public Settings(Form1 main)
         {
             InitializeComponent();
@@ -27,6 +26,9 @@ namespace commo_rose
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             tabControl1.SelectTab("Style");
+            Editpanel.Enabled = false;
+            update_SaveCancelAllpanel(false);
+            update_ApplyCancelpanel(false);
             Point point = panel1.Location;
             point.X += panel1.Width /2;
             point.Y += panel1.Height /2;
@@ -40,15 +42,15 @@ namespace commo_rose
             MouseButtonsBox.Items.Add(MouseButtons.XButton1.ToString());
             MouseButtonsBox.Items.Add(MouseButtons.XButton2.ToString());
 
-            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            object value = subkey.GetValue(Form1.app_name);
-            if (value != null && value.ToString() == Application.ExecutablePath)
-            {
-                    checkBox1.Checked = true;
-            }   
-            else checkBox1.Checked = false;
-            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            //RegistryKey subkey = Registry.CurrentUser.OpenSubKey
+            //        ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            //object value = subkey.GetValue(Form1.app_name);
+            //if (value != null && value.ToString() == Application.ExecutablePath)
+            //{
+            //        checkBox1.Checked = true;
+            //}   
+            //else checkBox1.Checked = false;
+            //checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 
             if(main.hook_target == Hook_target.Keyboard)
             {
@@ -69,79 +71,22 @@ namespace commo_rose
             MouseButtonsBox.SelectedItem = main.action_button_mouse.ToString();
             ActionButtonBox.Text = main.action_button_keyboard.ToString();
 
-
+            foreach (var item in Enum.GetNames(typeof(Action_type)))
+            {
+                Action_typeBox.Items.Add(item);
+            }
+            
             foreach (CustomButton button in main_buttons)
             {
                 panel1.Controls.Add(button.Clone());
                 panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
                 panel1.Controls[panel1.Controls.Count - 1].MouseMove += Button_MouseMove;
             }
-            foreach (var item in Enum.GetNames(typeof(Action_type)))
-            {
-                Action_typeBox.Items.Add(item);
-            }
         }
-
-        private void set_setting()
-        {
-            if (currentButton != null)
-            {
-                CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
-                CustomButton.OverWrite(target_button, currentButton);
-            }
-        }
+             
 
 
-        private void Button_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                MouseDownLocation = e.Location;
-                currentButton = (CustomButton)sender;
-                ButtonTextBox.Text = currentButton.Text;
-                ButtonParametersBox.Text = currentButton.Parameters;
-                Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
-            }
-        }
-
-        private void Button_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left && currentButton != null)
-            {
-                currentButton.Left = e.X + currentButton.Left - MouseDownLocation.X;
-                currentButton.Top = e.Y + currentButton.Top - MouseDownLocation.Y;
-            }
-        }
-
-        private void Applybutton_Click(object sender, EventArgs e)
-        {
-            if (currentButton != null)
-            {
-                currentButton.Text = ButtonTextBox.Text;
-                currentButton.Parameters = ButtonParametersBox.Text;
-                currentButton.action_Type =
-                    (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
-                //button location already set 
-                set_setting();
-            }
-        }
-
-        private void Savebutton_Click(object sender, EventArgs e)
-        {
-            Applybutton_Click(new object(), EventArgs.Empty);
-            XmlNode node;
-            foreach (CustomButton button in panel1.Controls.OfType<CustomButton>().ToArray())
-            {
-                node = main.doc.DocumentElement.SelectSingleNode(button.Name);
-                node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
-                node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
-                node.Attributes[button.Name + ".Text"].Value = button.Text;
-                node.Attributes[button.Name + ".action_Type"].Value = button.action_Type.ToString();
-                node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
-                main.doc.Save(Form1.settings_filename);
-            }
-        }
-
+        #region tab General
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             RegistryKey rk;
@@ -177,7 +122,7 @@ namespace commo_rose
             ActionButtonBox.KeyDown -= ActionButtonBox_KeyDown;
             main.change_action_button(e.KeyCode);
         }
-       
+
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
             MouseButtonsBox.Visible = !MouseButtonsBox.Visible;
@@ -202,5 +147,140 @@ namespace commo_rose
             main.action_button_mouse =
                 (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseButtonsBox.SelectedItem.ToString());
         }
+        #endregion
+
+        #region tab Style
+        private void Button_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                MouseDownLocation = e.Location;
+                currentButton = (CustomButton)sender;
+                Editpanel.Enabled = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+                disable_editpanel_events();
+                ButtonTextBox.Text = currentButton.Text;
+                ButtonParametersBox.Text = currentButton.Parameters;
+                Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
+                enable_editpanel_events();
+            }
+        }
+
+        private void Button_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (MouseDownLocation == e.Location) return;
+            if (e.Button == MouseButtons.Left && currentButton != null)
+            {
+                currentButton.Left = e.X + currentButton.Left - MouseDownLocation.X;
+                currentButton.Top = e.Y + currentButton.Top - MouseDownLocation.Y;
+                currentButton.property_changed = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+            }
+        }
+
+        private void Cancelbutton_Click(object sender, EventArgs e)
+        {
+            CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
+            CustomButton.OverWrite(currentButton, target_button);
+            currentButton.property_changed = false;
+            update_ApplyCancelpanel(currentButton.property_changed);
+            disable_editpanel_events();
+            ButtonTextBox.Text = currentButton.Text;
+            ButtonParametersBox.Text = currentButton.Parameters;
+            Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
+            enable_editpanel_events();
+        }
+
+        private void Applybutton_Click(object sender, EventArgs e)
+        {
+            CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
+            CustomButton.OverWrite(target_button, currentButton);
+            currentButton.property_changed = false;
+            update_ApplyCancelpanel(currentButton.property_changed);
+        }
+
+        private void Savebutton_Click(object sender, EventArgs e)
+        {
+            Applybutton_Click(new object(), EventArgs.Empty);
+            XmlNode node;
+            foreach (CustomButton button in panel1.Controls.OfType<CustomButton>().ToArray())
+            {
+                node = main.doc.DocumentElement.SelectSingleNode(button.Name);
+                node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
+                node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
+                node.Attributes[button.Name + ".Text"].Value = button.Text;
+                node.Attributes[button.Name + ".action_Type"].Value = button.action_Type.ToString();
+                node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
+                main.doc.Save(Form1.settings_filename);
+            }
+            update_SaveCancelAllpanel(false);
+        }
+
+        private void CancelAll_Click(object sender, EventArgs e)
+        {
+            foreach (CustomButton button in main_buttons)
+            {
+                CustomButton b = (CustomButton)panel1.Controls.Find(button.Name, false)[0];
+                CustomButton.OverWrite(b, button);
+            }
+            update_SaveCancelAllpanel(false);
+        }
+
+        private void ButtonTextBox_TextChanged(object sender, EventArgs e)
+        {
+            currentButton.Text = ButtonTextBox.Text;
+            Applybutton.Enabled =
+            currentButton.property_changed = true;
+            update_ApplyCancelpanel(currentButton.property_changed);
+        }
+
+        private void Action_typeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentButton.action_Type =
+                (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
+            currentButton.property_changed = true;
+            update_ApplyCancelpanel(currentButton.property_changed);
+        }
+
+        private void ButtonParametersBox_TextChanged(object sender, EventArgs e)
+        {
+            currentButton.Parameters = ButtonParametersBox.Text;
+            currentButton.property_changed = true;
+            update_ApplyCancelpanel(currentButton.property_changed);
+        }
+
+        private void disable_editpanel_events()
+        {
+            ButtonTextBox.TextChanged -= ButtonTextBox_TextChanged;
+            Action_typeBox.SelectedIndexChanged -= Action_typeBox_SelectedIndexChanged;
+            ButtonParametersBox.TextChanged -= ButtonParametersBox_TextChanged;
+        }
+
+        private void enable_editpanel_events()
+        {
+            ButtonTextBox.TextChanged += ButtonTextBox_TextChanged;
+            Action_typeBox.SelectedIndexChanged += Action_typeBox_SelectedIndexChanged;
+            ButtonParametersBox.TextChanged += ButtonParametersBox_TextChanged;
+        }
+
+        private void update_ApplyCancelpanel(bool flag)
+        {
+            if (flag)
+            {
+                Applybutton.Enabled = Cancelbutton.Enabled = true;
+                update_SaveCancelAllpanel(true);
+            }
+            else
+            {
+                Applybutton.Enabled = Cancelbutton.Enabled = false;
+            }
+        }
+
+        private void update_SaveCancelAllpanel(bool flag)
+        {
+            Savebutton.Enabled = CancelAllbutton.Enabled = flag;
+        }
+        #endregion
+
     }
 }
