@@ -44,11 +44,11 @@ namespace commo_rose
             ShowInTaskbar = false;
             form_handle = this.Handle;
 
-            mouseHook = new MouseHook(LowLevelMouseProc);
+            //mouseHook = new MouseHook(LowLevelMouseProc);
 
 
-            hook_target = Hook_target.Mouse;
-            action_button_mouse = MouseButtons.XButton1;
+            //hook_target = Hook_target.Mouse;
+            //action_button_mouse = MouseButtons.XButton1;
             set_buttons_style();
             //set_buttons_actions();
 
@@ -58,9 +58,9 @@ namespace commo_rose
 
             action_button_keyboard = Keys.PrintScreen;
             KeyPreview = true;
-            //hook_target = Hook_target.Keyboard;
-            //ghk = new KeyHandler(action_button_keyboard, form_handle);
-            //ghk.Register();
+            hook_target = Hook_target.Keyboard;
+            ghk = new KeyHandler(action_button_keyboard, form_handle);
+            ghk.Register();
 
             load_settings();
         }
@@ -79,7 +79,7 @@ namespace commo_rose
                     writer.WriteAttributeString(button.Name + ".Location.X", button.Location.X.ToString());
                     writer.WriteAttributeString(button.Name + ".Location.Y", button.Location.Y.ToString());
                     writer.WriteAttributeString(button.Name + ".Text", button.Text);
-                    writer.WriteAttributeString(button.Name + ".action_Type", button.action_Type.ToString());
+                    writer.WriteAttributeString(button.Name + ".action_Type", button.action_type.ToString());
                     writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
                     writer.WriteEndElement();
                     writer.WriteString("\n");
@@ -88,6 +88,8 @@ namespace commo_rose
                 writer.WriteEndDocument();
                 writer.Flush();
                 writer.Close();
+                doc = new XmlDocument();
+                doc.Load(settings_filename);
             }
             else
             {
@@ -102,7 +104,7 @@ namespace commo_rose
                     point.Y = int.Parse(node.Attributes[button.Name + ".Location.Y"].Value);
                     button.Location = point;
                     button.Text = node.Attributes[button.Name + ".Text"].Value;
-                    button.action_Type =
+                    button.action_type =
                         (Action_type)Enum.Parse(typeof(Action_type), node.Attributes[button.Name + ".action_Type"].Value);
                     button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
                 }
@@ -210,7 +212,7 @@ namespace commo_rose
             {
                 if (button.Selected)
                 {
-                    button.Act(current_window);
+                    button.Act();
                     break;
                 }
             }
@@ -228,9 +230,9 @@ namespace commo_rose
 
         private void set_buttons_actions()
         {
-            customButton1.action_Type = Action_type.Run;
+            customButton1.action_type = Action_type.Run;
             customButton1.Parameters = "cmd";
-            customButton6.action_Type = Action_type.Run_as_admin;
+            customButton6.action_type = Action_type.Run_as_admin;
             customButton6.Parameters = "cmd";
         }
 
@@ -252,6 +254,7 @@ namespace commo_rose
         private void on_form_hide()
         {
             Hide();
+            SetForegroundWindow(current_window);
             activate_selected_button();
         }
 
@@ -262,7 +265,8 @@ namespace commo_rose
 
         private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
-            settings.ShowDialog();
+            if(!settings.Visible)
+                settings.ShowDialog();
         }
 
         public void change_action_button(Keys key)

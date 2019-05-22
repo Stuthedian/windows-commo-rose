@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
+using WindowsInput.Native;
 
 namespace commo_rose
 {
@@ -161,7 +163,7 @@ namespace commo_rose
                 disable_editpanel_events();
                 ButtonTextBox.Text = currentButton.Text;
                 ButtonParametersBox.Text = currentButton.Parameters;
-                Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
+                Action_typeBox.SelectedItem = currentButton.action_type.ToString();
                 enable_editpanel_events();
             }
         }
@@ -187,12 +189,14 @@ namespace commo_rose
             disable_editpanel_events();
             ButtonTextBox.Text = currentButton.Text;
             ButtonParametersBox.Text = currentButton.Parameters;
-            Action_typeBox.SelectedItem = currentButton.action_Type.ToString();
+            Action_typeBox.SelectedItem = currentButton.action_type.ToString();
             enable_editpanel_events();
         }
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
+            currentButton.clear_VKs();//Incomplete
+            parse_send(ButtonParametersBox.Text);
             CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
             CustomButton.OverWrite(target_button, currentButton);
             currentButton.property_changed = false;
@@ -201,19 +205,24 @@ namespace commo_rose
 
         private void Savebutton_Click(object sender, EventArgs e)
         {
-            Applybutton_Click(new object(), EventArgs.Empty);
+            //Applybutton_Click(new object(), EventArgs.Empty);
+            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
             XmlNode node;
-            foreach (CustomButton button in panel1.Controls.OfType<CustomButton>().ToArray())
+            foreach (CustomButton button in panel_buttons)
             {
+                currentButton = button;
+                Applybutton_Click(new object(), EventArgs.Empty);
                 node = main.doc.DocumentElement.SelectSingleNode(button.Name);
                 node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
                 node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
-                node.Attributes[button.Name + ".action_Type"].Value = button.action_Type.ToString();
+                node.Attributes[button.Name + ".action_Type"].Value = button.action_type.ToString();
                 node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
                 main.doc.Save(Form1.settings_filename);
             }
             update_SaveCancelAllpanel(false);
+            //currentButton = null;
+            //Editpanel.Enabled = false;
         }
 
         private void CancelAll_Click(object sender, EventArgs e)
@@ -236,7 +245,7 @@ namespace commo_rose
 
         private void Action_typeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            currentButton.action_Type =
+            currentButton.action_type =
                 (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
             currentButton.property_changed = true;
             update_ApplyCancelpanel(currentButton.property_changed);
@@ -279,7 +288,77 @@ namespace commo_rose
         private void update_SaveCancelAllpanel(bool flag)
         {
             Savebutton.Enabled = CancelAllbutton.Enabled = flag;
+            if (!flag)
+                update_ApplyCancelpanel(false);
         }
+
+        private void parse_send(string input_text)//move to settings form;
+        {
+            //string pattern = @"(\w+\+)+(\w+)?"";
+            //string pattern = @"^((\w+\+)+(\w+))|(\w+)$";
+            //string pattern = @"^(?:(?:(\w+)\+)+(\w+))|(\w+)$";//Incomplete
+            string pattern = @"^(?:(?:(?:(\w+)\+)+(\w+))|(\w+))$";
+            Match match = Regex.Match(input_text, pattern);
+            if (match.Success)
+            {
+                foreach (Capture capture in match.Groups[1].Captures)//only group 1 have multiple captures
+                {
+                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                }
+                foreach (Capture capture in match.Groups[2].Captures)
+                {
+                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                }
+                foreach (Capture capture in match.Groups[3].Captures)
+                {
+                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                }
+            }
+            else { MessageBox.Show("EmptyMatch"); }
+            //if(match.Success)
+            //{
+            //    string mt = "";
+            //    foreach (Capture item in match.Groups[1].Captures)
+            //    {
+            //        mt += item.Value + '\n';
+            //    }
+            //    foreach (Capture item in match.Groups[2].Captures)
+            //    {
+            //        mt += item.Value + '\n';
+            //    }
+            //    foreach (Capture item in match.Groups[3].Captures)
+            //    {
+            //        mt += item.Value + '\n';
+            //    }
+            //    MessageBox.Show(mt);
+            //}
+            //else { MessageBox.Show("EmptyMatch"); }
+        }
+
+        private static VirtualKeyCode capture_to_VK(string capture)//Incomplete
+        {
+            string lowstr = capture.ToLower();
+            if (lowstr.Length == 1 && lowstr[0] >= 'a' && lowstr[0] <= 'z')
+            {
+                return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "VK_" + lowstr.ToUpper()[0]);
+            }
+            switch (lowstr)
+            {
+                case "ctrl":
+                    return VirtualKeyCode.CONTROL;
+                case "shift":
+                    return VirtualKeyCode.SHIFT;
+                case "alt":
+                    return VirtualKeyCode.LMENU;
+                case "tab":
+                    return VirtualKeyCode.TAB;
+                default:
+                    break;
+            }
+            return VirtualKeyCode.NONAME;
+        }
+
+
         #endregion
 
     }
