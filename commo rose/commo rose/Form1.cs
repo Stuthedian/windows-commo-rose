@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Xml;
 using System.IO;
+using WindowsInput.Native;
 
 namespace commo_rose
 {
@@ -23,9 +24,9 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public const string app_name = "Commo rose";
-        public const string settings_filename = ".settings.xml";
-        public Keys action_button_keyboard;
-        public MouseButtons action_button_mouse;
+        
+        public Keys action_button_keyboard { get; set; }
+        public MouseButtons action_button_mouse { get; set; }
         public XmlDocument doc;
         private Settings settings;
         public KeyHandler ghk;
@@ -48,7 +49,7 @@ namespace commo_rose
 
 
             //hook_target = Hook_target.Mouse;
-            //action_button_mouse = MouseButtons.XButton1;
+            action_button_mouse = MouseButtons.XButton1;
             set_buttons_style();
             //set_buttons_actions();
 
@@ -62,53 +63,7 @@ namespace commo_rose
             ghk = new KeyHandler(action_button_keyboard, form_handle);
             ghk.Register();
 
-            load_settings();
-        }
-
-        private void load_settings()
-        {
-            if (!File.Exists(settings_filename))
-            {
-                XmlWriter writer = XmlWriter.Create(settings_filename);
-                writer.WriteStartDocument();
-                writer.WriteStartElement("CustomButtons");
-                writer.WriteString("\n");
-                foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-                {
-                    writer.WriteStartElement(button.Name);
-                    writer.WriteAttributeString(button.Name + ".Location.X", button.Location.X.ToString());
-                    writer.WriteAttributeString(button.Name + ".Location.Y", button.Location.Y.ToString());
-                    writer.WriteAttributeString(button.Name + ".Text", button.Text);
-                    writer.WriteAttributeString(button.Name + ".action_Type", button.action_type.ToString());
-                    writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
-                    writer.WriteEndElement();
-                    writer.WriteString("\n");
-                }
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-                writer.Flush();
-                writer.Close();
-                doc = new XmlDocument();
-                doc.Load(settings_filename);
-            }
-            else
-            {
-                doc = new XmlDocument();
-                doc.Load(settings_filename);
-                XmlNode node;
-                Point point = new Point();
-                foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-                {
-                    node = doc.DocumentElement.SelectSingleNode(button.Name);
-                    point.X = int.Parse(node.Attributes[button.Name + ".Location.X"].Value);
-                    point.Y = int.Parse(node.Attributes[button.Name + ".Location.Y"].Value);
-                    button.Location = point;
-                    button.Text = node.Attributes[button.Name + ".Text"].Value;
-                    button.action_type =
-                        (Action_type)Enum.Parse(typeof(Action_type), node.Attributes[button.Name + ".action_Type"].Value);
-                    button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
-                }
-            }
+            Saver.load_settings(Controls.OfType<CustomButton>().ToArray());
             settings = new Settings(this);
         }
 

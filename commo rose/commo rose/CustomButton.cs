@@ -19,10 +19,10 @@ namespace commo_rose
     {
         public bool property_changed;
         public bool Selected { get; private set; }
-        public Action_type action_type;
+        public Action_type action_type { get; set; }
         public string Parameters;
-        private IEnumerable<VirtualKeyCode> modifier_keys;
-        private IEnumerable<VirtualKeyCode> ordinary_keys;
+        public IEnumerable<VirtualKeyCode> modifier_keys;
+        public IEnumerable<VirtualKeyCode> ordinary_keys;
         private InputSimulator sim;
 
         public CustomButton() : base()
@@ -85,12 +85,11 @@ namespace commo_rose
             {
                 switch (action_type)
                 {
-                    case Action_type.Send_keys:
-                        //SendKeys.SendWait(Parameters);
-                        Thread thread = new Thread(() =>
-                        sim.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys));
-                        thread.IsBackground = true;
-                        thread.Start();
+                    case Action_type.Send:
+                        //Thread thread = new Thread(() =>
+                        sim.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys);
+                        //thread.IsBackground = true;
+                        //thread.Start();
                         break;
                     case Action_type.Run:
                         Process.Start(Parameters);
@@ -189,8 +188,6 @@ namespace commo_rose
             else { MessageBox.Show("EmptyMatches"); }
         }
 
-        
-
         public void collect_VKs(VirtualKeyCode vk)//Is correct?
         {
             if(vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT)
@@ -214,5 +211,5 @@ namespace commo_rose
         }
     }
 
-    public enum Action_type { Null, Send_keys, Run, Run_as_admin, Send_and_Run }
+    public enum Action_type { Null, Send, Run, Run_as_admin, Send_and_Run }
 }

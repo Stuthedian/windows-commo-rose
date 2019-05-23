@@ -195,8 +195,15 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
-            currentButton.clear_VKs();//Incomplete
-            parse_send(ButtonParametersBox.Text);
+            switch (currentButton.action_type)
+            {
+                case Action_type.Send:
+                    if (!parse_Send(currentButton.Parameters))
+                        return; break;
+                default:
+                    break;
+            }
+                   
             CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
             CustomButton.OverWrite(target_button, currentButton);
             currentButton.property_changed = false;
@@ -205,24 +212,14 @@ namespace commo_rose
 
         private void Savebutton_Click(object sender, EventArgs e)
         {
-            //Applybutton_Click(new object(), EventArgs.Empty);
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
-            XmlNode node;
             foreach (CustomButton button in panel_buttons)
             {
                 currentButton = button;
                 Applybutton_Click(new object(), EventArgs.Empty);
-                node = main.doc.DocumentElement.SelectSingleNode(button.Name);
-                node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
-                node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
-                node.Attributes[button.Name + ".Text"].Value = button.Text;
-                node.Attributes[button.Name + ".action_Type"].Value = button.action_type.ToString();
-                node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
-                main.doc.Save(Form1.settings_filename);
             }
+            Saver.save_settings(panel_buttons);
             update_SaveCancelAllpanel(false);
-            //currentButton = null;
-            //Editpanel.Enabled = false;
         }
 
         private void CancelAll_Click(object sender, EventArgs e)
@@ -292,7 +289,7 @@ namespace commo_rose
                 update_ApplyCancelpanel(false);
         }
 
-        private void parse_send(string input_text)//move to settings form;
+        private bool parse_Send(string input_text)
         {
             //string pattern = @"(\w+\+)+(\w+)?"";
             //string pattern = @"^((\w+\+)+(\w+))|(\w+)$";
@@ -301,6 +298,7 @@ namespace commo_rose
             Match match = Regex.Match(input_text, pattern);
             if (match.Success)
             {
+                currentButton.clear_VKs();
                 foreach (Capture capture in match.Groups[1].Captures)//only group 1 have multiple captures
                 {
                     currentButton.collect_VKs(capture_to_VK(capture.Value));
@@ -313,26 +311,13 @@ namespace commo_rose
                 {
                     currentButton.collect_VKs(capture_to_VK(capture.Value));
                 }
+                return true;
             }
-            else { MessageBox.Show("EmptyMatch"); }
-            //if(match.Success)
-            //{
-            //    string mt = "";
-            //    foreach (Capture item in match.Groups[1].Captures)
-            //    {
-            //        mt += item.Value + '\n';
-            //    }
-            //    foreach (Capture item in match.Groups[2].Captures)
-            //    {
-            //        mt += item.Value + '\n';
-            //    }
-            //    foreach (Capture item in match.Groups[3].Captures)
-            //    {
-            //        mt += item.Value + '\n';
-            //    }
-            //    MessageBox.Show(mt);
-            //}
-            //else { MessageBox.Show("EmptyMatch"); }
+            else
+            {
+                MessageBox.Show("Syntax error");
+                return false;
+            }
         }
 
         private static VirtualKeyCode capture_to_VK(string capture)//Incomplete
@@ -352,6 +337,18 @@ namespace commo_rose
                     return VirtualKeyCode.LMENU;
                 case "tab":
                     return VirtualKeyCode.TAB;
+                case "esc":
+                    return VirtualKeyCode.ESCAPE;
+                case "home":
+                    return VirtualKeyCode.HOME;
+                case "end":
+                    return VirtualKeyCode.END;
+                case "insert":
+                    return VirtualKeyCode.INSERT;
+                case "delete":
+                    return VirtualKeyCode.DELETE;
+                case "prtscn":
+                    return VirtualKeyCode.SNAPSHOT;
                 default:
                     break;
             }
