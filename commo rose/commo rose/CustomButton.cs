@@ -21,9 +21,18 @@ namespace commo_rose
         public bool Selected { get; private set; }
         public Action_type action_type { get; set; }
         public string Parameters;
+
         public IEnumerable<VirtualKeyCode> modifier_keys;
         public IEnumerable<VirtualKeyCode> ordinary_keys;
+
+        public string command;
+        public string command_args;
+
         private InputSimulator sim;
+
+        //
+        public List<IAction> actions;
+        //
 
         public CustomButton() : base()
         {
@@ -39,6 +48,10 @@ namespace commo_rose
             action_type = Action_type.Null;
             modifier_keys = Enumerable.Empty<VirtualKeyCode>();
             ordinary_keys = Enumerable.Empty<VirtualKeyCode>();
+            command = "";
+            command_args = "";
+
+            actions = new List<IAction>();
             sim = new InputSimulator();
         }
 
@@ -66,6 +79,8 @@ namespace commo_rose
 
         public static void OverWrite(CustomButton destination, CustomButton source)
         {
+            destination.command = source.command;
+            destination.command_args = source.command_args;
             destination.modifier_keys = source.modifier_keys;
             destination.ordinary_keys = source.ordinary_keys;
             destination.BackColor = source.BackColor;
@@ -86,20 +101,26 @@ namespace commo_rose
                 switch (action_type)
                 {
                     case Action_type.Send:
-                        //Thread thread = new Thread(() =>
                         sim.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys);
-                        //thread.IsBackground = true;
-                        //thread.Start();
                         break;
                     case Action_type.Run:
-                        Process.Start(Parameters);
+                        Process process = new Process();
+                        process.StartInfo.CreateNoWindow = true;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.FileName = command;
+                        process.StartInfo.Arguments = command_args;
+                        process.Start();
                         break;
-                    case Action_type.Run_as_admin:
-                        ProcessStartInfo startInfo = new ProcessStartInfo(Parameters);
-                        startInfo.Verb = "runas";
-                        Process.Start(startInfo);
+                    case Action_type.RunAsAdmin:
+                        //Process process = new Process();
+                        //process.StartInfo.CreateNoWindow = true;
+                        //process.StartInfo.UseShellExecute = false;
+                        //process.StartInfo.FileName = command;
+                        //process.StartInfo.Arguments = command_args;
+                        //process.StartInfo.Verb = "runas";
+                        //process.Start();
                         break;
-                    case Action_type.Send_and_Run:
+                    case Action_type.Generic:
                         //Thread thread = new Thread(() => interpret(Parameters));
                         //Thread thread = new Thread(() => parse_generic(Parameters));
                         //Thread thread = new Thread(() => parse_send(Parameters));
@@ -116,7 +137,7 @@ namespace commo_rose
             catch (Exception e) { MessageBox.Show(e.Message); }
         }
 
-        private void interpret(string parameters)
+        private void interpret(string parameters)//Delete?
         {
             //InputSimulator sim = new InputSimulator();
             string[] a = parameters.Split(' ');
@@ -168,26 +189,7 @@ namespace commo_rose
                 }
             }
         }
-
-        private void parse_generic(string parameters)//move to settings form;
-        {
-            MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\((\w+)\)");
-            if (matches.Count != 0)
-            {
-                foreach (Match command in matches)
-                {
-                    
-                    switch(command.Groups[1].Value)
-                    {
-                        case "Send":case "send":
-                            MessageBox.Show(command.Groups[2].Value); break;
-                        default:MessageBox.Show("switchErr-" + command.Groups[1].Value); break;
-                    }
-                }
-            }
-            else { MessageBox.Show("EmptyMatches"); }
-        }
-
+             
         public void collect_VKs(VirtualKeyCode vk)//Is correct?
         {
             if(vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT)
@@ -211,5 +213,44 @@ namespace commo_rose
         }
     }
 
-    public enum Action_type { Null, Send, Run, Run_as_admin, Send_and_Run }
+    public enum Action_type { Null, Send, Run, RunAsAdmin, Generic }
+
+    interface IAction
+    {
+        void exec();
+    }
+
+    class CustomButton_Process : IAction
+    {
+        private Process process;
+        public CustomButton_Process(string command, string command_args)
+        {
+            new Process();
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.FileName = command;
+            process.StartInfo.Arguments = command_args;
+        }
+        public void exec()
+        {
+            process.Start();
+        }
+    }
+
+    class CustomButton_Send : IAction
+    {
+        private static InputSimulator inputSimulator;
+        private IEnumerable<VirtualKeyCode> modifier_keys;
+        private IEnumerable<VirtualKeyCode> ordinary_keys;
+
+        static CustomButton_Send()
+        {
+            inputSimulator = new InputSimulator();
+        }
+
+        public void exec()
+        {
+            inputSimulator.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys);
+        }
+    }
 }

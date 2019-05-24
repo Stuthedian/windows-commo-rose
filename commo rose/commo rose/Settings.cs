@@ -11,6 +11,7 @@ using System.Xml;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using WindowsInput.Native;
+using System.Diagnostics;
 
 namespace commo_rose
 {
@@ -195,10 +196,22 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
+            //List<IAction> a = currentButton.actions;
+            //store list actions of button 
+            //if any parse function returns 'false' restore list actions
+            //clear list of actions
+            //create separate method and place switch statement there?
             switch (currentButton.action_type)
             {
                 case Action_type.Send:
                     if (!parse_Send(currentButton.Parameters))
+                        return; break;
+                case Action_type.Run:
+                case Action_type.RunAsAdmin:
+                    if (!parse_Run(currentButton.Parameters))
+                        return; break;
+                case Action_type.Generic:
+                    if (!parse_generic(currentButton.Parameters))
                         return; break;
                 default:
                     break;
@@ -289,6 +302,9 @@ namespace commo_rose
                 update_ApplyCancelpanel(false);
         }
 
+        //should create an instance of CustomButton_Send
+        //and add to it parsed keys
+        //then add the instance to list of actions
         private bool parse_Send(string input_text)
         {
             //string pattern = @"(\w+\+)+(\w+)?"";
@@ -315,7 +331,51 @@ namespace commo_rose
             }
             else
             {
-                MessageBox.Show("Syntax error");
+                MessageBox.Show("Syntax error in send command");
+                return false;
+            }
+        }
+
+        //should create an instance of CustomButton_Process
+        //and add to it process
+        //then add the instance to list of actions
+        private bool parse_Run(string input_text)
+        {
+            string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            if (a.Length == 0)
+                return false;
+            currentButton.command = a[0];
+            if (a.Length > 1)
+                currentButton.command_args = a[1];
+
+            return true;
+        }
+
+        //just checks syntax of input string and executes appropriate parse functions
+        private bool parse_generic(string parameters)
+        {
+            MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\((\w+)\)");
+            if (matches.Count != 0)
+            {
+                foreach (Match command in matches)
+                {
+
+                    switch (command.Groups[1].Value)
+                    {
+                        case "Send": case "send":
+                            if (!parse_Send(command.Groups[2].Value))
+                                return false; break;
+                        case "Run": case "run":
+                            if (!parse_Run(command.Groups[2].Value))
+                                return false; break;
+                        default: break;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                MessageBox.Show("Syntax error in generic command");
                 return false;
             }
         }

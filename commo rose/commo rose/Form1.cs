@@ -187,7 +187,7 @@ namespace commo_rose
         {
             customButton1.action_type = Action_type.Run;
             customButton1.Parameters = "cmd";
-            customButton6.action_type = Action_type.Run_as_admin;
+            customButton6.action_type = Action_type.RunAsAdmin;
             customButton6.Parameters = "cmd";
         }
 
