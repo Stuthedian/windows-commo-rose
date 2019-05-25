@@ -196,25 +196,12 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
-            //List<IAction> a = currentButton.actions;
-            //store list actions of button 
-            //if any parse function returns 'false' restore list actions
-            //clear list of actions
-            //create separate method and place switch statement there?
-            switch (currentButton.action_type)
+            List<IAction> actions_storage = currentButton.actions.ToList();
+            currentButton.actions.Clear();
+            if(!parse_button_command())
             {
-                case Action_type.Send:
-                    if (!parse_Send(currentButton.Parameters))
-                        return; break;
-                case Action_type.Run:
-                case Action_type.RunAsAdmin:
-                    if (!parse_Run(currentButton.Parameters))
-                        return; break;
-                case Action_type.Generic:
-                    if (!parse_generic(currentButton.Parameters))
-                        return; break;
-                default:
-                    break;
+                currentButton.actions = actions_storage;
+                return;
             }
                    
             CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
@@ -302,31 +289,28 @@ namespace commo_rose
                 update_ApplyCancelpanel(false);
         }
 
-        //should create an instance of CustomButton_Send
-        //and add to it parsed keys
-        //then add the instance to list of actions
         private bool parse_Send(string input_text)
         {
-            //string pattern = @"(\w+\+)+(\w+)?"";
-            //string pattern = @"^((\w+\+)+(\w+))|(\w+)$";
-            //string pattern = @"^(?:(?:(\w+)\+)+(\w+))|(\w+)$";//Incomplete
-            string pattern = @"^(?:(?:(?:(\w+)\+)+(\w+))|(\w+))$";
+            CustomButton_Send customButton_Send;
+            List<VirtualKeyCode> vk = new List<VirtualKeyCode>();
+            string pattern = @"^(?:(?:(?:(\w+)\+)+(\w+))|(\w+))$";//Is sufficient?
             Match match = Regex.Match(input_text, pattern);
             if (match.Success)
             {
-                currentButton.clear_VKs();
                 foreach (Capture capture in match.Groups[1].Captures)//only group 1 have multiple captures
                 {
-                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                    vk.Add(capture_to_VK(capture.Value));
                 }
                 foreach (Capture capture in match.Groups[2].Captures)
                 {
-                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                    vk.Add(capture_to_VK(capture.Value));
                 }
                 foreach (Capture capture in match.Groups[3].Captures)
                 {
-                    currentButton.collect_VKs(capture_to_VK(capture.Value));
+                    vk.Add(capture_to_VK(capture.Value));
                 }
+                customButton_Send = new CustomButton_Send(vk);
+                currentButton.actions.Add(customButton_Send);
                 return true;
             }
             else
@@ -336,25 +320,24 @@ namespace commo_rose
             }
         }
 
-        //should create an instance of CustomButton_Process
-        //and add to it process
-        //then add the instance to list of actions
-        private bool parse_Run(string input_text)
+        private bool parse_Run(string input_text, bool admin)
         {
+            CustomButton_Process customButton_Process;
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
             if (a.Length == 0)
                 return false;
-            currentButton.command = a[0];
-            if (a.Length > 1)
-                currentButton.command_args = a[1];
+            else if (a.Length == 1)
+                customButton_Process = new CustomButton_Process(admin, a[0]);
+            else
+                customButton_Process = new CustomButton_Process(admin, a[0], a[1]);
+            currentButton.actions.Add(customButton_Process);
 
             return true;
         }
 
-        //just checks syntax of input string and executes appropriate parse functions
         private bool parse_generic(string parameters)
         {
-            MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\((\w+)\)");
+            MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\(([^\)]+)\)");
             if (matches.Count != 0)
             {
                 foreach (Match command in matches)
@@ -366,7 +349,7 @@ namespace commo_rose
                             if (!parse_Send(command.Groups[2].Value))
                                 return false; break;
                         case "Run": case "run":
-                            if (!parse_Run(command.Groups[2].Value))
+                            if (!parse_Run(command.Groups[2].Value, false))
                                 return false; break;
                         default: break;
                     }
@@ -415,7 +398,21 @@ namespace commo_rose
             return VirtualKeyCode.NONAME;
         }
 
-
+        private bool parse_button_command()
+        {
+            switch (currentButton.action_type)
+            {
+                case Action_type.Send:
+                    return parse_Send(currentButton.Parameters);
+                case Action_type.Run:
+                    return parse_Run(currentButton.Parameters, false);
+                case Action_type.RunAsAdmin:
+                    return parse_Run(currentButton.Parameters, true);
+                case Action_type.Generic:
+                    return parse_generic(currentButton.Parameters);
+                default: return false;
+            }
+        }
         #endregion
 
     }
