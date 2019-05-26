@@ -91,8 +91,14 @@ namespace commo_rose
             foreach (CustomButton button in main_buttons)
             {
                 panel1.Controls.Add(button.Clone());
-                panel1.Controls[panel1.Controls.Count - 1].MouseDown += Button_MouseDown;
-                panel1.Controls[panel1.Controls.Count - 1].MouseMove += Button_MouseMove;
+                CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
+                b.MouseDown += Button_MouseDown;
+                b.MouseMove += Button_MouseMove;
+                b.resizer.MouseDown += resizer_MouseDown;
+                b.resizer.MouseMove += resizer_MouseMove;
+                b.resizer.MouseUp += resizer_MouseUp;
+                b.resizer.Cursor = Cursors.SizeNWSE;
+                b.resizer.BringToFront();
             }
         }
              
@@ -163,6 +169,28 @@ namespace commo_rose
         #endregion
 
         #region tab Style
+        private void resizer_MouseDown(object sender, MouseEventArgs e)
+        {
+            currentButton = (CustomButton)((Control)sender).Parent;
+            currentButton.mouseClicked = true;
+        }
+
+        private void resizer_MouseUp(object sender, MouseEventArgs e)
+        {
+            currentButton.mouseClicked = false;
+        }
+
+        private void resizer_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (currentButton != null && currentButton.mouseClicked)
+            {
+                currentButton.Height = currentButton.resizer.Top + e.Y;
+                currentButton.Width = currentButton.resizer.Left + e.X;
+                currentButton.property_changed = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+            }
+        }
+
         private void Button_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)

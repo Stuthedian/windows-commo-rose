@@ -52,12 +52,12 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
             this.BackColorpanel = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
-            this.Fontbutton = new System.Windows.Forms.Button();
             this.FontPicker = new System.Windows.Forms.FontDialog();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -185,7 +185,7 @@
             this.General.Location = new System.Drawing.Point(4, 22);
             this.General.Name = "General";
             this.General.Padding = new System.Windows.Forms.Padding(3);
-            this.General.Size = new System.Drawing.Size(851, 245);
+            this.General.Size = new System.Drawing.Size(721, 245);
             this.General.TabIndex = 0;
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
@@ -309,6 +309,16 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 131);
             this.Editpanel.TabIndex = 8;
             // 
+            // Fontbutton
+            // 
+            this.Fontbutton.Location = new System.Drawing.Point(206, 84);
+            this.Fontbutton.Name = "Fontbutton";
+            this.Fontbutton.Size = new System.Drawing.Size(75, 23);
+            this.Fontbutton.TabIndex = 17;
+            this.Fontbutton.Text = "Font";
+            this.Fontbutton.UseVisualStyleBackColor = true;
+            this.Fontbutton.Click += new System.EventHandler(this.Fontbutton_Click);
+            // 
             // TextColorpanel
             // 
             this.TextColorpanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -349,16 +359,6 @@
             // 
             this.ColorPicker.AnyColor = true;
             this.ColorPicker.FullOpen = true;
-            // 
-            // Fontbutton
-            // 
-            this.Fontbutton.Location = new System.Drawing.Point(206, 84);
-            this.Fontbutton.Name = "Fontbutton";
-            this.Fontbutton.Size = new System.Drawing.Size(75, 23);
-            this.Fontbutton.TabIndex = 17;
-            this.Fontbutton.Text = "Font";
-            this.Fontbutton.UseVisualStyleBackColor = true;
-            this.Fontbutton.Click += new System.EventHandler(this.Fontbutton_Click);
             // 
             // FontPicker
             // 

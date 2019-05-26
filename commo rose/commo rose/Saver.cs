@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
 using WindowsInput.Native;
@@ -31,6 +28,8 @@ namespace commo_rose
                 writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
                 writer.WriteAttributeString(button.Name + ".BackColor", button.BackColor.ToArgb().ToString());
                 writer.WriteAttributeString(button.Name + ".ForeColor", button.ForeColor.ToArgb().ToString());
+                writer.WriteAttributeString(button.Name + ".Width", button.Width.ToString());
+                writer.WriteAttributeString(button.Name + ".Height", button.Height.ToString());
                 writer.WriteAttributeString(button.Name + ".Font", new FontConverter().ConvertToString(button.Font));
                
                 writer.WriteString("\n");
@@ -108,6 +107,8 @@ namespace commo_rose
                 button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
                 button.BackColor = Color.FromArgb(Convert.ToInt32(node.Attributes[button.Name + ".BackColor"].Value));
                 button.ForeColor = Color.FromArgb(Convert.ToInt32(node.Attributes[button.Name + ".ForeColor"].Value));
+                button.Width = int.Parse(node.Attributes[button.Name + ".Width"].Value);
+                button.Height = int.Parse(node.Attributes[button.Name + ".Height"].Value);
                 button.Font = (Font)new FontConverter().ConvertFromString(node.Attributes[button.Name + ".Font"].Value);
 
                 list_of_actions = node.SelectSingleNode("List_of_Actions");
@@ -167,7 +168,8 @@ namespace commo_rose
                 node.Attributes[button.Name + ".BackColor"].Value = button.BackColor.ToArgb().ToString();
                 node.Attributes[button.Name + ".ForeColor"].Value = button.ForeColor.ToArgb().ToString();
                 node.Attributes[button.Name + ".Font"].Value = new FontConverter().ConvertToString(button.Font);
-
+                node.Attributes[button.Name + ".Width"].Value = button.Width.ToString();
+                node.Attributes[button.Name + ".Height"].Value = button.Height.ToString();
                 list_of_actions = node.SelectSingleNode("List_of_Actions");
                 list_of_actions.RemoveAll();
                 for (int i = 0; i < button.actions.Count; i++)

@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-//
-using System.Text.RegularExpressions;
 using System.Threading;
 using WindowsInput.Native;
 using WindowsInput;
@@ -17,11 +12,14 @@ namespace commo_rose
 {
     public class CustomButton : Button
     {
+        public bool mouseClicked;
         public bool property_changed;
         public bool Selected { get; private set; }
         public Action_type action_type { get; set; }
         public string Parameters;
         public List<IAction> actions;
+        public PictureBox resizer;
+
 
         public CustomButton() : base()
         {
@@ -29,21 +27,33 @@ namespace commo_rose
             Selected = false;
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
+
+            mouseClicked = false;
+            resizer = new PictureBox();
+            resizer.Parent = this;
+            resizer.Width = 10;
+            resizer.Height = 10;
+            resizer.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            resizer.Location = new Point(Width - resizer.Width,
+                Height - resizer.Height);
+            
             MouseEnter += switch_selection;
             MouseLeave += switch_selection;
             BackColorChanged += CustomButton_BackColorChanged;
             BackColor = Color.White;
             ForeColor = Color.Black;
             action_type = Action_type.Nothing;
-
             actions = new List<IAction>();
-        }
+
+            
+        }   
 
         private void CustomButton_BackColorChanged(object sender, EventArgs e)
         {
             FlatAppearance.BorderColor = BackColor;
             FlatAppearance.MouseOverBackColor = BackColor;
             FlatAppearance.MouseDownBackColor = BackColor;
+            resizer.BackColor = BackColor;
         }
 
         private void switch_selection(object sender, EventArgs e)
