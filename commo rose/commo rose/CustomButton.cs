@@ -66,6 +66,7 @@ namespace commo_rose
             destination.actions = source.actions.ToList();
             destination.BackColor = source.BackColor;
             destination.ForeColor = source.ForeColor;
+            destination.Font = source.Font;
             destination.Width = source.Width;
             destination.Height = source.Height;
             destination.Name = source.Name;
@@ -142,9 +143,10 @@ namespace commo_rose
         public IEnumerable<VirtualKeyCode> modifier_keys;
         public IEnumerable<VirtualKeyCode> ordinary_keys;
 
-        private bool is_Vk_modifier_key(VirtualKeyCode vk)//Is correct?//Add Windows key
+        private bool is_Vk_modifier_key(VirtualKeyCode vk)//Is correct?
         {
-            if (vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT)
+            if (vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT
+                || vk == VirtualKeyCode.LWIN)
             {
                 return true;
             }

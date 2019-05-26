@@ -29,7 +29,10 @@ namespace commo_rose
                 writer.WriteAttributeString(button.Name + ".Text", button.Text);
                 writer.WriteAttributeString(button.Name + ".action_type", button.action_type.ToString());
                 writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
-
+                writer.WriteAttributeString(button.Name + ".BackColor", button.BackColor.ToArgb().ToString());
+                writer.WriteAttributeString(button.Name + ".ForeColor", button.ForeColor.ToArgb().ToString());
+                writer.WriteAttributeString(button.Name + ".Font", new FontConverter().ConvertToString(button.Font));
+               
                 writer.WriteString("\n");
                 writer.WriteStartElement("List_of_Actions");
                 for(int i = 0; i < button.actions.Count; i++)
@@ -103,6 +106,9 @@ namespace commo_rose
                 button.action_type =
                     (Action_type)Enum.Parse(typeof(Action_type), node.Attributes[button.Name + ".action_type"].Value);
                 button.Parameters = node.Attributes[button.Name + ".Parameters"].Value;
+                button.BackColor = Color.FromArgb(Convert.ToInt32(node.Attributes[button.Name + ".BackColor"].Value));
+                button.ForeColor = Color.FromArgb(Convert.ToInt32(node.Attributes[button.Name + ".ForeColor"].Value));
+                button.Font = (Font)new FontConverter().ConvertFromString(node.Attributes[button.Name + ".Font"].Value);
 
                 list_of_actions = node.SelectSingleNode("List_of_Actions");
                 foreach (XmlNode action_node in list_of_actions.ChildNodes)
@@ -158,6 +164,9 @@ namespace commo_rose
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
                 node.Attributes[button.Name + ".action_type"].Value = button.action_type.ToString();
                 node.Attributes[button.Name + ".Parameters"].Value = button.Parameters;
+                node.Attributes[button.Name + ".BackColor"].Value = button.BackColor.ToArgb().ToString();
+                node.Attributes[button.Name + ".ForeColor"].Value = button.ForeColor.ToArgb().ToString();
+                node.Attributes[button.Name + ".Font"].Value = new FontConverter().ConvertToString(button.Font);
 
                 list_of_actions = node.SelectSingleNode("List_of_Actions");
                 list_of_actions.RemoveAll();

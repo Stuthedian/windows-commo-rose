@@ -35,7 +35,6 @@ namespace commo_rose
         private IntPtr current_window;
         public IntPtr form_handle;
 
-
         public Form1()
         {
             InitializeComponent();
@@ -57,8 +56,9 @@ namespace commo_rose
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
-            action_button_keyboard = Keys.PrintScreen;
+            action_button_keyboard = Keys.NumPad0;
             KeyPreview = true;
+
             hook_target = Hook_target.Keyboard;
             ghk = new KeyHandler(action_button_keyboard, form_handle);
             ghk.Register();
@@ -145,7 +145,7 @@ namespace commo_rose
                     }
                 }
             }
-            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlMouseHook, nCode, wParam, lParam);
+            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlHook, nCode, wParam, lParam);
         }
 
         private void check_button_bounds()

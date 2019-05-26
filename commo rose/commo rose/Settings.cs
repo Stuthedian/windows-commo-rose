@@ -21,6 +21,8 @@ namespace commo_rose
         private Point MouseDownLocation;
         private CustomButton currentButton;
         private CustomButton[] main_buttons;
+        private object[] mouse_buttons;
+        private object[] keyboard_buttons;
         public Settings(Form1 main)
         {
             InitializeComponent();
@@ -38,12 +40,22 @@ namespace commo_rose
             point.X -= pictureBox1.Width / 2;
             point.Y -= pictureBox1.Height / 2;
             pictureBox1.Location = point;
-            MouseButtonsBox.Location = ActionButtonBox.Location;
-            MouseButtonsBox.Width = ActionButtonBox.Width;
-            MouseButtonsBox.Height = ActionButtonBox.Height;
-            MouseButtonsBox.Items.Add(MouseButtons.Middle.ToString());
-            MouseButtonsBox.Items.Add(MouseButtons.XButton1.ToString());
-            MouseButtonsBox.Items.Add(MouseButtons.XButton2.ToString());
+            mouse_buttons = new object[] {
+            MouseButtons.Middle.ToString(),
+            MouseButtons.XButton1.ToString(),
+            MouseButtons.XButton2.ToString() };
+            keyboard_buttons = new object[]{
+                Keys.Scroll.ToString(),
+                Keys.NumPad0.ToString(),
+                Keys.NumPad1.ToString(),
+                Keys.NumPad2.ToString(),
+                Keys.NumPad3.ToString(),
+                Keys.NumPad4.ToString(),
+                Keys.NumPad5.ToString(),
+                Keys.NumPad6.ToString(),
+                Keys.NumPad7.ToString(),
+                Keys.NumPad8.ToString(),
+                Keys.NumPad9.ToString() };
 
             //RegistryKey subkey = Registry.CurrentUser.OpenSubKey
             //        ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
@@ -59,21 +71,18 @@ namespace commo_rose
             {
                 MouseradioButton.Checked = false;
                 KeyboardradioButton.Checked = true;
-                ActionButtonBox.Visible = true;
-                MouseButtonsBox.Visible = false;
+                MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
+                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_keyboard.ToString();
             }
             else if (main.hook_target == Hook_target.Mouse)
             {
                 MouseradioButton.Checked = true;
                 KeyboardradioButton.Checked = false;
-                ActionButtonBox.Visible = false;
-                MouseButtonsBox.Visible = true;
+                MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
+                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
             }
             MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
-
-            MouseButtonsBox.SelectedItem = main.action_button_mouse.ToString();
-            ActionButtonBox.Text = main.action_button_keyboard.ToString();
-
+                     
             foreach (var item in Enum.GetNames(typeof(Action_type)))
             {
                 Action_typeBox.Items.Add(item);
@@ -113,42 +122,43 @@ namespace commo_rose
             }
         }
 
-        private void ActionButtonBox_MouseDown(object sender, MouseEventArgs e)
-        {
-            ActionButtonBox.KeyDown += ActionButtonBox_KeyDown;
-        }
-
-        private void ActionButtonBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            string received_key = e.KeyCode.ToString();
-            ActionButtonBox.Text = received_key == "Next" ? "PageDown" : received_key;
-            ActionButtonBox.KeyDown -= ActionButtonBox_KeyDown;
-            main.change_action_button(e.KeyCode);
-        }
-
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
-            MouseButtonsBox.Visible = !MouseButtonsBox.Visible;
-            ActionButtonBox.Visible = !ActionButtonBox.Visible;
             if (main.hook_target == Hook_target.Mouse)
             {
                 main.mouseHook.ClearHook();
                 main.ghk = new KeyHandler(main.action_button_keyboard, main.form_handle);
                 main.ghk.Register();
                 main.hook_target = Hook_target.Keyboard;
+                MouseKeyboardButtonsComboBox.Items.Clear();
+                MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
+                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_keyboard.ToString();
             }
             else if (main.hook_target == Hook_target.Keyboard)
             {
                 main.ghk.Unregister();
                 main.mouseHook = new MouseHook(main.LowLevelMouseProc);
                 main.hook_target = Hook_target.Mouse;
+                MouseKeyboardButtonsComboBox.Items.Clear();
+                MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
+                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
             }
         }
 
         private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            main.action_button_mouse =
-                (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseButtonsBox.SelectedItem.ToString());
+            if (main.hook_target == Hook_target.Mouse)
+                main.action_button_mouse =
+                    (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
+            else if (main.hook_target == Hook_target.Keyboard)
+            {
+                main.action_button_keyboard =
+                    (Keys)Enum.Parse(typeof(Keys), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
+                main.ghk.Unregister();
+                main.ghk = new KeyHandler(main.action_button_keyboard, main.form_handle);
+                main.ghk.Register();
+            }
+                
         }
         #endregion
 
@@ -165,6 +175,8 @@ namespace commo_rose
                 ButtonTextBox.Text = currentButton.Text;
                 ButtonParametersBox.Text = currentButton.Parameters;
                 Action_typeBox.SelectedItem = currentButton.action_type.ToString();
+                BackColorpanel.BackColor = currentButton.ForeColor;
+                TextColorpanel.BackColor = currentButton.BackColor;
                 enable_editpanel_events();
             }
         }
@@ -392,6 +404,8 @@ namespace commo_rose
                     return VirtualKeyCode.DELETE;
                 case "prtscn":
                     return VirtualKeyCode.SNAPSHOT;
+                case "win":
+                    return VirtualKeyCode.LWIN;
                 default:
                     break;
             }
@@ -410,8 +424,54 @@ namespace commo_rose
                     return parse_Run(currentButton.Parameters, true);
                 case Action_type.Generic:
                     return parse_generic(currentButton.Parameters);
+                case Action_type.Nothing:
+                    return true;
                 default: return false;
             }
+        }
+
+        private void BackColorpanel_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = BackColorpanel.BackColor;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                BackColorpanel.BackColor = ColorPicker.Color;
+                currentButton.BackColor = BackColorpanel.BackColor;
+                currentButton.property_changed = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+            }
+        }
+
+        private void TextColorpanel_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = TextColorpanel.BackColor;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                TextColorpanel.BackColor = ColorPicker.Color;
+                currentButton.ForeColor = TextColorpanel.BackColor;
+                currentButton.property_changed = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+            }
+        }
+
+        private void Fontbutton_Click(object sender, EventArgs e)
+        {
+            FontPicker.Font = currentButton.Font;
+            var a = currentButton.Font;
+            if (DialogResult.OK == FontPicker.ShowDialog())
+            {
+                currentButton.property_changed = true;
+                update_ApplyCancelpanel(currentButton.property_changed);
+            }
+            else
+            {
+                currentButton.Font = a;
+            }
+        }
+
+        private void FontPicker_Apply(object sender, EventArgs e)
+        {
+            currentButton.Font = FontPicker.Font;
         }
         #endregion
 
