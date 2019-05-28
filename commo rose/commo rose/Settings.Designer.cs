@@ -37,7 +37,7 @@
             this.ButtonParametersBox = new System.Windows.Forms.TextBox();
             this.Applybutton = new System.Windows.Forms.Button();
             this.Action_typeBox = new System.Windows.Forms.ComboBox();
-            this.Savebutton = new System.Windows.Forms.Button();
+            this.ApplyAllbutton = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
@@ -49,9 +49,11 @@
             this.Style = new System.Windows.Forms.TabPage();
             this.SaveCancelAllpanel = new System.Windows.Forms.Panel();
             this.CancelAllbutton = new System.Windows.Forms.Button();
+            this.Addbutton = new System.Windows.Forms.Button();
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
             this.BackColorpanel = new System.Windows.Forms.Panel();
@@ -142,15 +144,15 @@
             this.Action_typeBox.Size = new System.Drawing.Size(85, 21);
             this.Action_typeBox.TabIndex = 6;
             // 
-            // Savebutton
+            // ApplyAllbutton
             // 
-            this.Savebutton.Location = new System.Drawing.Point(3, 3);
-            this.Savebutton.Name = "Savebutton";
-            this.Savebutton.Size = new System.Drawing.Size(75, 23);
-            this.Savebutton.TabIndex = 7;
-            this.Savebutton.Text = "Save";
-            this.Savebutton.UseVisualStyleBackColor = true;
-            this.Savebutton.Click += new System.EventHandler(this.Savebutton_Click);
+            this.ApplyAllbutton.Location = new System.Drawing.Point(3, 3);
+            this.ApplyAllbutton.Name = "ApplyAllbutton";
+            this.ApplyAllbutton.Size = new System.Drawing.Size(75, 23);
+            this.ApplyAllbutton.TabIndex = 7;
+            this.ApplyAllbutton.Text = "Apply all";
+            this.ApplyAllbutton.UseVisualStyleBackColor = true;
+            this.ApplyAllbutton.Click += new System.EventHandler(this.ApplyAllbutton_Click);
             // 
             // checkBox1
             // 
@@ -243,6 +245,7 @@
             // Style
             // 
             this.Style.Controls.Add(this.SaveCancelAllpanel);
+            this.Style.Controls.Add(this.Addbutton);
             this.Style.Controls.Add(this.ApplyCancelpanel);
             this.Style.Controls.Add(this.Editpanel);
             this.Style.Controls.Add(this.panel1);
@@ -256,7 +259,7 @@
             // 
             // SaveCancelAllpanel
             // 
-            this.SaveCancelAllpanel.Controls.Add(this.Savebutton);
+            this.SaveCancelAllpanel.Controls.Add(this.ApplyAllbutton);
             this.SaveCancelAllpanel.Controls.Add(this.CancelAllbutton);
             this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 166);
             this.SaveCancelAllpanel.Name = "SaveCancelAllpanel";
@@ -269,9 +272,19 @@
             this.CancelAllbutton.Name = "CancelAllbutton";
             this.CancelAllbutton.Size = new System.Drawing.Size(75, 23);
             this.CancelAllbutton.TabIndex = 11;
-            this.CancelAllbutton.Text = "CancelAll";
+            this.CancelAllbutton.Text = "Cancel all";
             this.CancelAllbutton.UseVisualStyleBackColor = true;
             this.CancelAllbutton.Click += new System.EventHandler(this.CancelAll_Click);
+            // 
+            // Addbutton
+            // 
+            this.Addbutton.Location = new System.Drawing.Point(638, 166);
+            this.Addbutton.Name = "Addbutton";
+            this.Addbutton.Size = new System.Drawing.Size(75, 23);
+            this.Addbutton.TabIndex = 18;
+            this.Addbutton.Text = "Add button";
+            this.Addbutton.UseVisualStyleBackColor = true;
+            this.Addbutton.Click += new System.EventHandler(this.Addbutton_Click);
             // 
             // ApplyCancelpanel
             // 
@@ -294,6 +307,7 @@
             // 
             // Editpanel
             // 
+            this.Editpanel.Controls.Add(this.Deletebutton);
             this.Editpanel.Controls.Add(this.Fontbutton);
             this.Editpanel.Controls.Add(this.TextColorpanel);
             this.Editpanel.Controls.Add(this.BackColorpanel);
@@ -306,8 +320,18 @@
             this.Editpanel.Controls.Add(this.ButtonParametersBox);
             this.Editpanel.Location = new System.Drawing.Point(417, 9);
             this.Editpanel.Name = "Editpanel";
-            this.Editpanel.Size = new System.Drawing.Size(296, 131);
+            this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
+            // 
+            // Deletebutton
+            // 
+            this.Deletebutton.Location = new System.Drawing.Point(6, 109);
+            this.Deletebutton.Name = "Deletebutton";
+            this.Deletebutton.Size = new System.Drawing.Size(96, 23);
+            this.Deletebutton.TabIndex = 19;
+            this.Deletebutton.Text = "Delete button";
+            this.Deletebutton.UseVisualStyleBackColor = true;
+            this.Deletebutton.Click += new System.EventHandler(this.Deletebutton_Click);
             // 
             // Fontbutton
             // 
@@ -396,7 +420,7 @@
         private System.Windows.Forms.TextBox ButtonParametersBox;
         private System.Windows.Forms.Button Applybutton;
         private System.Windows.Forms.ComboBox Action_typeBox;
-        private System.Windows.Forms.Button Savebutton;
+        private System.Windows.Forms.Button ApplyAllbutton;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage General;
@@ -419,5 +443,7 @@
         private System.Windows.Forms.Panel TextColorpanel;
         private System.Windows.Forms.Button Fontbutton;
         private System.Windows.Forms.FontDialog FontPicker;
+        private System.Windows.Forms.Button Addbutton;
+        private System.Windows.Forms.Button Deletebutton;
     }
 }

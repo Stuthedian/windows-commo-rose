@@ -19,20 +19,48 @@ namespace commo_rose
     {
         private Form1 main;
         private Point MouseDownLocation;
-        private CustomButton currentButton;
-        private CustomButton[] main_buttons;
+        private CustomButton previousbutton;
+        private CustomButton _currentButton;
+        private CustomButton currentButton
+        {
+            get { return _currentButton; }
+            set
+            {
+                previousbutton = _currentButton;
+                _currentButton = value;
+                if (currentButton != null)
+                {
+                    Editpanel.Enabled = true;
+                    update_ApplyCancelpanel(currentButton.property_changed);
+                    disable_editpanel_events();
+                    ButtonTextBox.Text = currentButton.Text;
+                    ButtonParametersBox.Text = currentButton.Parameters;
+                    Action_typeBox.SelectedItem = currentButton.action_type.ToString();
+                    BackColorpanel.BackColor = currentButton.ForeColor;
+                    TextColorpanel.BackColor = currentButton.BackColor;
+                    enable_editpanel_events();
+                }
+                else
+                {
+                    Editpanel.Enabled = false;
+                    update_ApplyCancelpanel(false);
+                }
+            }
+        }
+        private List<CustomButton> main_buttons;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
+
         public Settings(Form1 main)
         {
             InitializeComponent();
             this.main = main;
-            main_buttons = main.Controls.OfType<CustomButton>().ToArray();
+            main_buttons = main.buttons_array;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             tabControl1.SelectTab("Style");
             Editpanel.Enabled = false;
-            update_SaveCancelAllpanel(false);
+            update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
             Point point = panel1.Location;
             point.X += panel1.Width /2;
@@ -56,7 +84,6 @@ namespace commo_rose
                 Keys.NumPad7.ToString(),
                 Keys.NumPad8.ToString(),
                 Keys.NumPad9.ToString() };
-
             //RegistryKey subkey = Registry.CurrentUser.OpenSubKey
             //        ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
             //object value = subkey.GetValue(Form1.app_name);
@@ -149,6 +176,7 @@ namespace commo_rose
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
                 MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
             }
+            Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 
         private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,7 +192,7 @@ namespace commo_rose
                 main.ghk = new KeyHandler(main.action_button_keyboard, main.form_handle);
                 main.ghk.Register();
             }
-                
+            Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
         #endregion
 
@@ -173,6 +201,7 @@ namespace commo_rose
         {
             currentButton = (CustomButton)((Control)sender).Parent;
             currentButton.mouseClicked = true;
+            Editpanel.Enabled = true;
         }
 
         private void resizer_MouseUp(object sender, MouseEventArgs e)
@@ -186,8 +215,7 @@ namespace commo_rose
             {
                 currentButton.Height = currentButton.resizer.Top + e.Y;
                 currentButton.Width = currentButton.resizer.Left + e.X;
-                currentButton.property_changed = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
+                currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
 
@@ -197,15 +225,6 @@ namespace commo_rose
             {
                 MouseDownLocation = e.Location;
                 currentButton = (CustomButton)sender;
-                Editpanel.Enabled = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
-                disable_editpanel_events();
-                ButtonTextBox.Text = currentButton.Text;
-                ButtonParametersBox.Text = currentButton.Parameters;
-                Action_typeBox.SelectedItem = currentButton.action_type.ToString();
-                BackColorpanel.BackColor = currentButton.ForeColor;
-                TextColorpanel.BackColor = currentButton.BackColor;
-                enable_editpanel_events();
             }
         }
 
@@ -216,8 +235,7 @@ namespace commo_rose
             {
                 currentButton.Left = e.X + currentButton.Left - MouseDownLocation.X;
                 currentButton.Top = e.Y + currentButton.Top - MouseDownLocation.Y;
-                currentButton.property_changed = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
+                currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
 
@@ -225,8 +243,7 @@ namespace commo_rose
         {
             CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
             CustomButton.OverWrite(currentButton, target_button);
-            currentButton.property_changed = false;
-            update_ApplyCancelpanel(currentButton.property_changed);
+            currentButton.set_property_changed(false, update_ApplyCancelpanel);
             disable_editpanel_events();
             ButtonTextBox.Text = currentButton.Text;
             ButtonParametersBox.Text = currentButton.Parameters;
@@ -236,30 +253,55 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
-            List<IAction> actions_storage = currentButton.actions.ToList();
-            currentButton.actions.Clear();
-            if(!parse_button_command())
+            if(currentButton == null)
             {
-                currentButton.actions = actions_storage;
-                return;
+                var c = panel1.Controls.OfType<CustomButton>().ToList();
+                IEnumerable<CustomButton> b = main_buttons.Where(x => !c.Exists(y => x.Name == y.Name));
+                b.ToArray()[0].Parent = null;
+                main.buttons_array.Remove(b.ToArray()[0]);
+                update_ApplyCancelpanel(false);
             }
-                   
-            CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
-            CustomButton.OverWrite(target_button, currentButton);
-            currentButton.property_changed = false;
-            update_ApplyCancelpanel(currentButton.property_changed);
+            else
+            {
+                List<IAction> actions_storage = currentButton.actions.ToList();
+                currentButton.actions.Clear();
+                if (!parse_button_command())
+                {
+                    currentButton.actions = actions_storage;
+                    return;
+                }
+                CustomButton target_button;
+                var a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+
+                if (a.Length == 0)
+                {
+                    target_button = new CustomButton();
+                    main_buttons.Add(target_button);
+                    target_button.Parent = main;
+                    Saver.save_button_settings(currentButton, true);
+                }
+                else if (a.Length == 1)
+                {
+                    target_button = a[0];
+                    Saver.save_button_settings(currentButton, false);
+                }
+                else throw new Exception();
+                CustomButton.OverWrite(target_button, currentButton);
+                currentButton.set_property_changed(false, update_ApplyCancelpanel);
+            }
         }
 
-        private void Savebutton_Click(object sender, EventArgs e)
+        private void ApplyAllbutton_Click(object sender, EventArgs e)
         {
+            CustomButton temp = currentButton;
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
                 currentButton = button;
                 Applybutton_Click(new object(), EventArgs.Empty);
             }
-            Saver.save_settings(panel_buttons);
-            update_SaveCancelAllpanel(false);
+            currentButton = temp;
+            update_ApplyAllCancelAllpanel(false);
         }
 
         private void CancelAll_Click(object sender, EventArgs e)
@@ -269,30 +311,26 @@ namespace commo_rose
                 CustomButton b = (CustomButton)panel1.Controls.Find(button.Name, false)[0];
                 CustomButton.OverWrite(b, button);
             }
-            update_SaveCancelAllpanel(false);
+            update_ApplyAllCancelAllpanel(false);
         }
 
         private void ButtonTextBox_TextChanged(object sender, EventArgs e)
         {
             currentButton.Text = ButtonTextBox.Text;
-            Applybutton.Enabled =
-            currentButton.property_changed = true;
-            update_ApplyCancelpanel(currentButton.property_changed);
+            currentButton.set_property_changed(true, update_ApplyCancelpanel);
         }
 
         private void Action_typeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentButton.action_type =
                 (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
-            currentButton.property_changed = true;
-            update_ApplyCancelpanel(currentButton.property_changed);
+            currentButton.set_property_changed(true, update_ApplyCancelpanel);
         }
 
         private void ButtonParametersBox_TextChanged(object sender, EventArgs e)
         {
             currentButton.Parameters = ButtonParametersBox.Text;
-            currentButton.property_changed = true;
-            update_ApplyCancelpanel(currentButton.property_changed);
+            currentButton.set_property_changed(true, update_ApplyCancelpanel);
         }
 
         private void disable_editpanel_events()
@@ -314,7 +352,7 @@ namespace commo_rose
             if (flag)
             {
                 Applybutton.Enabled = Cancelbutton.Enabled = true;
-                update_SaveCancelAllpanel(true);
+                update_ApplyAllCancelAllpanel(true);
             }
             else
             {
@@ -322,9 +360,9 @@ namespace commo_rose
             }
         }
 
-        private void update_SaveCancelAllpanel(bool flag)
+        private void update_ApplyAllCancelAllpanel(bool flag)
         {
-            Savebutton.Enabled = CancelAllbutton.Enabled = flag;
+            ApplyAllbutton.Enabled = CancelAllbutton.Enabled = flag;
             if (!flag)
                 update_ApplyCancelpanel(false);
         }
@@ -465,8 +503,7 @@ namespace commo_rose
             {
                 BackColorpanel.BackColor = ColorPicker.Color;
                 currentButton.BackColor = BackColorpanel.BackColor;
-                currentButton.property_changed = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
+                currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
 
@@ -477,8 +514,7 @@ namespace commo_rose
             {
                 TextColorpanel.BackColor = ColorPicker.Color;
                 currentButton.ForeColor = TextColorpanel.BackColor;
-                currentButton.property_changed = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
+                currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
 
@@ -488,8 +524,7 @@ namespace commo_rose
             var a = currentButton.Font;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
-                currentButton.property_changed = true;
-                update_ApplyCancelpanel(currentButton.property_changed);
+                currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
             else
             {
@@ -500,6 +535,41 @@ namespace commo_rose
         private void FontPicker_Apply(object sender, EventArgs e)
         {
             currentButton.Font = FontPicker.Font;
+        }
+
+        private void Addbutton_Click(object sender, EventArgs e)
+        {
+            CustomButton b = new CustomButton();
+            panel1.Controls.Add(b);
+            b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
+            b.Text = "button";
+            currentButton = b;
+            Editpanel.Enabled = true;
+            b.set_property_changed(true, update_ApplyCancelpanel);
+            b.MouseDown += Button_MouseDown;
+            b.MouseMove += Button_MouseMove;
+            b.resizer.MouseDown += resizer_MouseDown;
+            b.resizer.MouseMove += resizer_MouseMove;
+            b.resizer.MouseUp += resizer_MouseUp;
+            b.resizer.Cursor = Cursors.SizeNWSE;
+            b.resizer.BringToFront();
+        }
+
+        private void Deletebutton_Click(object sender, EventArgs e)
+        {
+            if(DialogResult.OK == MessageBox.Show("Are you sure you want to delete this button?", "Warning",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+            {
+                panel1.Controls.Remove(currentButton);
+                List<CustomButton> a = main_buttons.Where(x => x.Name == currentButton.Name).ToList();
+                if(a.Count > 0)
+                {
+                    Saver.delete_button(currentButton);
+                    a[0].Parent = null;
+                    main_buttons.Remove(a[0]);
+                }
+                currentButton = previousbutton;
+            }
         }
         #endregion
 

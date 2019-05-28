@@ -13,7 +13,7 @@ namespace commo_rose
     public class CustomButton : Button
     {
         public bool mouseClicked;
-        public bool property_changed;
+        public bool property_changed { get; private set; }
         public bool Selected { get; private set; }
         public Action_type action_type { get; set; }
         public string Parameters;
@@ -27,6 +27,7 @@ namespace commo_rose
             Selected = false;
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
+            Location = new Point(0, 0);
 
             mouseClicked = false;
             resizer = new PictureBox();
@@ -63,7 +64,13 @@ namespace commo_rose
             BackColor = ForeColor;
             ForeColor = tmp;
         }
-               
+
+        public void set_property_changed(bool flag, Action<bool> func)
+        {
+            property_changed = flag;
+            func(flag);
+        }
+
         public CustomButton Clone()
         {
             CustomButton customButton = new CustomButton();
@@ -119,7 +126,7 @@ namespace commo_rose
             }
             catch (Exception e) { MessageBox.Show(e.Message); }
         }
-    }
+    }   
 
     public enum Action_type { Nothing, Send, Run, RunAsAdmin, Generic }
 

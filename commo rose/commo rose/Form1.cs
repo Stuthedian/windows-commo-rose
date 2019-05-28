@@ -26,14 +26,17 @@ namespace commo_rose
         public const string app_name = "Commo rose";
         
         public Keys action_button_keyboard { get; set; }
-        public MouseButtons action_button_mouse { get; set; }
-        public XmlDocument doc;
-        private Settings settings;
         public KeyHandler ghk;
+        public MouseButtons action_button_mouse { get; set; }
         public MouseHook mouseHook;
         public Hook_target hook_target;
+
+        private Settings settings;
+        
         private IntPtr current_window;
         public IntPtr form_handle;
+
+        public List<CustomButton> buttons_array;
 
         public Form1()
         {
@@ -43,27 +46,23 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             form_handle = this.Handle;
-
-            //mouseHook = new MouseHook(LowLevelMouseProc);
-
-
-            //hook_target = Hook_target.Mouse;
-            action_button_mouse = MouseButtons.XButton1;
-            set_buttons_style();
-            //set_buttons_actions();
+            buttons_array = new List<CustomButton>();
 
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-
-            action_button_keyboard = Keys.NumPad0;
             KeyPreview = true;
 
-            hook_target = Hook_target.Keyboard;
-            ghk = new KeyHandler(action_button_keyboard, form_handle);
-            ghk.Register();
-
-            Saver.load_settings(Controls.OfType<CustomButton>().ToArray());
+            Saver.load_settings(this);
+            if(hook_target == Hook_target.Keyboard)
+            {
+                ghk = new KeyHandler(action_button_keyboard, form_handle);
+                ghk.Register();
+            }
+            else if(hook_target == Hook_target.Mouse)
+            {
+                mouseHook = new MouseHook(LowLevelMouseProc);
+            }
             settings = new Settings(this);
         }
 
@@ -163,7 +162,7 @@ namespace commo_rose
 
         private void activate_selected_button()
         {
-            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            foreach (CustomButton button in buttons_array)
             {
                 if (button.Selected)
                 {
@@ -171,24 +170,6 @@ namespace commo_rose
                     break;
                 }
             }
-        }
-
-        private void set_buttons_style()
-        {
-            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-            {
-
-                button.BackColor = Color.FromArgb(201, 120, 0);
-                button.ForeColor = Color.FromArgb(247, 218, 2);
-            }
-        }
-
-        private void set_buttons_actions()
-        {
-            customButton1.action_type = Action_type.Run;
-            customButton1.Parameters = "cmd";
-            customButton6.action_type = Action_type.RunAsAdmin;
-            customButton6.Parameters = "cmd";
         }
 
         private void on_form_show()

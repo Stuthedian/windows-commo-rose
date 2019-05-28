@@ -167,8 +167,10 @@ namespace commo_rose
         WM_XBUTTONUP = 0x020C
     }
 
-    public class MouseHook : Hook
+    public class MouseHook
     {
+        public IntPtr _hGlobalLlHook;
+        public HookProc _globalLlHookCallback;
         public MouseHook(HookProc hookProc)
         {
             // Create an instance of HookProc.
@@ -190,12 +192,7 @@ namespace commo_rose
         {
             ClearHook();
         }
-    }
 
-    public abstract class Hook
-    {
-        public IntPtr _hGlobalLlHook;
-        public HookProc _globalLlHookCallback;
         public virtual void ClearHook()
         {
             if (_hGlobalLlHook != IntPtr.Zero)
@@ -208,5 +205,4 @@ namespace commo_rose
             }
         }
     }
-
 }
