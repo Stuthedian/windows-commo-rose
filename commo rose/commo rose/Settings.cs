@@ -18,6 +18,7 @@ namespace commo_rose
     public partial class Settings : Form
     {
         private Form1 main;
+        private PictureBox selection_rectangle;
         private Point MouseDownLocation;
         private CustomButton previousbutton;
         private CustomButton _currentButton;
@@ -43,7 +44,15 @@ namespace commo_rose
                 else
                 {
                     Editpanel.Enabled = false;
+                    disable_editpanel_events();
+                    ButtonTextBox.Text = "";
+                    Action_typeBox.SelectedIndex = 0;
+                    ButtonParametersBox.Text = "";
+                    BackColorpanel.BackColor = Color.White;
+                    TextColorpanel.BackColor = Color.White;
+                    enable_editpanel_events();
                     update_ApplyCancelpanel(false);
+                    selection_rectangle.Visible = false;
                 }
             }
         }
@@ -68,6 +77,10 @@ namespace commo_rose
             point.X -= pictureBox1.Width / 2;
             point.Y -= pictureBox1.Height / 2;
             pictureBox1.Location = point;
+            selection_rectangle = new PictureBox();
+            selection_rectangle.Parent = panel1;
+            selection_rectangle.BackColor = Color.Transparent;
+            selection_rectangle.Visible = false;
             mouse_buttons = new object[] {
             MouseButtons.Middle.ToString(),
             MouseButtons.XButton1.ToString(),
@@ -84,17 +97,17 @@ namespace commo_rose
                 Keys.NumPad7.ToString(),
                 Keys.NumPad8.ToString(),
                 Keys.NumPad9.ToString() };
-            //RegistryKey subkey = Registry.CurrentUser.OpenSubKey
-            //        ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            //object value = subkey.GetValue(Form1.app_name);
-            //if (value != null && value.ToString() == Application.ExecutablePath)
-            //{
-            //        checkBox1.Checked = true;
-            //}   
-            //else checkBox1.Checked = false;
-            //checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            object value = subkey.GetValue(Form1.app_name);
+            if (value != null && value.ToString() == Application.ExecutablePath)
+            {
+                checkBox1.Checked = true;
+            }
+            else checkBox1.Checked = false;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 
-            if(main.hook_target == Hook_target.Keyboard)
+            if (main.hook_target == Hook_target.Keyboard)
             {
                 MouseradioButton.Checked = false;
                 KeyboardradioButton.Checked = true;
@@ -128,8 +141,6 @@ namespace commo_rose
                 b.resizer.BringToFront();
             }
         }
-             
-
 
         #region tab General
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -193,6 +204,57 @@ namespace commo_rose
                 main.ghk.Register();
             }
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
+        }
+
+        private void GlobalBackColor_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = Color.Black;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                CustomButton customButton = currentButton;
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    currentButton = button;
+                    BackColorpanel.BackColor = ColorPicker.Color;
+                    currentButton.BackColor = BackColorpanel.BackColor;
+                    currentButton.set_property_changed(true, update_ApplyCancelpanel);
+                }
+                currentButton = customButton;
+            }
+        }
+
+        private void GlobalTextColor_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = Color.White;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                CustomButton customButton = currentButton;
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    currentButton = button;
+                    TextColorpanel.BackColor = ColorPicker.Color;
+                    currentButton.ForeColor = TextColorpanel.BackColor;
+                    currentButton.set_property_changed(true, update_ApplyCancelpanel);
+                }
+                currentButton = customButton;
+            }
+        }
+
+        private void GlobalFont_Click(object sender, EventArgs e)
+        {
+            FontPicker.Font = new Font("Consolas", 14.25F, FontStyle.Regular);
+            FontPicker.ShowApply = false;
+            if (DialogResult.OK == FontPicker.ShowDialog())
+            {
+                CustomButton customButton = currentButton;
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    currentButton = button;
+                    currentButton.Font = FontPicker.Font;
+                    currentButton.set_property_changed(true, update_ApplyCancelpanel);
+                }
+                currentButton = customButton;
+            }
         }
         #endregion
 
@@ -521,9 +583,11 @@ namespace commo_rose
         private void Fontbutton_Click(object sender, EventArgs e)
         {
             FontPicker.Font = currentButton.Font;
+            FontPicker.ShowApply = true;
             var a = currentButton.Font;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
+                currentButton.Font = FontPicker.Font;
                 currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
             else
@@ -572,6 +636,5 @@ namespace commo_rose
             }
         }
         #endregion
-
     }
 }

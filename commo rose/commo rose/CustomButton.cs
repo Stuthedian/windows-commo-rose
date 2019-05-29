@@ -28,6 +28,7 @@ namespace commo_rose
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
             Location = new Point(0, 0);
+            TabStop = false;
 
             mouseClicked = false;
             resizer = new PictureBox();
@@ -37,6 +38,7 @@ namespace commo_rose
             resizer.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             resizer.Location = new Point(Width - resizer.Width,
                 Height - resizer.Height);
+            resizer.BackColor = Color.Transparent;
             
             MouseEnter += switch_selection;
             MouseLeave += switch_selection;
@@ -44,17 +46,19 @@ namespace commo_rose
             BackColor = Color.White;
             ForeColor = Color.Black;
             action_type = Action_type.Nothing;
-            actions = new List<IAction>();
+            actions = new List<IAction>();            
+        }
 
-            
-        }   
+        protected override bool ShowFocusCues
+        {
+            get { return false; }
+        }
 
         private void CustomButton_BackColorChanged(object sender, EventArgs e)
         {
             FlatAppearance.BorderColor = BackColor;
             FlatAppearance.MouseOverBackColor = BackColor;
             FlatAppearance.MouseDownBackColor = BackColor;
-            resizer.BackColor = BackColor;
         }
 
         private void switch_selection(object sender, EventArgs e)
