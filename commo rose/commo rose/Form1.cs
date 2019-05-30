@@ -22,6 +22,14 @@ namespace commo_rose
         static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+        [DllImport("kernel32.dll")]
+        static extern uint GetCurrentThreadId();
+        [DllImport("user32.dll")]
+        static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool BringWindowToTop(IntPtr hWnd);
 
         public const string app_name = "Commo rose";
         
@@ -174,7 +182,7 @@ namespace commo_rose
 
         private void on_form_show()
         {
-            const int SW_SHOWNORMAL = 1;
+            const int SW_SHOW = 5;
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
@@ -183,8 +191,16 @@ namespace commo_rose
 
             //check_button_bounds();
             current_window = GetForegroundWindow();
-            SetForegroundWindow(form_handle);
-            ShowWindow(form_handle, SW_SHOWNORMAL);
+            uint currentlyFocusedWindowProcessId = GetWindowThreadProcessId(current_window, IntPtr.Zero);
+            uint appThread = GetCurrentThreadId();
+
+            if (currentlyFocusedWindowProcessId != appThread)
+            {
+                AttachThreadInput(currentlyFocusedWindowProcessId, appThread, true);
+                BringWindowToTop(form_handle);
+                ShowWindow(form_handle, SW_SHOW);
+                AttachThreadInput(currentlyFocusedWindowProcessId, appThread, false);
+            }
         }
 
         private void on_form_hide()
