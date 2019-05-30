@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Xml;
+using System.IO;
+using WindowsInput.Native;
 
 namespace commo_rose
 {
@@ -20,33 +23,47 @@ namespace commo_rose
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_SHOWNORMAL = 1;
-        private Keys action_button;
-        private KeyHandler ghk;
-        private MouseHook mouseHook;
+        public const string app_name = "Commo rose";
+        
+        public Keys action_button_keyboard { get; set; }
+        public KeyHandler ghk;
+        public MouseButtons action_button_mouse { get; set; }
+        public MouseHook mouseHook;
+        public Hook_target hook_target;
+
+        private Settings settings;
+        
         private IntPtr current_window;
+        public IntPtr form_handle;
+
+        public List<CustomButton> buttons_array;
+
         public Form1()
         {
             InitializeComponent();
-
             BackColor = Color.Lime;
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
+            form_handle = this.Handle;
+            buttons_array = new List<CustomButton>();
 
-            mouseHook = new MouseHook(LowLevelMouseProc);
-
-            set_buttons_style();
-            set_buttons_actions();
-            
-            notifyIcon1.Text = "Commo rose";
+            notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            
-            action_button = Keys.PrintScreen;
             KeyPreview = true;
-            ghk = new KeyHandler(action_button, this);
-            ghk.Register();
+
+            Saver.load_settings(this);
+            if(hook_target == Hook_target.Keyboard)
+            {
+                ghk = new KeyHandler(action_button_keyboard, form_handle);
+                ghk.Register();
+            }
+            else if(hook_target == Hook_target.Mouse)
+            {
+                mouseHook = new MouseHook(LowLevelMouseProc);
+            }
+            settings = new Settings(this);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -68,16 +85,19 @@ namespace commo_rose
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == action_button)
+            if (e.KeyCode == action_button_keyboard)
             {
                 on_form_hide();
             }
             e.Handled = true;
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            ghk.Unregister();
+            if (ghk != null)
+                ghk.Unregister();
+            if (mouseHook != null)
+                mouseHook.ClearHook();
             this.Close();
         }
 
@@ -85,22 +105,46 @@ namespace commo_rose
         {
             if (nCode >= 0)
             {
-                // Get the mouse WM from the wParam parameter
-                var wmMouse = (MouseMessage)wParam;
-                if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
+                MSLLHOOKSTRUCT a = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+                int xbutton_id = a.mouseData >> 16;
+                MouseMessage wmMouse = (MouseMessage)wParam;
+                if (wmMouse == mouse_button_to_message_down(action_button_mouse))
                 {
-                    on_form_show();
-                    return 1;
+
+                    if (wmMouse != MouseMessage.WM_MBUTTONDOWN)
+                    {
+                        int id = mouse_xbutton_to_id(action_button_mouse);
+                        if (xbutton_id == id)
+                        {
+                            on_form_show();
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        on_form_show();
+                        return 1;
+                    }
                 }
-                if (wmMouse == MouseMessage.WM_XBUTTONUP)
+                if (wmMouse == mouse_button_to_message_up(action_button_mouse))
                 {
-                    on_form_hide();
-                    return 1;
+                    if (wmMouse != MouseMessage.WM_MBUTTONUP)
+                    {
+                        int id = mouse_xbutton_to_id(action_button_mouse);
+                        if (xbutton_id == id)
+                        {
+                            on_form_hide();
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        on_form_hide();
+                        return 1;
+                    }
                 }
             }
-
-            // Pass the hook information to the next hook procedure in chain
-            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlMouseHook, nCode, wParam, lParam);
+            return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlHook, nCode, wParam, lParam);
         }
 
         private void check_button_bounds()
@@ -118,9 +162,9 @@ namespace commo_rose
 
         private void activate_selected_button()
         {
-            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+            foreach (CustomButton button in buttons_array)
             {
-                if(button.Selected)
+                if (button.Selected)
                 {
                     button.Act();
                     break;
@@ -128,49 +172,25 @@ namespace commo_rose
             }
         }
 
-        private void set_buttons_style()
-        {
-            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-            {
-
-                button.BackColor = Color.FromArgb(201, 120, 0);
-                button.ForeColor = Color.FromArgb(247, 218, 2);
-            }
-        }
-
-        private void set_buttons_actions()
-        {
-            customButton1.Act = () => System.Diagnostics.Process.Start("cmd");
-            customButton2.Act = () => SendKeys.SendWait("+%");
-            customButton3.Act = () =>
-            {
-                SetForegroundWindow(current_window);
-                SendKeys.SendWait("^(c)");
-            };
-            customButton4.Act = () =>
-            {
-                SetForegroundWindow(current_window);
-                SendKeys.SendWait("^(v)");
-            };
-        }
-
         private void on_form_show()
         {
+            const int SW_SHOWNORMAL = 1;
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
 
-            check_button_bounds();
 
+            //check_button_bounds();
             current_window = GetForegroundWindow();
-            SetForegroundWindow(this.Handle);
-            ShowWindow(this.Handle, SW_SHOWNORMAL);
+            SetForegroundWindow(form_handle);
+            ShowWindow(form_handle, SW_SHOWNORMAL);
         }
 
         private void on_form_hide()
         {
             Hide();
+            SetForegroundWindow(current_window);
             activate_selected_button();
         }
 
@@ -178,5 +198,50 @@ namespace commo_rose
         {
             Application.Exit();
         }
+
+        private void SettingsMenuItem_Click(object sender, EventArgs e)
+        {
+            if(!settings.Visible)
+                settings.ShowDialog();
+        }
+
+        public void change_action_button(Keys key)
+        {
+            ghk.Unregister();
+            action_button_keyboard = key;
+            ghk = new KeyHandler(action_button_keyboard, form_handle);
+            ghk.Register();
+        }
+
+        private MouseMessage mouse_button_to_message_down(MouseButtons button)
+        {
+            if (button == MouseButtons.Middle)
+                return MouseMessage.WM_MBUTTONDOWN;
+            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+                return MouseMessage.WM_XBUTTONDOWN;
+            else throw new NotImplementedException();
+        }
+
+        private MouseMessage mouse_button_to_message_up(MouseButtons button)
+        {
+            if (button == MouseButtons.Middle)
+                return MouseMessage.WM_MBUTTONUP;
+            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+                return MouseMessage.WM_XBUTTONUP;
+            else throw new NotImplementedException();
+        }
+
+        private int mouse_xbutton_to_id(MouseButtons button)
+        {
+            const int XBUTTON1 = 0x0001;
+            const int XBUTTON2 = 0x0002;
+            if (button == MouseButtons.XButton1)
+                return XBUTTON1;
+            else if (button == MouseButtons.XButton2)
+                return XBUTTON2;
+            else throw new NotImplementedException();
+        }
     }
+
+    public enum Hook_target { Mouse, Keyboard }
 }

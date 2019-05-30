@@ -32,7 +32,7 @@ namespace commo_rose
     ///     not receive hook notifications and may behave incorrectly as a result. If the
     ///     hook procedure does not call CallNextHookEx, the return value should be zero.
     /// </returns>
-    internal delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+    public delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
     internal class NativeMethods
     {
@@ -113,9 +113,6 @@ namespace commo_rose
 
     internal enum HookType
     {
-        WH_KEYBOARD = 2,
-        WH_MOUSE = 7,
-        WH_KEYBOARD_LL = 13,
         WH_MOUSE_LL = 14
     }
 
@@ -129,19 +126,6 @@ namespace commo_rose
     /// <summary>
     ///     The MSLLHOOKSTRUCT structure contains information about a low-level keyboard
     ///     input event.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct MOUSEHOOKSTRUCT
-    {
-        public POINT pt; // The x and y coordinates in screen coordinates
-        public int hwnd; // Handle to the window that'll receive the mouse message
-        public int wHitTestCode;
-        public int dwExtraInfo;
-    }
-
-    /// <summary>
-    ///     The MOUSEHOOKSTRUCT structure contains information about a mouse event passed
-    ///     to a WH_MOUSE hook procedure, MouseProc.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     internal struct MSLLHOOKSTRUCT
@@ -183,66 +167,41 @@ namespace commo_rose
         WM_XBUTTONUP = 0x020C
     }
 
-    /// <summary>
-    ///     The structure contains information about a low-level keyboard input event.
-    /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct KBDLLHOOKSTRUCT
+    public class MouseHook
     {
-        public int vkCode; // Specifies a virtual-key code
-        public int scanCode; // Specifies a hardware scan code for the key
-        public int flags;
-        public int time; // Specifies the time stamp for this message
-        public int dwExtraInfo;
-    }
-
-    internal enum KeyboardMessage
-    {
-        WM_KEYDOWN = 0x0100,
-        WM_KEYUP = 0x0101,
-        WM_SYSKEYDOWN = 0x0104,
-        WM_SYSKEYUP = 0x0105
-    }
-
-    class MouseHook
-    {
-        public IntPtr _hGlobalLlMouseHook;
-        public HookProc _globalLlMouseHookCallback;
+        public IntPtr _hGlobalLlHook;
+        public HookProc _globalLlHookCallback;
         public MouseHook(HookProc hookProc)
         {
-            SetUpHook(hookProc);
+            // Create an instance of HookProc.
+            _globalLlHookCallback = hookProc;
+
+            _hGlobalLlHook = NativeMethods.SetWindowsHookEx(
+                HookType.WH_MOUSE_LL,
+                _globalLlHookCallback,
+                Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
+                0);
+
+            if (_hGlobalLlHook == IntPtr.Zero)
+            {
+                throw new Win32Exception("Unable to set MouseHook");
+            }
         }
 
         ~MouseHook()
         {
             ClearHook();
         }
-        private void SetUpHook(HookProc hookProc)
+
+        public virtual void ClearHook()
         {
-            // Create an instance of HookProc.
-            _globalLlMouseHookCallback = hookProc;
-
-            _hGlobalLlMouseHook = NativeMethods.SetWindowsHookEx(
-                HookType.WH_MOUSE_LL,
-                _globalLlMouseHookCallback,
-                Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
-                0);
-
-            if (_hGlobalLlMouseHook == IntPtr.Zero)
-            {
-              throw new Win32Exception("Unable to set MouseHook");
-            }
-        }
-
-        private void ClearHook()
-        {
-            if (_hGlobalLlMouseHook != IntPtr.Zero)
+            if (_hGlobalLlHook != IntPtr.Zero)
             {
                 // Unhook the low-level mouse hook
-                if (!NativeMethods.UnhookWindowsHookEx(_hGlobalLlMouseHook))
-                    throw new Win32Exception("Unable to clear MouseHook");
+                if (!NativeMethods.UnhookWindowsHookEx(_hGlobalLlHook))
+                    throw new Win32Exception("Unable to clear Hook");
 
-                _hGlobalLlMouseHook = IntPtr.Zero;
+                _hGlobalLlHook = IntPtr.Zero;
             }
         }
     }

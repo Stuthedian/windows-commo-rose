@@ -22,10 +22,10 @@ namespace commo_rose
         private int id;
         private const int MOD_NOREPEAT = 0x4000;
 
-        public KeyHandler(Keys key, Form form)
+        public KeyHandler(Keys key, IntPtr handle)
         {
             this.key = (int)key;
-            this.hWnd = form.Handle;
+            this.hWnd = handle;
             id = this.GetHashCode();
         }
 
@@ -41,7 +41,7 @@ namespace commo_rose
 
         public bool Unregister()
         {
-            return UnregisterHotKey(hWnd, id);
+                return UnregisterHotKey(hWnd, id);
         }
     }
 }
