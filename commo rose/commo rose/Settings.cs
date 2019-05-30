@@ -607,9 +607,6 @@ namespace commo_rose
             panel1.Controls.Add(b);
             b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
             b.Text = "button";
-            currentButton = b;
-            Editpanel.Enabled = true;
-            b.set_property_changed(true, update_ApplyCancelpanel);
             b.MouseDown += Button_MouseDown;
             b.MouseMove += Button_MouseMove;
             b.resizer.MouseDown += resizer_MouseDown;
@@ -626,13 +623,15 @@ namespace commo_rose
             {
                 panel1.Controls.Remove(currentButton);
                 List<CustomButton> a = main_buttons.Where(x => x.Name == currentButton.Name).ToList();
-                if(a.Count > 0)
+                if (a.Count == 1)
                 {
                     Saver.delete_button(currentButton);
                     a[0].Parent = null;
                     main_buttons.Remove(a[0]);
                 }
+                else if (a.Count > 1) throw new Exception("Identity problem");
                 currentButton = previousbutton;
+                previousbutton = null;
             }
         }
         #endregion

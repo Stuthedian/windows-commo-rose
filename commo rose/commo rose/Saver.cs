@@ -13,10 +13,12 @@ namespace commo_rose
         private static XmlDocument doc;
         private static XmlNode CustomButtons;
         private const string settings_filename = ".settings.xml";
+        private static readonly string path_to_settings_filename = 
+            Path.Combine(Application.StartupPath, settings_filename);
 
         private static void create_new_settings_file()
         {
-            XmlWriter writer = XmlWriter.Create(settings_filename);
+            XmlWriter writer = XmlWriter.Create(path_to_settings_filename);
             writer.WriteStartDocument();
             writer.WriteStartElement("Settings");
             writer.WriteStartElement("Hook_target");
@@ -32,7 +34,7 @@ namespace commo_rose
             buttons = new List<CustomButton>();
             buttons.Add(new CustomButton());
             customButton = buttons[buttons.Count - 1];
-            customButton.Name = "customButton" + (buttons.Count + 1).ToString();
+            customButton.Name = "customButton" + buttons.Count.ToString();
             customButton.Location = new Point(33, 37);
             customButton.Text = "Ctrl+C";
             customButton.Parameters = "Ctrl+C";
@@ -129,12 +131,12 @@ namespace commo_rose
 
         public static void load_settings(Form1 main)
         {
-            if (!File.Exists(settings_filename))
+            if (!File.Exists(path_to_settings_filename))
             {
                 create_new_settings_file();
             }
             doc = new XmlDocument();
-            doc.Load(settings_filename);
+            doc.Load(path_to_settings_filename);
             XmlNode node, list_of_actions, modifiers_node, ordinary_node, process_node;
             Point point = new Point();
 
@@ -339,7 +341,7 @@ namespace commo_rose
                     list_of_actions.AppendChild(action_node);
                 }
             }
-            doc.Save(settings_filename);
+            doc.Save(path_to_settings_filename);
         }
 
         public static void delete_button(CustomButton button)
@@ -347,7 +349,7 @@ namespace commo_rose
             if (doc == null && CustomButtons != null)
                 return;
             CustomButtons.RemoveChild(CustomButtons.SelectSingleNode(button.Name));
-            doc.Save(settings_filename);
+            doc.Save(path_to_settings_filename);
         }
 
         public static void save_tab_general(Hook_target target, MouseButtons mbutton, Keys key)
@@ -366,7 +368,7 @@ namespace commo_rose
             {
                 node.InnerText = mbutton.ToString();
             }
-            doc.Save(settings_filename);
+            doc.Save(path_to_settings_filename);
         }
     }
 }
