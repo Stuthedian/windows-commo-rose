@@ -76,9 +76,6 @@ namespace commo_rose
         private List<CustomButton> main_buttons;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
-        private Color global_backcolor;
-        private Color global_textcolor;
-        private Font global_font;
 
         public Settings(Form1 main)
         {
@@ -157,11 +154,6 @@ namespace commo_rose
                 b.resizer.BringToFront();
             }
 
-            //read from file; save to the file if changed
-            global_backcolor = Color.White;
-            global_textcolor = Color.Black;
-            global_font = new Font("Consolas", 14.25F, FontStyle.Regular);
-
             currentButton = null;
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
@@ -233,10 +225,11 @@ namespace commo_rose
 
         private void GlobalBackColorButton_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = global_backcolor;
+            ColorPicker.Color = main.global_backcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                global_backcolor = ColorPicker.Color;
+                main.global_backcolor = ColorPicker.Color;
+                Saver.save_global_backcolor(main.global_backcolor);
                 int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
@@ -253,10 +246,11 @@ namespace commo_rose
 
         private void GlobalTextColorButton_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = global_textcolor;
+            ColorPicker.Color = main.global_textcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                global_textcolor = ColorPicker.Color;
+                main.global_textcolor = ColorPicker.Color;
+                Saver.save_global_textcolor(main.global_textcolor);
                 int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
@@ -273,11 +267,12 @@ namespace commo_rose
 
         private void GlobalFontButton_Click(object sender, EventArgs e)
         {
-            FontPicker.Font = global_font;
+            FontPicker.Font = main.global_font;
             FontPicker.ShowApply = false;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
-                global_font = FontPicker.Font;
+                main.global_font = FontPicker.Font;
+                Saver.save_global_font(main.global_font);
                 int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())

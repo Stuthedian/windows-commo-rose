@@ -45,6 +45,9 @@ namespace commo_rose
         public IntPtr form_handle;
 
         public List<CustomButton> buttons_array;
+        public Color global_backcolor;
+        public Color global_textcolor;
+        public Font global_font;
 
         public Form1()
         {
