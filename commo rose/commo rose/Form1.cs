@@ -211,6 +211,11 @@ namespace commo_rose
                 ShowWindow(form_handle, SW_SHOW);
                 AttachThreadInput(currentlyFocusedWindowProcessId, appThread, false);
             }
+            else
+            {
+                BringWindowToTop(form_handle);
+                ShowWindow(form_handle, SW_SHOW);
+            }
         }
 
         private void on_form_hide()
