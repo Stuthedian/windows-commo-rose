@@ -87,7 +87,7 @@ namespace commo_rose
             destination.actions = source.actions.ToList();
             destination.BackColor = source.BackColor;
             destination.ForeColor = source.ForeColor;
-            destination.Font = source.Font;
+            destination.Font = (Font)source.Font.Clone();
             destination.Width = source.Width;
             destination.Height = source.Height;
             destination.Name = source.Name;

@@ -41,6 +41,9 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
+            this.GlobalBackColorButton = new System.Windows.Forms.Button();
+            this.GlobalTextColorButton = new System.Windows.Forms.Button();
+            this.GlobalFontButton = new System.Windows.Forms.Button();
             this.MouseKeyboardButtonsComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
@@ -61,9 +64,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.FontPicker = new System.Windows.Forms.FontDialog();
-            this.GlobalBackColor = new System.Windows.Forms.Button();
-            this.GlobalTextColor = new System.Windows.Forms.Button();
-            this.GlobalFont = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -180,9 +180,9 @@
             // 
             // General
             // 
-            this.General.Controls.Add(this.GlobalBackColor);
-            this.General.Controls.Add(this.GlobalTextColor);
-            this.General.Controls.Add(this.GlobalFont);
+            this.General.Controls.Add(this.GlobalBackColorButton);
+            this.General.Controls.Add(this.GlobalTextColorButton);
+            this.General.Controls.Add(this.GlobalFontButton);
             this.General.Controls.Add(this.MouseKeyboardButtonsComboBox);
             this.General.Controls.Add(this.label4);
             this.General.Controls.Add(this.KeyboardradioButton);
@@ -196,6 +196,36 @@
             this.General.TabIndex = 0;
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
+            // 
+            // GlobalBackColorButton
+            // 
+            this.GlobalBackColorButton.Location = new System.Drawing.Point(14, 154);
+            this.GlobalBackColorButton.Name = "GlobalBackColorButton";
+            this.GlobalBackColorButton.Size = new System.Drawing.Size(121, 23);
+            this.GlobalBackColorButton.TabIndex = 10;
+            this.GlobalBackColorButton.Text = "Set global backcolor";
+            this.GlobalBackColorButton.UseVisualStyleBackColor = true;
+            this.GlobalBackColorButton.Click += new System.EventHandler(this.GlobalBackColorButton_Click);
+            // 
+            // GlobalTextColorButton
+            // 
+            this.GlobalTextColorButton.Location = new System.Drawing.Point(14, 183);
+            this.GlobalTextColorButton.Name = "GlobalTextColorButton";
+            this.GlobalTextColorButton.Size = new System.Drawing.Size(121, 23);
+            this.GlobalTextColorButton.TabIndex = 11;
+            this.GlobalTextColorButton.Text = "Set global textcolor";
+            this.GlobalTextColorButton.UseVisualStyleBackColor = true;
+            this.GlobalTextColorButton.Click += new System.EventHandler(this.GlobalTextColorButton_Click);
+            // 
+            // GlobalFontButton
+            // 
+            this.GlobalFontButton.Location = new System.Drawing.Point(14, 212);
+            this.GlobalFontButton.Name = "GlobalFontButton";
+            this.GlobalFontButton.Size = new System.Drawing.Size(121, 23);
+            this.GlobalFontButton.TabIndex = 12;
+            this.GlobalFontButton.Text = "Set global font";
+            this.GlobalFontButton.UseVisualStyleBackColor = true;
+            this.GlobalFontButton.Click += new System.EventHandler(this.GlobalFontButton_Click);
             // 
             // MouseKeyboardButtonsComboBox
             // 
@@ -396,36 +426,6 @@
             this.FontPicker.ShowApply = true;
             this.FontPicker.Apply += new System.EventHandler(this.FontPicker_Apply);
             // 
-            // GlobalBackColor
-            // 
-            this.GlobalBackColor.Location = new System.Drawing.Point(14, 154);
-            this.GlobalBackColor.Name = "GlobalBackColor";
-            this.GlobalBackColor.Size = new System.Drawing.Size(121, 23);
-            this.GlobalBackColor.TabIndex = 10;
-            this.GlobalBackColor.Text = "Set global backcolor";
-            this.GlobalBackColor.UseVisualStyleBackColor = true;
-            this.GlobalBackColor.Click += new System.EventHandler(this.GlobalBackColor_Click);
-            // 
-            // GlobalTextColor
-            // 
-            this.GlobalTextColor.Location = new System.Drawing.Point(14, 183);
-            this.GlobalTextColor.Name = "GlobalTextColor";
-            this.GlobalTextColor.Size = new System.Drawing.Size(121, 23);
-            this.GlobalTextColor.TabIndex = 11;
-            this.GlobalTextColor.Text = "Set global textcolor";
-            this.GlobalTextColor.UseVisualStyleBackColor = true;
-            this.GlobalTextColor.Click += new System.EventHandler(this.GlobalTextColor_Click);
-            // 
-            // GlobalFont
-            // 
-            this.GlobalFont.Location = new System.Drawing.Point(14, 212);
-            this.GlobalFont.Name = "GlobalFont";
-            this.GlobalFont.Size = new System.Drawing.Size(121, 23);
-            this.GlobalFont.TabIndex = 12;
-            this.GlobalFont.Text = "Set global font";
-            this.GlobalFont.UseVisualStyleBackColor = true;
-            this.GlobalFont.Click += new System.EventHandler(this.GlobalFont_Click);
-            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -482,8 +482,8 @@
         private System.Windows.Forms.FontDialog FontPicker;
         private System.Windows.Forms.Button Addbutton;
         private System.Windows.Forms.Button Deletebutton;
-        private System.Windows.Forms.Button GlobalBackColor;
-        private System.Windows.Forms.Button GlobalTextColor;
-        private System.Windows.Forms.Button GlobalFont;
+        private System.Windows.Forms.Button GlobalBackColorButton;
+        private System.Windows.Forms.Button GlobalTextColorButton;
+        private System.Windows.Forms.Button GlobalFontButton;
     }
 }

@@ -18,27 +18,33 @@ namespace commo_rose
     public partial class Settings : Form
     {
         private Form1 main;
-        private PictureBox selection_rectangle;
         private Point MouseDownLocation;
-        private CustomButton previousbutton;
+        private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
         private CustomButton currentButton
         {
             get { return _currentButton; }
             set
             {
-                previousbutton = _currentButton;
+                if(_currentButton != null)
+                {
+                    currentButton.BackColorChanged -= CurrentButton_BackColorChanged;
+                    currentButton.ForeColorChanged -= CurrentButton_ForeColorChanged;
+                }
                 _currentButton = value;
                 if (currentButton != null)
                 {
+                    previousbuttons.Add(currentButton);
                     Editpanel.Enabled = true;
                     update_ApplyCancelpanel(currentButton.property_changed);
                     disable_editpanel_events();
                     ButtonTextBox.Text = currentButton.Text;
                     ButtonParametersBox.Text = currentButton.Parameters;
                     Action_typeBox.SelectedItem = currentButton.action_type.ToString();
-                    BackColorpanel.BackColor = currentButton.ForeColor;
-                    TextColorpanel.BackColor = currentButton.BackColor;
+                    BackColorpanel.BackColor = currentButton.BackColor;
+                    TextColorpanel.BackColor = currentButton.ForeColor;
+                    currentButton.BackColorChanged += CurrentButton_BackColorChanged;
+                    currentButton.ForeColorChanged += CurrentButton_ForeColorChanged;
                     enable_editpanel_events();
                 }
                 else
@@ -52,13 +58,27 @@ namespace commo_rose
                     TextColorpanel.BackColor = Color.White;
                     enable_editpanel_events();
                     update_ApplyCancelpanel(false);
-                    selection_rectangle.Visible = false;
                 }
             }
         }
+
+        private void CurrentButton_BackColorChanged(object sender, EventArgs e)
+        {
+            BackColorpanel.BackColor = currentButton.BackColor;
+        }
+
+        private void CurrentButton_ForeColorChanged(object sender, EventArgs e)
+        {
+            TextColorpanel.BackColor = currentButton.ForeColor;
+        }
+
+
         private List<CustomButton> main_buttons;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
+        private Color global_backcolor;
+        private Color global_textcolor;
+        private Font global_font;
 
         public Settings(Form1 main)
         {
@@ -77,10 +97,6 @@ namespace commo_rose
             point.X -= pictureBox1.Width / 2;
             point.Y -= pictureBox1.Height / 2;
             pictureBox1.Location = point;
-            selection_rectangle = new PictureBox();
-            selection_rectangle.Parent = panel1;
-            selection_rectangle.BackColor = Color.Transparent;
-            selection_rectangle.Visible = false;
             mouse_buttons = new object[] {
             MouseButtons.Middle.ToString(),
             MouseButtons.XButton1.ToString(),
@@ -140,6 +156,15 @@ namespace commo_rose
                 b.resizer.Cursor = Cursors.SizeNWSE;
                 b.resizer.BringToFront();
             }
+
+            //read from file; save to the file if changed
+            global_backcolor = Color.White;
+            global_textcolor = Color.Black;
+            global_font = new Font("Consolas", 14.25F, FontStyle.Regular);
+
+            currentButton = null;
+            previousbuttons = new List<CustomButton>();
+            previousbuttons.Add(currentButton);
         }
 
         #region tab General
@@ -206,11 +231,13 @@ namespace commo_rose
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 
-        private void GlobalBackColor_Click(object sender, EventArgs e)
+        private void GlobalBackColorButton_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = Color.Black;
+            ColorPicker.Color = global_backcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
+                global_backcolor = ColorPicker.Color;
+                int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
@@ -220,14 +247,17 @@ namespace commo_rose
                     currentButton.set_property_changed(true, update_ApplyCancelpanel);
                 }
                 currentButton = customButton;
+                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
             }
         }
 
-        private void GlobalTextColor_Click(object sender, EventArgs e)
+        private void GlobalTextColorButton_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = Color.White;
+            ColorPicker.Color = global_textcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
+                global_textcolor = ColorPicker.Color;
+                int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
@@ -237,15 +267,18 @@ namespace commo_rose
                     currentButton.set_property_changed(true, update_ApplyCancelpanel);
                 }
                 currentButton = customButton;
+                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
             }
         }
 
-        private void GlobalFont_Click(object sender, EventArgs e)
+        private void GlobalFontButton_Click(object sender, EventArgs e)
         {
-            FontPicker.Font = new Font("Consolas", 14.25F, FontStyle.Regular);
+            FontPicker.Font = global_font;
             FontPicker.ShowApply = false;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
+                global_font = FontPicker.Font;
+                int c = previousbuttons.Count;
                 CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
@@ -254,6 +287,7 @@ namespace commo_rose
                     currentButton.set_property_changed(true, update_ApplyCancelpanel);
                 }
                 currentButton = customButton;
+                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
             }
         }
         #endregion
@@ -357,12 +391,14 @@ namespace commo_rose
         {
             CustomButton temp = currentButton;
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
+            int c = previousbuttons.Count;
             foreach (CustomButton button in panel_buttons)
             {
                 currentButton = button;
                 Applybutton_Click(new object(), EventArgs.Empty);
             }
             currentButton = temp;
+            previousbuttons.RemoveRange(c, previousbuttons.Count - c);
             update_ApplyAllCancelAllpanel(false);
         }
 
@@ -563,8 +599,7 @@ namespace commo_rose
             ColorPicker.Color = BackColorpanel.BackColor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                BackColorpanel.BackColor = ColorPicker.Color;
-                currentButton.BackColor = BackColorpanel.BackColor;
+                currentButton.BackColor = ColorPicker.Color;
                 currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
@@ -574,8 +609,7 @@ namespace commo_rose
             ColorPicker.Color = TextColorpanel.BackColor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                TextColorpanel.BackColor = ColorPicker.Color;
-                currentButton.ForeColor = TextColorpanel.BackColor;
+                currentButton.ForeColor = ColorPicker.Color;
                 currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
@@ -614,6 +648,8 @@ namespace commo_rose
             b.resizer.MouseUp += resizer_MouseUp;
             b.resizer.Cursor = Cursors.SizeNWSE;
             b.resizer.BringToFront();
+            currentButton = b;
+            currentButton.set_property_changed(true, update_ApplyCancelpanel);
         }
 
         private void Deletebutton_Click(object sender, EventArgs e)
@@ -630,8 +666,15 @@ namespace commo_rose
                     main_buttons.Remove(a[0]);
                 }
                 else if (a.Count > 1) throw new Exception("Identity problem");
-                currentButton = previousbutton;
-                previousbutton = null;
+                for (int i = 1; i < previousbuttons.Count; i++)
+                {
+                    if(previousbuttons[i].Name == currentButton.Name)
+                    {
+                        previousbuttons.RemoveAt(i);
+                        i--;
+                    }
+                }
+                currentButton = previousbuttons.Last();
             }
         }
         #endregion
