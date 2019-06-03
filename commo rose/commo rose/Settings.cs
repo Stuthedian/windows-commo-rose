@@ -159,6 +159,18 @@ namespace commo_rose
             previousbuttons.Add(currentButton);
         }
 
+        private Color check_color_is_transparency_key(Color color)
+        {
+            if(color.G == main.TransparencyKey.G)
+            {
+                if((color.R == 0 || color.R == 1) && (color.B == 0 || color.B == 1))
+                {
+                    color = Color.FromArgb(255, 2, 255, 1);
+                }
+            }
+            return color;
+        }
+
         #region tab General
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
@@ -235,8 +247,7 @@ namespace commo_rose
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
                     currentButton = button;
-                    BackColorpanel.BackColor = ColorPicker.Color;
-                    currentButton.BackColor = BackColorpanel.BackColor;
+                    currentButton.BackColor = check_color_is_transparency_key(ColorPicker.Color);
                     currentButton.set_property_changed(true, update_ApplyCancelpanel);
                 }
                 currentButton = customButton;
@@ -256,8 +267,7 @@ namespace commo_rose
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
                     currentButton = button;
-                    TextColorpanel.BackColor = ColorPicker.Color;
-                    currentButton.ForeColor = TextColorpanel.BackColor;
+                    currentButton.ForeColor = check_color_is_transparency_key(ColorPicker.Color);
                     currentButton.set_property_changed(true, update_ApplyCancelpanel);
                 }
                 currentButton = customButton;
@@ -594,7 +604,7 @@ namespace commo_rose
             ColorPicker.Color = BackColorpanel.BackColor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                currentButton.BackColor = ColorPicker.Color;
+                currentButton.BackColor = check_color_is_transparency_key(ColorPicker.Color);
                 currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
@@ -604,7 +614,7 @@ namespace commo_rose
             ColorPicker.Color = TextColorpanel.BackColor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                currentButton.ForeColor = ColorPicker.Color;
+                currentButton.ForeColor = check_color_is_transparency_key(ColorPicker.Color);
                 currentButton.set_property_changed(true, update_ApplyCancelpanel);
             }
         }
