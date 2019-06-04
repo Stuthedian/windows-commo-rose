@@ -13,17 +13,35 @@ namespace commo_rose
     public class CustomButton : Button
     {
         public bool mouseClicked;
-        public bool property_changed { get; private set; }
+        private bool _property_watcher;
+        public bool property_watcher
+        {
+            get { return _property_watcher; }
+            set { _property_watcher = value; OnPropertyWatcherChanged(); }
+        }
         public bool Selected { get; private set; }
-        public Action_type action_type { get; set; }
-        public string Parameters;
+        private Action_type _action_type;
+        public Action_type action_type
+        {
+            get { return _action_type; }
+            set { _action_type = value; Onaction_typeChanged(); }
+        }
+        private string _Parameters;
+        public string Parameters
+        {
+            get { return _Parameters; }
+            set { _Parameters = value; OnParametersChanged(); }
+        }
         public List<IAction> actions;
         public PictureBox resizer;
 
+        public event EventHandler ParametersChanged;
+        public event EventHandler action_typeChanged;
+        public event EventHandler PropertyWatcherChanged;
 
         public CustomButton() : base()
         {
-            property_changed = false;
+            property_watcher = false;
             Selected = false;
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
@@ -43,10 +61,32 @@ namespace commo_rose
             MouseEnter += switch_selection;
             MouseLeave += switch_selection;
             BackColorChanged += CustomButton_BackColorChanged;
+            Parameters = "";
             BackColor = Color.White;
             ForeColor = Color.Black;
             action_type = Action_type.Nothing;
             actions = new List<IAction>();            
+        }
+
+        public void Onaction_typeChanged()
+        {
+            EventHandler handler = action_typeChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        public void OnParametersChanged()
+        {
+            EventHandler handler = ParametersChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        public void OnPropertyWatcherChanged()
+        {
+            EventHandler handler = PropertyWatcherChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         protected override bool ShowFocusCues
@@ -67,12 +107,6 @@ namespace commo_rose
             Color tmp = BackColor;
             BackColor = ForeColor;
             ForeColor = tmp;
-        }
-
-        public void set_property_changed(bool flag, Action<bool> func)
-        {
-            property_changed = flag;
-            func(flag);
         }
 
         public CustomButton Clone()
