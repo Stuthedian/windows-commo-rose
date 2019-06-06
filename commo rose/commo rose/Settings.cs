@@ -28,6 +28,7 @@ namespace commo_rose
             {
                 if(_currentButton != null)
                 {
+                    currentButton.PropertyWatcherChanged -= CurrentButton_PropertyWatcherChanged;
                     currentButton.BackColorChanged -= CurrentButton_BackColorChanged;
                     currentButton.ForeColorChanged -= CurrentButton_ForeColorChanged;
                     currentButton.ParametersChanged -= CurrentButton_PropertyChanged;
@@ -171,7 +172,7 @@ namespace commo_rose
             return color;
         }
 
-        private void CurrentButton_PropertyWatcherChanged(object sender, EventArgs e)//rename
+        private void CurrentButton_PropertyWatcherChanged(object sender, EventArgs e)
         {
             update_ApplyCancelpanel(currentButton.property_watcher);
         }
@@ -372,56 +373,61 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
-            List<IAction> actions_storage = currentButton.actions.ToList();
-            currentButton.actions.Clear();
-            if (!parse_button_command())
+            apply_changes_to_button(currentButton);
+        }
+
+        private void ApplyAllbutton_Click(object sender, EventArgs e)
+        {
+            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
+            foreach (CustomButton button in panel_buttons)
             {
-                currentButton.actions = actions_storage;
+                if(button.property_watcher)
+                    apply_changes_to_button(button);
+            }
+            update_ApplyAllCancelAllpanel(false);
+        }
+
+        private void CancelAll_Click(object sender, EventArgs e)
+        {
+            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
+            foreach (CustomButton button in panel_buttons)
+            {
+                if(button.property_watcher)
+                {
+                    CustomButton b = main_buttons.Where(x => x.Name == button.Name).ToArray()[0];
+                    CustomButton.OverWrite(button, b);
+                }
+            }
+            update_ApplyAllCancelAllpanel(false);
+        }
+
+        private void apply_changes_to_button(CustomButton customButton)
+        {
+            List<IAction> actions_storage = customButton.actions.ToList();
+            customButton.actions.Clear();
+            if (!parse_button_command(customButton))
+            {
+                customButton.actions = actions_storage;
                 return;
             }
             CustomButton target_button;
-            var a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+            var a = main_buttons.Where(x => x.Name == customButton.Name).ToArray();
 
             if (a.Length == 0)
             {
                 target_button = new CustomButton();
                 main_buttons.Add(target_button);
                 target_button.Parent = main;
-                Saver.save_button_settings(currentButton, true);
+                Saver.save_button_settings(customButton, true);
             }
             else if (a.Length == 1)
             {
                 target_button = a[0];
-                Saver.save_button_settings(currentButton, false);
+                Saver.save_button_settings(customButton, false);
             }
             else throw new Exception();
-            CustomButton.OverWrite(target_button, currentButton);
-            currentButton.property_watcher = false;
-        }
-
-        private void ApplyAllbutton_Click(object sender, EventArgs e)
-        {
-            CustomButton temp = currentButton;
-            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
-            int c = previousbuttons.Count;
-            foreach (CustomButton button in panel_buttons)
-            {
-                currentButton = button;
-                Applybutton_Click(new object(), EventArgs.Empty);
-            }
-            currentButton = temp;
-            previousbuttons.RemoveRange(c, previousbuttons.Count - c);
-            update_ApplyAllCancelAllpanel(false);
-        }
-
-        private void CancelAll_Click(object sender, EventArgs e)
-        {
-            foreach (CustomButton button in main_buttons)
-            {
-                CustomButton b = (CustomButton)panel1.Controls.Find(button.Name, false)[0];
-                CustomButton.OverWrite(b, button);
-            }
-            update_ApplyAllCancelAllpanel(false);
+            CustomButton.OverWrite(target_button, customButton);
+            customButton.property_watcher = false;
         }
 
         private void ButtonTextBox_TextChanged(object sender, EventArgs e)
@@ -474,7 +480,7 @@ namespace commo_rose
                 update_ApplyCancelpanel(false);
         }
 
-        private bool parse_Send(string input_text)
+        private bool parse_Send(CustomButton customButton, string input_text)
         {
             CustomButton_Send customButton_Send;
             List<VirtualKeyCode> vk = new List<VirtualKeyCode>();
@@ -495,7 +501,7 @@ namespace commo_rose
                     vk.Add(capture_to_VK(capture.Value));
                 }
                 customButton_Send = new CustomButton_Send(vk);
-                currentButton.actions.Add(customButton_Send);
+                customButton.actions.Add(customButton_Send);
                 return true;
             }
             else
@@ -505,7 +511,7 @@ namespace commo_rose
             }
         }
 
-        private bool parse_Run(string input_text, bool admin)
+        private bool parse_Run(CustomButton customButton, string input_text, bool admin)
         {
             CustomButton_Process customButton_Process;
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
@@ -515,12 +521,12 @@ namespace commo_rose
                 customButton_Process = new CustomButton_Process(admin, a[0]);
             else
                 customButton_Process = new CustomButton_Process(admin, a[0], a[1]);
-            currentButton.actions.Add(customButton_Process);
+            customButton.actions.Add(customButton_Process);
 
             return true;
         }
 
-        private bool parse_generic(string parameters)
+        private bool parse_generic(CustomButton customButton, string parameters)
         {
             MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\(([^\)]+)\)");
             if (matches.Count != 0)
@@ -531,10 +537,10 @@ namespace commo_rose
                     switch (command.Groups[1].Value)
                     {
                         case "Send": case "send":
-                            if (!parse_Send(command.Groups[2].Value))
+                            if (!parse_Send(customButton, command.Groups[2].Value))
                                 return false; break;
                         case "Run": case "run":
-                            if (!parse_Run(command.Groups[2].Value, false))
+                            if (!parse_Run(customButton, command.Groups[2].Value, false))
                                 return false; break;
                         default: break;
                     }
@@ -585,18 +591,18 @@ namespace commo_rose
             return VirtualKeyCode.NONAME;
         }
 
-        private bool parse_button_command()
+        private bool parse_button_command(CustomButton customButton)
         {
-            switch (currentButton.action_type)
+            switch (customButton.action_type)
             {
                 case Action_type.Send:
-                    return parse_Send(currentButton.Parameters);
+                    return parse_Send(customButton, customButton.Parameters);
                 case Action_type.Run:
-                    return parse_Run(currentButton.Parameters, false);
+                    return parse_Run(customButton, customButton.Parameters, false);
                 case Action_type.RunAsAdmin:
-                    return parse_Run(currentButton.Parameters, true);
+                    return parse_Run(customButton, customButton.Parameters, true);
                 case Action_type.Generic:
-                    return parse_generic(currentButton.Parameters);
+                    return parse_generic(customButton, customButton.Parameters);
                 case Action_type.Nothing:
                     return true;
                 default: return false;
