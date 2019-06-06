@@ -17,20 +17,8 @@ namespace commo_rose
     public partial class Form1 : Form
     {
         [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-        [DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        [DllImport("user32.dll")]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
-        [DllImport("kernel32.dll")]
-        static extern uint GetCurrentThreadId();
-        [DllImport("user32.dll")]
-        static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool BringWindowToTop(IntPtr hWnd);
-
+        
         public const string app_name = "Commo rose";
         
         public Keys action_button_keyboard { get; set; }
@@ -77,12 +65,16 @@ namespace commo_rose
             settings = new Settings(this);
         }
 
+        private const int WS_EX_TOPMOST = 0x00000008;
+        private const int WS_EX_COMPOSITED = 0x02000000;
+        
         protected override CreateParams CreateParams
         {
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;
+                cp.ExStyle |= WS_EX_TOPMOST;
+                cp.ExStyle |= WS_EX_COMPOSITED;
                 return cp;
             }
         }
@@ -195,7 +187,7 @@ namespace commo_rose
 
         private void on_form_show()
         {
-            const int SW_SHOW = 5;
+            const int SW_SHOWNOACTIVATE = 4;
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
@@ -203,28 +195,12 @@ namespace commo_rose
 
 
             //check_button_bounds();
-            current_window = GetForegroundWindow();
-            uint currentlyFocusedWindowProcessId = GetWindowThreadProcessId(current_window, IntPtr.Zero);
-            uint appThread = GetCurrentThreadId();
-
-            if (currentlyFocusedWindowProcessId != appThread)
-            {
-                AttachThreadInput(currentlyFocusedWindowProcessId, appThread, true);
-                BringWindowToTop(form_handle);
-                ShowWindow(form_handle, SW_SHOW);
-                AttachThreadInput(currentlyFocusedWindowProcessId, appThread, false);
-            }
-            else
-            {
-                BringWindowToTop(form_handle);
-                ShowWindow(form_handle, SW_SHOW);
-            }
+            ShowWindow(form_handle, SW_SHOWNOACTIVATE);
         }
 
         private void on_form_hide()
         {
             Hide();
-            SetForegroundWindow(current_window);
             activate_selected_button();
         }
 
