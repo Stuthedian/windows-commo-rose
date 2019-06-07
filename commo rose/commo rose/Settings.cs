@@ -78,6 +78,8 @@ namespace commo_rose
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
 
+        private int apply_counter;
+
         public Settings(Form1 main)
         {
             InitializeComponent();
@@ -158,6 +160,8 @@ namespace commo_rose
             currentButton = null;
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
+
+            apply_counter = 0;
         }
 
         private Color check_color_is_transparency_key(Color color)
@@ -172,8 +176,18 @@ namespace commo_rose
             return color;
         }
 
-        private void CurrentButton_PropertyWatcherChanged(object sender, EventArgs e)
+        private void CurrentButton_PropertyWatcherChanged(object sender, PropertyWatcherEventArgs e)
         {
+            if (e.previous_state == false && currentButton.property_watcher == true)
+            {
+                apply_counter++;
+            }
+            else if (e.previous_state == true && currentButton.property_watcher == false)
+            {
+                apply_counter--;
+                if (apply_counter == 0)
+                    update_ApplyAllCancelAllpanel(false);
+            }
             update_ApplyCancelpanel(currentButton.property_watcher);
         }
 
@@ -381,9 +395,10 @@ namespace commo_rose
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
-                if(button.property_watcher)
+                if (button.property_watcher)
                     apply_changes_to_button(button);
             }
+            apply_counter = 0;
             update_ApplyAllCancelAllpanel(false);
         }
 
@@ -392,12 +407,13 @@ namespace commo_rose
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
-                if(button.property_watcher)
+                if (button.property_watcher)
                 {
                     CustomButton b = main_buttons.Where(x => x.Name == button.Name).ToArray()[0];
                     CustomButton.OverWrite(button, b);
                 }
             }
+            apply_counter = 0;
             update_ApplyAllCancelAllpanel(false);
         }
 

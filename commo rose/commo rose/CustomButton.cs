@@ -17,7 +17,12 @@ namespace commo_rose
         public bool property_watcher
         {
             get { return _property_watcher; }
-            set { _property_watcher = value; OnPropertyWatcherChanged(); }
+            set
+            {
+                bool temp = _property_watcher;
+                _property_watcher = value;
+                OnPropertyWatcherChanged(temp);
+            }
         }
         public bool Selected { get; private set; }
         private Action_type _action_type;
@@ -37,7 +42,7 @@ namespace commo_rose
 
         public event EventHandler ParametersChanged;
         public event EventHandler action_typeChanged;
-        public event EventHandler PropertyWatcherChanged;
+        public event EventHandler<PropertyWatcherEventArgs> PropertyWatcherChanged;
 
         public CustomButton() : base()
         {
@@ -82,11 +87,13 @@ namespace commo_rose
                 handler(this, EventArgs.Empty);
         }
 
-        public void OnPropertyWatcherChanged()
+        public void OnPropertyWatcherChanged(bool previous_state)
         {
-            EventHandler handler = PropertyWatcherChanged;
+            EventHandler<PropertyWatcherEventArgs> handler = PropertyWatcherChanged;
+            PropertyWatcherEventArgs args = new PropertyWatcherEventArgs();
+            args.previous_state = previous_state;
             if (handler != null)
-                handler(this, EventArgs.Empty);
+                handler(this, args);
         }
 
         protected override bool ShowFocusCues
@@ -236,5 +243,10 @@ namespace commo_rose
         {
             inputSimulator.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys);
         }
+    }
+
+    public class PropertyWatcherEventArgs : EventArgs
+    {
+        public bool previous_state;
     }
 }
