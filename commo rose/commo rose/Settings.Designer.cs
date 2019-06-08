@@ -249,6 +249,7 @@
             // KeyboardradioButton
             // 
             this.KeyboardradioButton.AutoSize = true;
+            this.KeyboardradioButton.Enabled = false;
             this.KeyboardradioButton.Location = new System.Drawing.Point(25, 87);
             this.KeyboardradioButton.Name = "KeyboardradioButton";
             this.KeyboardradioButton.Size = new System.Drawing.Size(70, 17);
