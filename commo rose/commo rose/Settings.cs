@@ -101,18 +101,6 @@ namespace commo_rose
             MouseButtons.Middle.ToString(),
             MouseButtons.XButton1.ToString(),
             MouseButtons.XButton2.ToString() };
-            //keyboard_buttons = new object[]{
-            //    Keys.Scroll.ToString(),
-            //    Keys.NumPad0.ToString(),
-            //    Keys.NumPad1.ToString(),
-            //    Keys.NumPad2.ToString(),
-            //    Keys.NumPad3.ToString(),
-            //    Keys.NumPad4.ToString(),
-            //    Keys.NumPad5.ToString(),
-            //    Keys.NumPad6.ToString(),
-            //    Keys.NumPad7.ToString(),
-            //    Keys.NumPad8.ToString(),
-            //    Keys.NumPad9.ToString() };
             keyboard_buttons = new object[]{
                 VirtualKeyCode.SCROLL.ToString(),
                 VirtualKeyCode.NUMPAD0.ToString(),
@@ -247,8 +235,6 @@ namespace commo_rose
             if (main.hook_target == Hook_target.Mouse)
             {
                 main.mouseHook.ClearHook();
-                //main.ghk = new KeyHandler(main.keyboardHook, main.form_handle);
-                //main.ghk.Register();
                 main.keyboardHook = new KeyboardHook(main.LowLevelKeyboardProc);
                 main.hook_target = Hook_target.Keyboard;
                 MouseKeyboardButtonsComboBox.Items.Clear();
@@ -258,14 +244,12 @@ namespace commo_rose
             else if (main.hook_target == Hook_target.Keyboard)
             {
                 main.keyboardHook.ClearHook();
-                //main.ghk.Unregister();
                 main.mouseHook = new MouseHook(main.LowLevelMouseProc);
                 main.hook_target = Hook_target.Mouse;
                 MouseKeyboardButtonsComboBox.Items.Clear();
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
                 MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
             }
-            //Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.keyboardHook);
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 
@@ -278,13 +262,7 @@ namespace commo_rose
             {
                 main.action_button_keyboard =
                     (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-                //main.keyboardHook =
-                //    (Keys)Enum.Parse(typeof(Keys), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-                //main.ghk.Unregister();
-                //main.ghk = new KeyHandler(main.keyboardHook, main.form_handle);
-                //main.ghk.Register();
             }
-            //Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.keyboardHook);
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 

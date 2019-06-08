@@ -23,8 +23,6 @@ namespace commo_rose
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int WS_EX_COMPOSITED = 0x02000000;
 
-        //public Keys action_button_keyboard { get; set; }
-        //public KeyHandler ghk;
         public MouseButtons action_button_mouse { get; set; }
         public MouseHook mouseHook;
         public VirtualKeyCode action_button_keyboard { get; set; }
@@ -33,7 +31,6 @@ namespace commo_rose
         private bool key_hook_handled;
         private Settings settings;
         
-        //private IntPtr current_window;
         public IntPtr form_handle;
 
         public List<CustomButton> buttons_array;
@@ -54,15 +51,12 @@ namespace commo_rose
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            //KeyPreview = true;
             key_hook_handled = false;
             action_button_keyboard = VirtualKeyCode.INSERT;
 
             Saver.load_settings(this);
             if (hook_target == Hook_target.Keyboard)
             {
-                //ghk = new KeyHandler(action_button_keyboard, form_handle);
-                //ghk.Register();
                 keyboardHook = new KeyboardHook(LowLevelKeyboardProc);
             }
             else if (hook_target == Hook_target.Mouse)
@@ -90,31 +84,8 @@ namespace commo_rose
 
         }
 
-        private void HandleHotkey()
-        {
-            on_form_show();
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == Constants.WM_HOTKEY_MSG_ID)
-                HandleHotkey();
-            base.WndProc(ref m);
-        }
-
-        private void Form1_KeyUp(object sender, KeyEventArgs e)//Dummy
-        {
-            //if (e.KeyCode == keyboardHook)
-            //{
-            //    on_form_hide();
-            //}
-            //e.Handled = true;
-        }
-
         private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            //if (ghk != null)
-            //    ghk.Unregister();
             if (mouseHook != null)
                 mouseHook.ClearHook();
             if (keyboardHook != null)
@@ -254,14 +225,6 @@ namespace commo_rose
             if(!settings.Visible)
                 settings.ShowDialog();
         }
-
-        //public void change_action_button(Keys key)
-        //{
-        //    ghk.Unregister();
-        //    keyboardHook = key;
-        //    ghk = new KeyHandler(keyboardHook, form_handle);
-        //    ghk.Register();
-        //}
 
         private MouseMessage mouse_button_to_message_down(MouseButtons button)
         {
