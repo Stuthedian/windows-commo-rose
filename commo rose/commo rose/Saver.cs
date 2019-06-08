@@ -151,13 +151,15 @@ namespace commo_rose
             node = doc.DocumentElement.SelectSingleNode("Hook_key");
             if(main.hook_target == Hook_target.Keyboard)
             {
-                main.action_button_keyboard = (Keys)Enum.Parse(typeof(Keys), node.InnerText);
+                //main.keyboardHook = (Keys)Enum.Parse(typeof(Keys), node.InnerText);
+                main.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
                 main.action_button_mouse = MouseButtons.XButton1;
             }
             else if(main.hook_target == Hook_target.Mouse)
             {
                 main.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
-                main.action_button_keyboard = Keys.NumPad0;
+                //main.keyboardHook = Keys.NumPad0;
+                main.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
 
             CustomButton customButton;
@@ -354,7 +356,8 @@ namespace commo_rose
             doc.Save(path_to_settings_filename);
         }
 
-        public static void save_tab_general(Hook_target target, MouseButtons mbutton, Keys key)
+        //public static void save_tab_general(Hook_target target, MouseButtons mbutton, Keys key)
+        public static void save_tab_general(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
         {
             XmlNode node;
             node = doc.DocumentElement.SelectSingleNode("Hook_target");
@@ -362,7 +365,8 @@ namespace commo_rose
             node = doc.DocumentElement.SelectSingleNode("Hook_key");
             if (target == Hook_target.Keyboard)
             {
-                node.InnerText = key.ToString();
+                //node.InnerText = key.ToString();
+                node.InnerText = vk.ToString();
             }
             else if (target == Hook_target.Mouse)
             {

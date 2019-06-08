@@ -113,6 +113,7 @@ namespace commo_rose
 
     internal enum HookType
     {
+        WH_KEYBOARD_LL = 13,
         WH_MOUSE_LL = 14
     }
 
@@ -122,11 +123,7 @@ namespace commo_rose
         public int x;
         public int y;
     }
-
-    /// <summary>
-    ///     The MSLLHOOKSTRUCT structure contains information about a low-level keyboard
-    ///     input event.
-    /// </summary>
+        
     [StructLayout(LayoutKind.Sequential)]
     internal struct MSLLHOOKSTRUCT
     {
@@ -136,6 +133,18 @@ namespace commo_rose
         public int time; // Specifies the time stamp for this message. 
         public IntPtr dwExtraInfo;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct KBDLLHOOKSTRUCT
+    {
+        public int vkCode; // Specifies a virtual-key code
+        public int scanCode; // Specifies a hardware scan code for the key
+        public int flags;
+        public int time; // Specifies the time stamp for this message
+        public int dwExtraInfo;
+    }
+
+
 
     internal enum MouseMessage
     {
@@ -167,6 +176,14 @@ namespace commo_rose
         WM_XBUTTONUP = 0x020C
     }
 
+    internal enum KeyboardMessage
+    {
+        WM_KEYDOWN = 0x0100,
+        WM_KEYUP = 0x0101,
+        WM_SYSKEYDOWN = 0x0104,
+        WM_SYSKEYUP = 0x0105
+    }
+
     public class MouseHook
     {
         public IntPtr _hGlobalLlHook;
@@ -189,6 +206,45 @@ namespace commo_rose
         }
 
         ~MouseHook()
+        {
+            ClearHook();
+        }
+
+        public virtual void ClearHook()
+        {
+            if (_hGlobalLlHook != IntPtr.Zero)
+            {
+                // Unhook the low-level mouse hook
+                if (!NativeMethods.UnhookWindowsHookEx(_hGlobalLlHook))
+                    throw new Win32Exception("Unable to clear Hook");
+
+                _hGlobalLlHook = IntPtr.Zero;
+            }
+        }
+    }
+
+    public class KeyboardHook
+    {
+        public IntPtr _hGlobalLlHook;
+        public HookProc _globalLlHookCallback;
+        public KeyboardHook(HookProc hookProc)
+        {
+            // Create an instance of HookProc.
+            _globalLlHookCallback = hookProc;
+
+            _hGlobalLlHook = NativeMethods.SetWindowsHookEx(
+                HookType.WH_KEYBOARD_LL,
+                _globalLlHookCallback,
+                Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
+                0);
+
+            if (_hGlobalLlHook == IntPtr.Zero)
+            {
+                throw new Win32Exception("Unable to set KeyboardHook");
+            }
+        }
+
+        ~KeyboardHook()
         {
             ClearHook();
         }

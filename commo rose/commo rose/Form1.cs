@@ -20,16 +20,20 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         
         public const string app_name = "Commo rose";
-        
-        public Keys action_button_keyboard { get; set; }
-        public KeyHandler ghk;
+        private const int WS_EX_TOPMOST = 0x00000008;
+        private const int WS_EX_COMPOSITED = 0x02000000;
+
+        //public Keys action_button_keyboard { get; set; }
+        //public KeyHandler ghk;
         public MouseButtons action_button_mouse { get; set; }
         public MouseHook mouseHook;
+        public VirtualKeyCode action_button_keyboard { get; set; }
+        public KeyboardHook keyboardHook;
         public Hook_target hook_target;
-
+        private bool key_hook_handled;
         private Settings settings;
         
-        private IntPtr current_window;
+        //private IntPtr current_window;
         public IntPtr form_handle;
 
         public List<CustomButton> buttons_array;
@@ -50,23 +54,25 @@ namespace commo_rose
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            KeyPreview = true;
+            //KeyPreview = true;
+            key_hook_handled = false;
+            action_button_keyboard = VirtualKeyCode.INSERT;
 
             Saver.load_settings(this);
-            if(hook_target == Hook_target.Keyboard)
+            if (hook_target == Hook_target.Keyboard)
             {
-                ghk = new KeyHandler(action_button_keyboard, form_handle);
-                ghk.Register();
+                //ghk = new KeyHandler(action_button_keyboard, form_handle);
+                //ghk.Register();
+                keyboardHook = new KeyboardHook(LowLevelKeyboardProc);
             }
-            else if(hook_target == Hook_target.Mouse)
+            else if (hook_target == Hook_target.Mouse)
             {
                 mouseHook = new MouseHook(LowLevelMouseProc);
             }
             settings = new Settings(this);
         }
 
-        private const int WS_EX_TOPMOST = 0x00000008;
-        private const int WS_EX_COMPOSITED = 0x02000000;
+        
         
         protected override CreateParams CreateParams
         {
@@ -96,22 +102,56 @@ namespace commo_rose
             base.WndProc(ref m);
         }
 
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        private void Form1_KeyUp(object sender, KeyEventArgs e)//Dummy
         {
-            if (e.KeyCode == action_button_keyboard)
-            {
-                on_form_hide();
-            }
-            e.Handled = true;
+            //if (e.KeyCode == keyboardHook)
+            //{
+            //    on_form_hide();
+            //}
+            //e.Handled = true;
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            if (ghk != null)
-                ghk.Unregister();
+            //if (ghk != null)
+            //    ghk.Unregister();
             if (mouseHook != null)
                 mouseHook.ClearHook();
+            if (keyboardHook != null)
+                keyboardHook.ClearHook();
             this.Close();
+        }
+
+        public int LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0)
+            {
+                KBDLLHOOKSTRUCT a = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
+                
+                KeyboardMessage wmMouse = (KeyboardMessage)wParam;
+                if (wmMouse == KeyboardMessage.WM_KEYDOWN)
+                {
+                    if(a.vkCode == (int)action_button_keyboard)
+                    {
+                        if(key_hook_handled == false)
+                        {
+                            key_hook_handled = true;
+                            on_form_show();
+                        }
+                        return 1;
+                    }
+                }
+                else if (wmMouse == KeyboardMessage.WM_KEYUP)
+                {
+                    if (a.vkCode == (int)action_button_keyboard)
+                    {
+                        key_hook_handled = false;
+                        on_form_hide();
+                        return 1;
+                    }
+                }
+            }
+            return NativeMethods.CallNextHookEx(keyboardHook._hGlobalLlHook, nCode, wParam, lParam);
         }
 
         public int LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -160,18 +200,18 @@ namespace commo_rose
             return NativeMethods.CallNextHookEx(mouseHook._hGlobalLlHook, nCode, wParam, lParam);
         }
 
-        private void check_button_bounds()
-        {
-            foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-            {
-                Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-                if (!screen.Contains(RectangleToScreen(button.Bounds)))
-                {
-                    button.Visible = false;
-                }
-                else { button.Visible = true; }
-            }
-        }
+        //private void check_button_bounds()
+        //{
+        //    foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
+        //    {
+        //        Rectangle screen = Screen.PrimaryScreen.WorkingArea;
+        //        if (!screen.Contains(RectangleToScreen(button.Bounds)))
+        //        {
+        //            button.Visible = false;
+        //        }
+        //        else { button.Visible = true; }
+        //    }
+        //}
 
         private void activate_selected_button()
         {
@@ -215,13 +255,13 @@ namespace commo_rose
                 settings.ShowDialog();
         }
 
-        public void change_action_button(Keys key)
-        {
-            ghk.Unregister();
-            action_button_keyboard = key;
-            ghk = new KeyHandler(action_button_keyboard, form_handle);
-            ghk.Register();
-        }
+        //public void change_action_button(Keys key)
+        //{
+        //    ghk.Unregister();
+        //    keyboardHook = key;
+        //    ghk = new KeyHandler(keyboardHook, form_handle);
+        //    ghk.Register();
+        //}
 
         private MouseMessage mouse_button_to_message_down(MouseButtons button)
         {

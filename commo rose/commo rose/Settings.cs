@@ -101,18 +101,30 @@ namespace commo_rose
             MouseButtons.Middle.ToString(),
             MouseButtons.XButton1.ToString(),
             MouseButtons.XButton2.ToString() };
+            //keyboard_buttons = new object[]{
+            //    Keys.Scroll.ToString(),
+            //    Keys.NumPad0.ToString(),
+            //    Keys.NumPad1.ToString(),
+            //    Keys.NumPad2.ToString(),
+            //    Keys.NumPad3.ToString(),
+            //    Keys.NumPad4.ToString(),
+            //    Keys.NumPad5.ToString(),
+            //    Keys.NumPad6.ToString(),
+            //    Keys.NumPad7.ToString(),
+            //    Keys.NumPad8.ToString(),
+            //    Keys.NumPad9.ToString() };
             keyboard_buttons = new object[]{
-                Keys.Scroll.ToString(),
-                Keys.NumPad0.ToString(),
-                Keys.NumPad1.ToString(),
-                Keys.NumPad2.ToString(),
-                Keys.NumPad3.ToString(),
-                Keys.NumPad4.ToString(),
-                Keys.NumPad5.ToString(),
-                Keys.NumPad6.ToString(),
-                Keys.NumPad7.ToString(),
-                Keys.NumPad8.ToString(),
-                Keys.NumPad9.ToString() };
+                VirtualKeyCode.SCROLL.ToString(),
+                VirtualKeyCode.NUMPAD0.ToString(),
+                VirtualKeyCode.NUMPAD1.ToString(),
+                VirtualKeyCode.NUMPAD2.ToString(),
+                VirtualKeyCode.NUMPAD3.ToString(),
+                VirtualKeyCode.NUMPAD4.ToString(),
+                VirtualKeyCode.NUMPAD5.ToString(),
+                VirtualKeyCode.NUMPAD6.ToString(),
+                VirtualKeyCode.NUMPAD7.ToString(),
+                VirtualKeyCode.NUMPAD8.ToString(),
+                VirtualKeyCode.NUMPAD9.ToString() };
             RegistryKey subkey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
             object value = subkey.GetValue(Form1.app_name);
@@ -235,8 +247,9 @@ namespace commo_rose
             if (main.hook_target == Hook_target.Mouse)
             {
                 main.mouseHook.ClearHook();
-                main.ghk = new KeyHandler(main.action_button_keyboard, main.form_handle);
-                main.ghk.Register();
+                //main.ghk = new KeyHandler(main.keyboardHook, main.form_handle);
+                //main.ghk.Register();
+                main.keyboardHook = new KeyboardHook(main.LowLevelKeyboardProc);
                 main.hook_target = Hook_target.Keyboard;
                 MouseKeyboardButtonsComboBox.Items.Clear();
                 MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
@@ -244,13 +257,15 @@ namespace commo_rose
             }
             else if (main.hook_target == Hook_target.Keyboard)
             {
-                main.ghk.Unregister();
+                main.keyboardHook.ClearHook();
+                //main.ghk.Unregister();
                 main.mouseHook = new MouseHook(main.LowLevelMouseProc);
                 main.hook_target = Hook_target.Mouse;
                 MouseKeyboardButtonsComboBox.Items.Clear();
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
                 MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
             }
+            //Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.keyboardHook);
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 
@@ -262,11 +277,14 @@ namespace commo_rose
             else if (main.hook_target == Hook_target.Keyboard)
             {
                 main.action_button_keyboard =
-                    (Keys)Enum.Parse(typeof(Keys), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-                main.ghk.Unregister();
-                main.ghk = new KeyHandler(main.action_button_keyboard, main.form_handle);
-                main.ghk.Register();
+                    (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
+                //main.keyboardHook =
+                //    (Keys)Enum.Parse(typeof(Keys), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
+                //main.ghk.Unregister();
+                //main.ghk = new KeyHandler(main.keyboardHook, main.form_handle);
+                //main.ghk.Register();
             }
+            //Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.keyboardHook);
             Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
         }
 
