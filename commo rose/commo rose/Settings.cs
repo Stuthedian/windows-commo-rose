@@ -375,14 +375,23 @@ namespace commo_rose
 
         private void Cancelbutton_Click(object sender, EventArgs e)
         {
-            CustomButton target_button = main_buttons.Where(x => x.Name == currentButton.Name).ToArray()[0];
-            CustomButton.OverWrite(currentButton, target_button);
-            currentButton.property_watcher = false;
-            disable_editpanel_events();
-            ButtonTextBox.Text = currentButton.Text;
-            ButtonParametersBox.Text = currentButton.Parameters;
-            Action_typeBox.SelectedItem = currentButton.action_type.ToString();
-            enable_editpanel_events();
+            CustomButton[] a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+            if (a.Length == 0)
+            {
+                delete_current_button_from_panel();
+            }
+            else if (a.Length == 1)
+            {
+                CustomButton target_button = a[0];
+                CustomButton.OverWrite(currentButton, target_button);
+                currentButton.property_watcher = false;
+                disable_editpanel_events();
+                ButtonTextBox.Text = currentButton.Text;
+                ButtonParametersBox.Text = currentButton.Parameters;
+                Action_typeBox.SelectedItem = currentButton.action_type.ToString();
+                enable_editpanel_events();
+            }
+            else throw new Exception("Identity problem");
         }
 
         private void Applybutton_Click(object sender, EventArgs e)
@@ -409,8 +418,22 @@ namespace commo_rose
             {
                 if (button.property_watcher)
                 {
-                    CustomButton b = main_buttons.Where(x => x.Name == button.Name).ToArray()[0];
-                    CustomButton.OverWrite(button, b);
+                    CustomButton[] a = main_buttons.Where(x => x.Name == button.Name).ToArray();
+                    if (a.Length == 0)
+                    {
+                        delete_button_from_panel(button);
+                        if(button == currentButton)
+                            currentButton = previousbuttons.Last();
+                    }
+                    else if(a.Length == 1)
+                    {
+                        CustomButton.OverWrite(button, a[0]);
+                        button.property_watcher = false;
+                    }
+                    else if (a.Length > 1)
+                    {
+                        throw new Exception("Identity problem");
+                    }
                 }
             }
             apply_counter = 0;
@@ -441,7 +464,7 @@ namespace commo_rose
                 target_button = a[0];
                 Saver.save_button_settings(customButton, false);
             }
-            else throw new Exception();
+            else throw new Exception("Identity problem");
             CustomButton.OverWrite(target_button, customButton);
             customButton.property_watcher = false;
         }
@@ -685,27 +708,54 @@ namespace commo_rose
 
         private void Deletebutton_Click(object sender, EventArgs e)
         {
-            if(DialogResult.OK == MessageBox.Show("Are you sure you want to delete this button?", "Warning",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+            CustomButton[] a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+            if(a.Length == 0)
             {
-                panel1.Controls.Remove(currentButton);
-                List<CustomButton> a = main_buttons.Where(x => x.Name == currentButton.Name).ToList();
-                if (a.Count == 1)
+                delete_current_button_from_panel();
+            }
+            else if (a.Length == 1)
+            {
+                if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete this button?", "Warning",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
                 {
                     Saver.delete_button(currentButton);
                     a[0].Parent = null;
                     main_buttons.Remove(a[0]);
+                    delete_current_button_from_panel();
                 }
-                else if (a.Count > 1) throw new Exception("Identity problem");
-                for (int i = 1; i < previousbuttons.Count; i++)
+            }
+            else if (a.Length > 1)
+            {
+                throw new Exception("Identity problem");
+            }
+        }
+
+        private void delete_current_button_from_panel()
+        {
+            currentButton.property_watcher = false;
+            panel1.Controls.Remove(currentButton);
+            for (int i = 1; i < previousbuttons.Count; i++)
+            {
+                if (previousbuttons[i].Name == currentButton.Name)
                 {
-                    if(previousbuttons[i].Name == currentButton.Name)
-                    {
-                        previousbuttons.RemoveAt(i);
-                        i--;
-                    }
+                    previousbuttons.RemoveAt(i);
+                    i--;
                 }
-                currentButton = previousbuttons.Last();
+            }
+            currentButton = previousbuttons.Last();
+        }
+
+        private void delete_button_from_panel(CustomButton button)
+        {
+            button.property_watcher = false;
+            panel1.Controls.Remove(button);
+            for (int i = 1; i < previousbuttons.Count; i++)
+            {
+                if (previousbuttons[i].Name == button.Name)
+                {
+                    previousbuttons.RemoveAt(i);
+                    i--;
+                }
             }
         }
         #endregion
