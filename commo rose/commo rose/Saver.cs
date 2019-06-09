@@ -27,7 +27,7 @@ namespace commo_rose
             writer.WriteString(Hook_target.Keyboard.ToString());
             writer.WriteEndElement();
             writer.WriteStartElement("Hook_key");
-            writer.WriteString(Keys.NumPad0.ToString());
+            writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
             writer.WriteEndElement();
             writer.WriteStartElement("CustomButtons");
             writer.WriteString("\n");
@@ -147,17 +147,17 @@ namespace commo_rose
             main.global_textcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_textcolor"].Value));
             main.global_font = (Font)new FontConverter().ConvertFromString(node.Attributes["global_font"].Value);
             node = doc.DocumentElement.SelectSingleNode("Hook_target");
-            main.hook_target = (Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText);
+            main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText));
             node = doc.DocumentElement.SelectSingleNode("Hook_key");
-            if(main.hook_target == Hook_target.Keyboard)
+            if(main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                main.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
-                main.action_button_mouse = MouseButtons.XButton1;
+                main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_mouse = MouseButtons.XButton1;
             }
-            else if(main.hook_target == Hook_target.Mouse)
+            else if(main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
-                main.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
-                main.action_button_keyboard = VirtualKeyCode.NUMPAD0;
+                main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
 
             CustomButton customButton;

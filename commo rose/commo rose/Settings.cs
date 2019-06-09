@@ -123,19 +123,19 @@ namespace commo_rose
             else checkBox1.Checked = false;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
 
-            if (main.hook_target == Hook_target.Keyboard)
+            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
                 MouseradioButton.Checked = false;
                 KeyboardradioButton.Checked = true;
                 MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_keyboard.ToString();
+                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_keyboard.ToString();
             }
-            else if (main.hook_target == Hook_target.Mouse)
+            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
                 MouseradioButton.Checked = true;
                 KeyboardradioButton.Checked = false;
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
+                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
             }
             MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
                      
@@ -232,38 +232,40 @@ namespace commo_rose
 
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (main.hook_target == Hook_target.Mouse)
+            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
-                main.mouseHook.ClearHook();
-                main.keyboardHook = new KeyboardHook(main.LowLevelKeyboardProc);
-                main.hook_target = Hook_target.Keyboard;
+                //main.mouseHook.ClearHook();
+                //main.keyboardHook = new KeyboardHook(main.LowLevelKeyboardProc);
+                main.mouseOrKeyboardHook.hook_target = Hook_target.Keyboard;
+                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
                 MouseKeyboardButtonsComboBox.Items.Clear();
                 MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_keyboard.ToString();
+                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_keyboard.ToString();
             }
-            else if (main.hook_target == Hook_target.Keyboard)
+            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                main.keyboardHook.ClearHook();
-                main.mouseHook = new MouseHook(main.LowLevelMouseProc);
-                main.hook_target = Hook_target.Mouse;
+                //main.keyboardHook.ClearHook();
+                //main.mouseHook = new MouseHook(main.LowLevelMouseProc);
+                main.mouseOrKeyboardHook.hook_target = Hook_target.Mouse;
+                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
                 MouseKeyboardButtonsComboBox.Items.Clear();
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.action_button_mouse.ToString();
+                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
             }
-            Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
+            Saver.save_tab_general(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (main.hook_target == Hook_target.Mouse)
-                main.action_button_mouse =
+            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
+                main.mouseOrKeyboardHook.action_button_mouse =
                     (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-            else if (main.hook_target == Hook_target.Keyboard)
+            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                main.action_button_keyboard =
+                main.mouseOrKeyboardHook.action_button_keyboard =
                     (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
             }
-            Saver.save_tab_general(main.hook_target, main.action_button_mouse, main.action_button_keyboard);
+            Saver.save_tab_general(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         private void GlobalBackColorButton_Click(object sender, EventArgs e)
