@@ -21,6 +21,7 @@ namespace commo_rose
         public const string app_name = "Commo rose";
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int WS_EX_COMPOSITED = 0x02000000;
+        private const int SW_SHOWNOACTIVATE = 4;
 
         public MouseOrKeyboardHook mouseOrKeyboardHook;
         
@@ -46,11 +47,12 @@ namespace commo_rose
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
-            
 
+            Opacity = 0.0;
             mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide);
             Saver.load_settings(this);
             settings = new Settings(this);
+            ShowWindow(form_handle, SW_SHOWNOACTIVATE);
         }
 
         
@@ -105,20 +107,18 @@ namespace commo_rose
 
         private void on_form_show()
         {
-            const int SW_SHOWNOACTIVATE = 4;
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
 
-
             //check_button_bounds();
-            ShowWindow(form_handle, SW_SHOWNOACTIVATE);
+            Opacity = 1.0;
         }
 
         private void on_form_hide()
         {
-            Hide();
+            Opacity = 0.0;
             activate_selected_button();
         }
 
