@@ -28,7 +28,6 @@ namespace commo_rose
             {
                 if(_currentButton != null)
                 {
-                    currentButton.PropertyWatcherChanged -= CurrentButton_PropertyWatcherChanged;
                     currentButton.BackColorChanged -= CurrentButton_BackColorChanged;
                     currentButton.ForeColorChanged -= CurrentButton_ForeColorChanged;
                     currentButton.ParametersChanged -= CurrentButton_PropertyChanged;
@@ -43,7 +42,6 @@ namespace commo_rose
                     previousbuttons.Add(currentButton);
                     Editpanel.Enabled = true;
                     update_ApplyCancelpanel(currentButton.property_watcher);
-                    currentButton.PropertyWatcherChanged += CurrentButton_PropertyWatcherChanged;
                     disable_editpanel_events();
                     ButtonTextBox.Text = currentButton.Text;
                     ButtonParametersBox.Text = currentButton.Parameters;
@@ -148,6 +146,7 @@ namespace commo_rose
             {
                 panel1.Controls.Add(button.Clone());
                 CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
+                b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
                 b.MouseDown += Button_MouseDown;
                 b.MouseMove += Button_MouseMove;
                 b.resizer.MouseDown += resizer_MouseDown;
@@ -176,19 +175,19 @@ namespace commo_rose
             return color;
         }
 
-        private void CurrentButton_PropertyWatcherChanged(object sender, PropertyWatcherEventArgs e)
+        private void Button_PropertyWatcherChanged(object sender, PropertyWatcherEventArgs e)
         {
-            if (e.previous_state == false && currentButton.property_watcher == true)
+            if (e.previous_state == false && ((CustomButton)sender).property_watcher == true)
             {
                 apply_counter++;
             }
-            else if (e.previous_state == true && currentButton.property_watcher == false)
+            else if (e.previous_state == true && ((CustomButton)sender).property_watcher == false) 
             {
                 apply_counter--;
                 if (apply_counter == 0)
                     update_ApplyAllCancelAllpanel(false);
             }
-            update_ApplyCancelpanel(currentButton.property_watcher);
+            update_ApplyCancelpanel(((CustomButton)sender).property_watcher);
         }
 
         private void CurrentButton_PropertyChanged(object sender, EventArgs e)
@@ -234,8 +233,6 @@ namespace commo_rose
         {
             if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
-                //main.mouseHook.ClearHook();
-                //main.keyboardHook = new KeyboardHook(main.LowLevelKeyboardProc);
                 main.mouseOrKeyboardHook.hook_target = Hook_target.Keyboard;
                 main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
                 MouseKeyboardButtonsComboBox.Items.Clear();
@@ -244,8 +241,6 @@ namespace commo_rose
             }
             else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                //main.keyboardHook.ClearHook();
-                //main.mouseHook = new MouseHook(main.LowLevelMouseProc);
                 main.mouseOrKeyboardHook.hook_target = Hook_target.Mouse;
                 main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
                 MouseKeyboardButtonsComboBox.Items.Clear();
@@ -394,19 +389,27 @@ namespace commo_rose
 
         private void Applybutton_Click(object sender, EventArgs e)
         {
-            apply_changes_to_button(currentButton);
+            string error_message = apply_changes_to_button(currentButton);
+            if (error_message != "")
+                MessageBox.Show(error_message, "Error occured");
         }
 
         private void ApplyAllbutton_Click(object sender, EventArgs e)
         {
+            string error_message = "";
+            string temp;
             CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
                 if (button.property_watcher)
-                    apply_changes_to_button(button);
+                {
+                    temp = apply_changes_to_button(button);
+                    if (temp != "")
+                        error_message += temp + '\n';
+                }
             }
-            apply_counter = 0;
-            update_ApplyAllCancelAllpanel(false);
+            if(error_message != "")
+                MessageBox.Show(error_message, "Error occured");
         }
 
         private void CancelAll_Click(object sender, EventArgs e)
@@ -434,18 +437,17 @@ namespace commo_rose
                     }
                 }
             }
-            apply_counter = 0;
-            update_ApplyAllCancelAllpanel(false);
         }
 
-        private void apply_changes_to_button(CustomButton customButton)
+        private string apply_changes_to_button(CustomButton customButton)
         {
             List<IAction> actions_storage = customButton.actions.ToList();
             customButton.actions.Clear();
-            if (!parse_button_command(customButton))
+            string error_message = parse_button_command(customButton);
+            if (error_message != "")
             {
                 customButton.actions = actions_storage;
-                return;
+                return error_message;
             }
             CustomButton target_button;
             var a = main_buttons.Where(x => x.Name == customButton.Name).ToArray();
@@ -465,6 +467,7 @@ namespace commo_rose
             else throw new Exception("Identity problem");
             CustomButton.OverWrite(target_button, customButton);
             customButton.property_watcher = false;
+            return "";
         }
 
         private void ButtonTextBox_TextChanged(object sender, EventArgs e)
@@ -517,7 +520,7 @@ namespace commo_rose
                 update_ApplyCancelpanel(false);
         }
 
-        private bool parse_Send(CustomButton customButton, string input_text)
+        private string parse_Send(CustomButton customButton, string input_text)
         {
             CustomButton_Send customButton_Send;
             List<VirtualKeyCode> vk = new List<VirtualKeyCode>();
@@ -539,55 +542,59 @@ namespace commo_rose
                 }
                 customButton_Send = new CustomButton_Send(vk);
                 customButton.actions.Add(customButton_Send);
-                return true;
+                return "";
             }
             else
             {
-                MessageBox.Show("Syntax error in send command");
-                return false;
+                return "Button [" + customButton.Text + "] — Syntax error in send command";
             }
         }
 
-        private bool parse_Run(CustomButton customButton, string input_text, bool admin)
+        private string parse_Run(CustomButton customButton, string input_text, bool admin)
         {
             CustomButton_Process customButton_Process;
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
             if (a.Length == 0)
-                return false;
+                return "Button [" + customButton.Text + "] — Syntax error in " 
+                    + (admin ? "run as admin" : "run") + " command";
+                
             else if (a.Length == 1)
                 customButton_Process = new CustomButton_Process(admin, a[0]);
             else
                 customButton_Process = new CustomButton_Process(admin, a[0], a[1]);
             customButton.actions.Add(customButton_Process);
 
-            return true;
+            return "";
         }
 
-        private bool parse_generic(CustomButton customButton, string parameters)
+        private string parse_generic(CustomButton customButton, string parameters)
         {
-            MatchCollection matches = Regex.Matches(parameters, @"([sS]end|[rR]un)\(([^\)]+)\)");
+            MatchCollection matches = Regex.Matches(parameters, @"^([sS]end|[rR]un)\(([^\)]+)\)$");
+            string error_message = "";
             if (matches.Count != 0)
             {
                 foreach (Match command in matches)
                 {
-
                     switch (command.Groups[1].Value)
                     {
                         case "Send": case "send":
-                            if (!parse_Send(customButton, command.Groups[2].Value))
-                                return false; break;
+                            error_message = parse_Send(customButton, command.Groups[2].Value);
+                            if (error_message != "")
+                                return error_message;
+                            break;
                         case "Run": case "run":
-                            if (!parse_Run(customButton, command.Groups[2].Value, false))
-                                return false; break;
+                            error_message = parse_Run(customButton, command.Groups[2].Value, false);
+                            if (error_message != "")
+                                return error_message;
+                            break;
                         default: break;
                     }
                 }
-                return true;
+                return error_message;
             }
             else
             {
-                MessageBox.Show("Syntax error in generic command");
-                return false;
+                return "Button [" + customButton.Text + "] — Syntax error in generic command";
             }
         }
 
@@ -628,7 +635,7 @@ namespace commo_rose
             return VirtualKeyCode.NONAME;
         }
 
-        private bool parse_button_command(CustomButton customButton)
+        private string parse_button_command(CustomButton customButton)
         {
             switch (customButton.action_type)
             {
@@ -641,8 +648,8 @@ namespace commo_rose
                 case Action_type.Generic:
                     return parse_generic(customButton, customButton.Parameters);
                 case Action_type.Nothing:
-                    return true;
-                default: return false;
+                    return "";
+                default: return "Error";
             }
         }
 
@@ -693,6 +700,7 @@ namespace commo_rose
             panel1.Controls.Add(b);
             b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
             b.Text = "button";
+            b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
             b.MouseDown += Button_MouseDown;
             b.MouseMove += Button_MouseMove;
             b.resizer.MouseDown += resizer_MouseDown;
