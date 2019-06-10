@@ -58,6 +58,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="CueTextbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CueTextbox.Designer.cs">
+      <DependentUpon>CueTextbox.cs</DependentUpon>
+    </Compile>
     <Compile Include="MouseOrKeyboardHook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
