@@ -62,7 +62,8 @@ namespace commo_rose
             resizer.Location = new Point(Width - resizer.Width,
                 Height - resizer.Height);
             resizer.BackColor = Color.Transparent;
-            
+
+            MinimumSize = new Size(resizer.Width, resizer.Height);
             MouseEnter += switch_selection;
             MouseLeave += switch_selection;
             BackColorChanged += CustomButton_BackColorChanged;
