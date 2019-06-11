@@ -57,6 +57,7 @@ namespace commo_rose
                     currentButton.LocationChanged += CurrentButton_PropertyChanged;
                     currentButton.SizeChanged += CurrentButton_PropertyChanged;
                     currentButton.action_typeChanged += CurrentButton_PropertyChanged;
+                    update_cue();
                     enable_editpanel_events();
                 }
                 else
@@ -161,7 +162,6 @@ namespace commo_rose
             currentButton = null;
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
-
             apply_counter = 0;
         }
 
@@ -491,6 +491,29 @@ namespace commo_rose
         {
             currentButton.action_type =
                 (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
+            update_cue();
+        }
+
+        private void update_cue()
+        {
+            switch (currentButton.action_type)
+            {
+                case Action_type.Nothing:
+                    ButtonParametersBox.Cue = "";
+                    break;
+                case Action_type.Send:
+                    ButtonParametersBox.Cue = "Ctrl+C";
+                    break;
+                case Action_type.Run:
+                case Action_type.RunAsAdmin:
+                    ButtonParametersBox.Cue = "cmd";
+                    break;
+                case Action_type.Generic:
+                    ButtonParametersBox.Cue = "send(Ctrl+V) run(cmd) send(win+e)";
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ButtonParametersBox_TextChanged(object sender, EventArgs e)

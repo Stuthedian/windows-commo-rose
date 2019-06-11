@@ -34,7 +34,6 @@
             this.ButtonTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.ButtonParametersBox = new System.Windows.Forms.TextBox();
             this.Applybutton = new System.Windows.Forms.Button();
             this.Action_typeBox = new System.Windows.Forms.ComboBox();
             this.ApplyAllbutton = new System.Windows.Forms.Button();
@@ -64,6 +63,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.FontPicker = new System.Windows.Forms.FontDialog();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -120,13 +120,6 @@
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Action";
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 4;
             // 
             // Applybutton
             // 
@@ -342,6 +335,7 @@
             // 
             // Editpanel
             // 
+            this.Editpanel.Controls.Add(this.ButtonParametersBox);
             this.Editpanel.Controls.Add(this.Deletebutton);
             this.Editpanel.Controls.Add(this.Fontbutton);
             this.Editpanel.Controls.Add(this.TextColorpanel);
@@ -352,7 +346,6 @@
             this.Editpanel.Controls.Add(this.ButtonTextBox);
             this.Editpanel.Controls.Add(this.Action_typeBox);
             this.Editpanel.Controls.Add(this.label2);
-            this.Editpanel.Controls.Add(this.ButtonParametersBox);
             this.Editpanel.Location = new System.Drawing.Point(417, 9);
             this.Editpanel.Name = "Editpanel";
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
@@ -426,6 +419,14 @@
             this.FontPicker.ShowApply = true;
             this.FontPicker.Apply += new System.EventHandler(this.FontPicker_Apply);
             // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -455,7 +456,6 @@
         private System.Windows.Forms.TextBox ButtonTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox ButtonParametersBox;
         private System.Windows.Forms.Button Applybutton;
         private System.Windows.Forms.ComboBox Action_typeBox;
         private System.Windows.Forms.Button ApplyAllbutton;
@@ -486,5 +486,6 @@
         private System.Windows.Forms.Button GlobalBackColorButton;
         private System.Windows.Forms.Button GlobalTextColorButton;
         private System.Windows.Forms.Button GlobalFontButton;
+        private CueTextbox ButtonParametersBox;
     }
 }
