@@ -55,6 +55,7 @@ namespace commo_rose
                     currentButton.LocationChanged += CurrentButton_PropertyChanged;
                     currentButton.SizeChanged += CurrentButton_PropertyChanged;
                     currentButton.action_typeChanged += CurrentButton_PropertyChanged;
+                    update_cue();
                     enable_editpanel_events();
                 }
                 else
@@ -478,8 +479,13 @@ namespace commo_rose
         {
             currentButton.action_type =
                 (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
+            update_cue();
+        }
+
+        private void update_cue()
+        {
             switch (currentButton.action_type)
-            {   
+            {
                 case Action_type.Nothing:
                     ButtonParametersBox.Cue = "";
                     break;
