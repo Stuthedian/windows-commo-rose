@@ -17,6 +17,8 @@ namespace commo_rose
 {
     public partial class Settings : Form
     {
+        private const int WS_EX_COMPOSITED = 0x02000000;
+
         private Form1 main;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
@@ -161,6 +163,16 @@ namespace commo_rose
             previousbuttons.Add(currentButton);
 
             apply_counter = 0;
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= WS_EX_COMPOSITED;
+                return cp;
+            }
         }
 
         private Color check_color_is_transparency_key(Color color)
@@ -765,5 +777,11 @@ namespace commo_rose
             }
         }
         #endregion
+
+        private void Settings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Hide();
+            e.Cancel = true;
+        }
     }
 }

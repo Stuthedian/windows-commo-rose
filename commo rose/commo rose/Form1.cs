@@ -77,6 +77,7 @@ namespace commo_rose
         {
             if (mouseOrKeyboardHook != null)
                 mouseOrKeyboardHook.ClearHook();
+            settings.Dispose();
             this.Close();
         }
             
@@ -130,7 +131,7 @@ namespace commo_rose
         private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
             if(!settings.Visible)
-                settings.ShowDialog();
+                settings.Show();
         }
 
         
