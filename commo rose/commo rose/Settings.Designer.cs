@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.CursorpictureBox = new System.Windows.Forms.PictureBox();
             this.ButtonTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -55,6 +55,7 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -63,9 +64,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.FontPicker = new System.Windows.Forms.FontDialog();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.General.SuspendLayout();
             this.Style.SuspendLayout();
@@ -77,24 +77,23 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.CursorpictureBox);
             this.panel1.Location = new System.Drawing.Point(6, 6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(405, 232);
             this.panel1.TabIndex = 0;
             // 
-            // pictureBox1
+            // CursorpictureBox
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(166, 110);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(12, 19);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.CursorpictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.CursorpictureBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.CursorpictureBox.Image = ((System.Drawing.Image)(resources.GetObject("CursorpictureBox.Image")));
+            this.CursorpictureBox.Location = new System.Drawing.Point(166, 110);
+            this.CursorpictureBox.Name = "CursorpictureBox";
+            this.CursorpictureBox.Size = new System.Drawing.Size(12, 19);
+            this.CursorpictureBox.TabIndex = 0;
+            this.CursorpictureBox.TabStop = false;
             // 
             // ButtonTextBox
             // 
@@ -351,6 +350,14 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
             // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
             // Deletebutton
             // 
             this.Deletebutton.Location = new System.Drawing.Point(6, 109);
@@ -419,14 +426,6 @@
             this.FontPicker.ShowApply = true;
             this.FontPicker.Apply += new System.EventHandler(this.FontPicker_Apply);
             // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
-            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -437,7 +436,7 @@
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.General.ResumeLayout(false);
             this.General.PerformLayout();
@@ -468,7 +467,7 @@
         private System.Windows.Forms.RadioButton MouseradioButton;
         private System.Windows.Forms.ComboBox MouseKeyboardButtonsComboBox;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox CursorpictureBox;
         private System.Windows.Forms.Panel Editpanel;
         private System.Windows.Forms.Button Cancelbutton;
         private System.Windows.Forms.Panel ApplyCancelpanel;

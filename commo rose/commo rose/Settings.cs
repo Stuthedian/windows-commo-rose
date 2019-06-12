@@ -95,9 +95,10 @@ namespace commo_rose
             Point point = panel1.Location;
             point.X += panel1.Width /2;
             point.Y += panel1.Height /2;
-            point.X -= pictureBox1.Width / 2;
-            point.Y -= pictureBox1.Height / 2;
-            pictureBox1.Location = point;
+            point.X -= CursorpictureBox.Width / 2;
+            point.Y -= CursorpictureBox.Height / 2;
+            CursorpictureBox.Location = point;
+            
             mouse_buttons = new object[] {
             MouseButtons.Middle.ToString(),
             MouseButtons.XButton1.ToString(),
@@ -157,12 +158,15 @@ namespace commo_rose
                 b.resizer.MouseUp += resizer_MouseUp;
                 b.resizer.Cursor = Cursors.SizeNWSE;
                 b.resizer.BringToFront();
+                b.BringToFront();
             }
 
             currentButton = null;
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
             apply_counter = 0;
+            TransparencyKey = Color.FromArgb(255, 0, 255, 1);
+            panel1.BackColor = TransparencyKey;
         }
 
         protected override CreateParams CreateParams
@@ -173,6 +177,12 @@ namespace commo_rose
                 cp.ExStyle |= WS_EX_COMPOSITED;
                 return cp;
             }
+        }
+
+        private void Settings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Hide();
+            e.Cancel = true;
         }
 
         private Color check_color_is_transparency_key(Color color)
@@ -743,6 +753,7 @@ namespace commo_rose
             b.resizer.MouseUp += resizer_MouseUp;
             b.resizer.Cursor = Cursors.SizeNWSE;
             b.resizer.BringToFront();
+            b.BringToFront();
             currentButton = b;
             currentButton.property_watcher = true;
         }
@@ -801,10 +812,6 @@ namespace commo_rose
         }
         #endregion
 
-        private void Settings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Hide();
-            e.Cancel = true;
-        }
+        
     }
 }
