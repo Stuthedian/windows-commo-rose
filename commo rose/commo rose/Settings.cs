@@ -364,6 +364,10 @@ namespace commo_rose
         {
             if (currentButton != null && currentButton.mouseClicked)
             {
+                Point lower_right_corner = new Point(currentButton.Location.X + currentButton.Width + e.X, 
+                    currentButton.Location.Y + currentButton.Height + e.Y);
+                if (!panel1.Bounds.Contains(lower_right_corner))
+                    return;
                 currentButton.Height = currentButton.resizer.Top + e.Y;
                 currentButton.Width = currentButton.resizer.Left + e.X;
             }
@@ -383,8 +387,12 @@ namespace commo_rose
             if (MouseDownLocation == e.Location) return;
             if (e.Button == MouseButtons.Left && currentButton != null)
             {
-                currentButton.Left = e.X + currentButton.Left - MouseDownLocation.X;
-                currentButton.Top = e.Y + currentButton.Top - MouseDownLocation.Y;
+                Rectangle test_rect = currentButton.Bounds;
+                test_rect.X += e.X - MouseDownLocation.X;
+                test_rect.Y += e.Y - MouseDownLocation.Y;
+                if (!panel1.Bounds.Contains(test_rect))
+                    return;
+                currentButton.Location = test_rect.Location;
             }
         }
 
