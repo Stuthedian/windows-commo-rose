@@ -622,21 +622,21 @@ namespace commo_rose
 
         private string parse_generic(CustomButton customButton, string parameters)
         {
-            MatchCollection matches = Regex.Matches(parameters, @"^([sS]end|[rR]un)\(([^\)]+)\)$");
+            Match match = Regex.Match(parameters, @"^(([sS]end|[rR]un)\(([^\)]+)\)\s*)+$");
             string error_message = "";
-            if (matches.Count != 0)
+            if (match.Success)
             {
-                foreach (Match command in matches)
+                for (int i = 0; i < match.Groups[2].Captures.Count; i++)
                 {
-                    switch (command.Groups[1].Value)
+                    switch (match.Groups[2].Captures[i].Value)
                     {
                         case "Send": case "send":
-                            error_message = parse_Send(customButton, command.Groups[2].Value);
+                            error_message = parse_Send(customButton, match.Groups[3].Captures[i].Value);
                             if (error_message != "")
                                 return error_message;
                             break;
                         case "Run": case "run":
-                            error_message = parse_Run(customButton, command.Groups[2].Value, false);
+                            error_message = parse_Run(customButton, match.Groups[3].Captures[i].Value, false);
                             if (error_message != "")
                                 return error_message;
                             break;
