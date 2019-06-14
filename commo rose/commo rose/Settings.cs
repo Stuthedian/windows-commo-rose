@@ -181,8 +181,11 @@ namespace commo_rose
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Hide();
-            e.Cancel = true;
+            if(e.CloseReason == CloseReason.UserClosing)
+            {
+                Hide();
+                e.Cancel = true;
+            }
         }
 
         private Color check_color_is_transparency_key(Color color)
