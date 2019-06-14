@@ -580,7 +580,7 @@ namespace commo_rose
         {
             CustomButton_Send customButton_Send;
             List<VirtualKeyCode> vk = new List<VirtualKeyCode>();
-            string pattern = @"^(?:(?:(?:(?:\s*)(\w+)(?:\s*)\+(?:\s*))+(\w+)(?:\s*))|(?:\s*)(\w+)(?:\s*))$";
+            const string pattern = @"^(?:(?:(?:(?:\s*)(\w+)(?:\s*)\+(?:\s*))+(\w+)(?:\s*))|(?:\s*)(\w+)(?:\s*))$";
             Match match = Regex.Match(input_text, pattern);
             if (match.Success)
             {
@@ -641,7 +641,7 @@ namespace commo_rose
         private string parse_generic(CustomButton customButton, string parameters)
         {
             Match match = Regex.Match(parameters,
-                @"^(([sS]end|[rR]un(?:[aA]s[aA]dmin|[sS]ilent)?)\(([^\)]+)\)\s*)+$");
+                @"^(\s*([sS]end|[rR]un(?:[aA]s[aA]dmin|[sS]ilent)?)\(([^\)]+)\)\s*)+$");
             string error_message = "";
             if (match.Success)
             {
@@ -683,47 +683,90 @@ namespace commo_rose
 
         private static VirtualKeyCode capture_to_VK(string capture)
         {
-            string lowstr = capture.ToLower();
-            if (lowstr.Length == 1 && lowstr[0] >= 'a' && lowstr[0] <= 'z')
+            if (capture.Length == 1 && 
+                ((capture[0] >= 'a' && capture[0] <= 'z') || (capture[0] >= 'A' && capture[0] <= 'Z')))
             {
-                return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "VK_" + lowstr.ToUpper()[0]);
+                return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "VK_" + capture.ToUpper()[0]);
             }
-            if(lowstr[0] == 'f')
+            if(capture[0] == 'f' || capture[0] == 'F')
             {
                 int n;
-                if(int.TryParse(lowstr.Substring(1), out n) && n >= 1 && n <= 12)
+                if(int.TryParse(capture.Substring(1), out n) && n >= 1 && n <= 12)
                     return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "F" + n.ToString());
             }
-            switch (lowstr)
+            switch (capture)
             {
                 case "ctrl":
+                case "Ctrl":
                     return VirtualKeyCode.CONTROL;
                 case "shift":
+                case "Shift":
                     return VirtualKeyCode.SHIFT;
                 case "alt":
+                case "Alt":
                     return VirtualKeyCode.LMENU;
                 case "tab":
+                case "Tab":
                     return VirtualKeyCode.TAB;
                 case "esc":
+                case "Esc":
+                case "escape":
+                case "Escape":
                     return VirtualKeyCode.ESCAPE;
                 case "home":
+                case "Home":
                     return VirtualKeyCode.HOME;
                 case "end":
+                case "End":
                     return VirtualKeyCode.END;
                 case "insert":
+                case "Insert":
+                case "ins":
+                case "Ins":
                     return VirtualKeyCode.INSERT;
                 case "delete":
+                case "Delete":
+                case "del":
+                case "Del":
                     return VirtualKeyCode.DELETE;
                 case "prtscn":
+                case "PrtScn":
+                case "Prtscn":
+                case "prtScn":
                     return VirtualKeyCode.SNAPSHOT;
                 case "win":
+                case "Win":
+                case "windows":
+                case "Windows":
                     return VirtualKeyCode.LWIN;
                 case "enter":
+                case "Enter":
                     return VirtualKeyCode.RETURN;
                 case "backspace":
+                case "Backspace":
                     return VirtualKeyCode.BACK;
-                default:
-                    break;
+                case "caps":
+                case "Caps":
+                case "CapsLock":
+                case "capslock":
+                case "Capslock":
+                case "capsLock":
+                    return VirtualKeyCode.CAPITAL;
+                case "num":
+                case "Num":
+                case "numLock":
+                case "NumLock":
+                case "numlock":
+                case "Numlock":
+                    return VirtualKeyCode.NUMLOCK;
+                case "scroll":
+                case "Scroll":
+                case "scrollLock":
+                case "ScrollLock":
+                case "scrolllock":
+                case "Scrolllock":
+                    return VirtualKeyCode.SCROLL;
+                default: break;
             }
             return VirtualKeyCode.NONAME;
         }
