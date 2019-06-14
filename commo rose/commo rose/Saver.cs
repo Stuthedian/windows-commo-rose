@@ -103,19 +103,6 @@ namespace commo_rose
                         }
                         writer.WriteEndElement();
                     }
-                    else if (action is CustomButton_Process)
-                    {
-                        writer.WriteAttributeString("IAction_type", "CustomButton_Process");
-                        writer.WriteString("\n");
-                        writer.WriteStartElement("process");
-                        writer.WriteAttributeString("process.StartInfo.FileName",
-                            ((CustomButton_Process)action).process.StartInfo.FileName);
-                        writer.WriteAttributeString("process.StartInfo.Arguments",
-                            ((CustomButton_Process)action).process.StartInfo.Arguments);
-                        writer.WriteAttributeString("process.StartInfo.Verb",
-                            ((CustomButton_Process)action).process.StartInfo.Verb);
-                        writer.WriteEndElement();
-                    }
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -207,7 +194,7 @@ namespace commo_rose
                         CustomButton_Process customButton_Process;
                         process_node = action_node.SelectSingleNode("process");
                         customButton_Process = new CustomButton_Process(
-                            process_node.Attributes["process.StartInfo.Verb"].Value == "" ? false : true,
+                            (Process_type)Enum.Parse(typeof(Process_type), process_node.Attributes["process_type"].Value),
                             process_node.Attributes["process.StartInfo.FileName"].Value,
                             process_node.Attributes["process.StartInfo.Arguments"].Value);
                         customButton.actions.Add(customButton_Process);
@@ -273,9 +260,10 @@ namespace commo_rose
                         attr.Value = ((CustomButton_Process)action).process.StartInfo.Arguments;
                         process_node.SetAttributeNode(attr);
 
-                        attr = doc.CreateAttribute("process.StartInfo.Verb");
-                        attr.Value = ((CustomButton_Process)action).process.StartInfo.Verb;
+                        attr = doc.CreateAttribute("process_type");
+                        attr.Value = ((CustomButton_Process)action).process_type.ToString();
                         process_node.SetAttributeNode(attr);
+
                         action_node.AppendChild(process_node);
                     }
                     list_of_actions.AppendChild(action_node);
@@ -337,9 +325,10 @@ namespace commo_rose
                         attr.Value = ((CustomButton_Process)action).process.StartInfo.Arguments;
                         process_node.SetAttributeNode(attr);
 
-                        attr = doc.CreateAttribute("process.StartInfo.Verb");
-                        attr.Value = ((CustomButton_Process)action).process.StartInfo.Verb;
+                        attr = doc.CreateAttribute("process_type");
+                        attr.Value = ((CustomButton_Process)action).process_type.ToString();
                         process_node.SetAttributeNode(attr);
+
                         action_node.AppendChild(process_node);
                     }
                     list_of_actions.AppendChild(action_node);

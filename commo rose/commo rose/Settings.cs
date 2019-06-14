@@ -527,13 +527,13 @@ namespace commo_rose
                     break;
                 case Action_type.Run:
                 case Action_type.RunAsAdmin:
+                case Action_type.RunSilent:
                     ButtonParametersBox.Cue = "cmd";
                     break;
                 case Action_type.Generic:
                     ButtonParametersBox.Cue = "send(Ctrl+V) run(cmd) send(win+e)";
                     break;
-                default:
-                    break;
+                default:throw new NotImplementedException(); break;
             }
         }
 
@@ -621,24 +621,24 @@ namespace commo_rose
             }
         }
 
-        private string parse_Run(CustomButton customButton, string input_text, bool admin)
+        private string parse_Run(CustomButton customButton, string input_text, Process_type process_type)
         {
             CustomButton_Process customButton_Process;
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
             if (a.Length == 0)
                 return "Button [" + customButton.Text + "] — Syntax error in " 
-                    + (admin ? "run as admin" : "run") + " command";
+                    + process_type.ToString() + " command";
                 
             else if (a.Length == 1)
-                customButton_Process = new CustomButton_Process(admin, a[0]);
+                customButton_Process = new CustomButton_Process(process_type, a[0]);
             else
-                customButton_Process = new CustomButton_Process(admin, a[0], a[1]);
+                customButton_Process = new CustomButton_Process(process_type, a[0], a[1]);
             customButton.actions.Add(customButton_Process);
 
             return "";
         }
 
-        private string parse_generic(CustomButton customButton, string parameters)
+        private string parse_generic(CustomButton customButton, string parameters)//Add
         {
             Match match = Regex.Match(parameters, @"^(([sS]end|[rR]un)\(([^\)]+)\)\s*)+$");
             string error_message = "";
@@ -654,7 +654,7 @@ namespace commo_rose
                                 return error_message;
                             break;
                         case "Run": case "run":
-                            error_message = parse_Run(customButton, match.Groups[3].Captures[i].Value, false);
+                            error_message = parse_Run(customButton, match.Groups[3].Captures[i].Value, Process_type.Normal);
                             if (error_message != "")
                                 return error_message;
                             break;
@@ -723,9 +723,11 @@ namespace commo_rose
                 case Action_type.Send:
                     return parse_Send(customButton, customButton.Parameters);
                 case Action_type.Run:
-                    return parse_Run(customButton, customButton.Parameters, false);
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Normal);
                 case Action_type.RunAsAdmin:
-                    return parse_Run(customButton, customButton.Parameters, true);
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Admin);
+                case Action_type.RunSilent:
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Silent);
                 case Action_type.Generic:
                     return parse_generic(customButton, customButton.Parameters);
                 case Action_type.Nothing:
