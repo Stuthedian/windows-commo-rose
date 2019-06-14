@@ -577,21 +577,36 @@ namespace commo_rose
         {
             CustomButton_Send customButton_Send;
             List<VirtualKeyCode> vk = new List<VirtualKeyCode>();
-            string pattern = @"^(?:(?:(?:(\w+)\+)+(\w+))|(\w+))$";//Is sufficient?
+            string pattern = @"^(?:(?:(?:(?:\s*)(\w+)(?:\s*)\+(?:\s*))+(\w+)(?:\s*))|(?:\s*)(\w+)(?:\s*))$";
             Match match = Regex.Match(input_text, pattern);
             if (match.Success)
             {
                 foreach (Capture capture in match.Groups[1].Captures)//only group 1 have multiple captures
                 {
-                    vk.Add(capture_to_VK(capture.Value));
+                    VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
+                    if (KeyCode == VirtualKeyCode.NONAME)
+                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                            + ": unknown key name — " + capture.Value;
+                    else
+                        vk.Add(KeyCode);
                 }
                 foreach (Capture capture in match.Groups[2].Captures)
                 {
-                    vk.Add(capture_to_VK(capture.Value));
+                    VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
+                    if (KeyCode == VirtualKeyCode.NONAME)
+                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                            + ": unknown key name — " + capture.Value;
+                    else
+                        vk.Add(KeyCode);
                 }
                 foreach (Capture capture in match.Groups[3].Captures)
                 {
-                    vk.Add(capture_to_VK(capture.Value));
+                    VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
+                    if (KeyCode == VirtualKeyCode.NONAME)
+                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                            + ": unknown key name — " + capture.Value;
+                    else
+                        vk.Add(KeyCode);
                 }
                 customButton_Send = new CustomButton_Send(vk);
                 customButton.actions.Add(customButton_Send);
@@ -651,12 +666,18 @@ namespace commo_rose
             }
         }
 
-        private static VirtualKeyCode capture_to_VK(string capture)//Incomplete
+        private static VirtualKeyCode capture_to_VK(string capture)
         {
             string lowstr = capture.ToLower();
             if (lowstr.Length == 1 && lowstr[0] >= 'a' && lowstr[0] <= 'z')
             {
                 return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "VK_" + lowstr.ToUpper()[0]);
+            }
+            if(lowstr[0] == 'f')
+            {
+                int n;
+                if(int.TryParse(lowstr.Substring(1), out n) && n >= 1 && n <= 12)
+                    return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "F" + n.ToString());
             }
             switch (lowstr)
             {
@@ -682,6 +703,10 @@ namespace commo_rose
                     return VirtualKeyCode.SNAPSHOT;
                 case "win":
                     return VirtualKeyCode.LWIN;
+                case "enter":
+                    return VirtualKeyCode.RETURN;
+                case "backspace":
+                    return VirtualKeyCode.BACK;
                 default:
                     break;
             }
