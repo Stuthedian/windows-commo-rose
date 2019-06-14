@@ -638,9 +638,10 @@ namespace commo_rose
             return "";
         }
 
-        private string parse_generic(CustomButton customButton, string parameters)//Add
+        private string parse_generic(CustomButton customButton, string parameters)
         {
-            Match match = Regex.Match(parameters, @"^(([sS]end|[rR]un)\(([^\)]+)\)\s*)+$");
+            Match match = Regex.Match(parameters,
+                @"^(([sS]end|[rR]un(?:[aA]s[aA]dmin|[sS]ilent)?)\(([^\)]+)\)\s*)+$");
             string error_message = "";
             if (match.Success)
             {
@@ -658,7 +659,18 @@ namespace commo_rose
                             if (error_message != "")
                                 return error_message;
                             break;
-                        default: break;
+                        case "RunAsAdmin":case "RunasAdmin":case "RunAsadmin":case "Runasadmin":
+                        case "runAsAdmin":case "runasAdmin":case "runAsadmin":case "runasadmin":
+                            error_message = parse_Run(customButton, match.Groups[3].Captures[i].Value, Process_type.Admin);
+                            if (error_message != "")
+                                return error_message;
+                            break;
+                        case "RunSilent":case "Runsilent":case "runSilent":case "runsilent":
+                            error_message = parse_Run(customButton, match.Groups[3].Captures[i].Value, Process_type.Silent);
+                            if (error_message != "")
+                                return error_message;
+                            break;
+                        default: throw new NotImplementedException(); break;
                     }
                 }
                 return error_message;
