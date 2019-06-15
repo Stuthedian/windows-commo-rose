@@ -627,7 +627,7 @@ namespace commo_rose
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
             if (a.Length == 0)
                 return "Button [" + customButton.Text + "] — Syntax error in " 
-                    + process_type.ToString() + " command";
+                    + customButton.action_type.ToString() + " command";
                 
             else if (a.Length == 1)
                 customButton_Process = new CustomButton_Process(process_type, a[0]);
