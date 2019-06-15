@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.MouseKeyboardButtonsComboBox = new System.Windows.Forms.ComboBox();
+            this.MouseButtonsComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
             this.MouseradioButton = new System.Windows.Forms.RadioButton();
@@ -37,14 +37,14 @@
             this.ScanKeyTextBox = new commo_rose.CueTextbox();
             this.SuspendLayout();
             // 
-            // MouseKeyboardButtonsComboBox
+            // MouseButtonsComboBox
             // 
-            this.MouseKeyboardButtonsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.MouseKeyboardButtonsComboBox.FormattingEnabled = true;
-            this.MouseKeyboardButtonsComboBox.Location = new System.Drawing.Point(122, 33);
-            this.MouseKeyboardButtonsComboBox.Name = "MouseKeyboardButtonsComboBox";
-            this.MouseKeyboardButtonsComboBox.Size = new System.Drawing.Size(100, 21);
-            this.MouseKeyboardButtonsComboBox.TabIndex = 12;
+            this.MouseButtonsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MouseButtonsComboBox.FormattingEnabled = true;
+            this.MouseButtonsComboBox.Location = new System.Drawing.Point(122, 33);
+            this.MouseButtonsComboBox.Name = "MouseButtonsComboBox";
+            this.MouseButtonsComboBox.Size = new System.Drawing.Size(100, 21);
+            this.MouseButtonsComboBox.TabIndex = 12;
             // 
             // label4
             // 
@@ -97,7 +97,7 @@
             // ScanKeyTextBox
             // 
             this.ScanKeyTextBox.Cue = null;
-            this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 69);
+            this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 33);
             this.ScanKeyTextBox.Name = "ScanKeyTextBox";
             this.ScanKeyTextBox.Size = new System.Drawing.Size(100, 20);
             this.ScanKeyTextBox.TabIndex = 15;
@@ -111,7 +111,7 @@
             this.ClientSize = new System.Drawing.Size(289, 101);
             this.Controls.Add(this.ScanKeyTextBox);
             this.Controls.Add(this.FakeLabel);
-            this.Controls.Add(this.MouseKeyboardButtonsComboBox);
+            this.Controls.Add(this.MouseButtonsComboBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.KeyboardradioButton);
             this.Controls.Add(this.MouseradioButton);
@@ -126,7 +126,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox MouseKeyboardButtonsComboBox;
+        private System.Windows.Forms.ComboBox MouseButtonsComboBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton KeyboardradioButton;
         private System.Windows.Forms.RadioButton MouseradioButton;
