@@ -173,6 +173,10 @@ namespace commo_rose
             {
                 return vk.ToString()[0] + vk.ToString().Substring(1).ToLower();
             }
+            else if (vk >= VirtualKeyCode.LEFT && vk <= VirtualKeyCode.DOWN)
+            {
+                return vk.ToString()[0] + vk.ToString().Substring(1).ToLower() + " Arrow";
+            }
             switch (vk)
             {
                 case VirtualKeyCode.NUMLOCK:
@@ -195,9 +199,16 @@ namespace commo_rose
                 case VirtualKeyCode.END:
                 case VirtualKeyCode.INSERT:
                 case VirtualKeyCode.DELETE:
+                case VirtualKeyCode.SPACE:
+                case VirtualKeyCode.ESCAPE:
+                case VirtualKeyCode.TAB:
                     return vk.ToString()[0] + vk.ToString().Substring(1).ToLower();
                 case VirtualKeyCode.SNAPSHOT:
                     return "Print Screen";
+                case VirtualKeyCode.NEXT:
+                    return "Page Down";
+                case VirtualKeyCode.PRIOR:
+                    return "Page Up";
                 default:break;
             }
             return vk.ToString();
