@@ -55,7 +55,6 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -64,6 +63,14 @@
             this.label6 = new System.Windows.Forms.Label();
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.FontPicker = new System.Windows.Forms.FontDialog();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.setToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.launchAtStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -72,6 +79,7 @@
             this.SaveCancelAllpanel.SuspendLayout();
             this.ApplyCancelpanel.SuspendLayout();
             this.Editpanel.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -164,10 +172,10 @@
             this.tabControl1.Controls.Add(this.General);
             this.tabControl1.Controls.Add(this.Style);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(729, 271);
+            this.tabControl1.Size = new System.Drawing.Size(729, 266);
             this.tabControl1.TabIndex = 9;
             // 
             // General
@@ -184,7 +192,7 @@
             this.General.Location = new System.Drawing.Point(4, 22);
             this.General.Name = "General";
             this.General.Padding = new System.Windows.Forms.Padding(3);
-            this.General.Size = new System.Drawing.Size(721, 245);
+            this.General.Size = new System.Drawing.Size(721, 240);
             this.General.TabIndex = 0;
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
@@ -279,7 +287,7 @@
             this.Style.Location = new System.Drawing.Point(4, 22);
             this.Style.Name = "Style";
             this.Style.Padding = new System.Windows.Forms.Padding(3);
-            this.Style.Size = new System.Drawing.Size(721, 245);
+            this.Style.Size = new System.Drawing.Size(721, 237);
             this.Style.TabIndex = 1;
             this.Style.Text = "Style";
             this.Style.UseVisualStyleBackColor = true;
@@ -350,14 +358,6 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
             // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
-            // 
             // Deletebutton
             // 
             this.Deletebutton.Location = new System.Drawing.Point(6, 109);
@@ -426,12 +426,77 @@
             this.FontPicker.ShowApply = true;
             this.FontPicker.Apply += new System.EventHandler(this.FontPicker_Apply);
             // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem,
+            this.setToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(729, 24);
+            this.menuStrip.TabIndex = 10;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // setToolStripMenuItem
+            // 
+            this.setToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.globalBackcolorToolStripMenuItem});
+            this.setToolStripMenuItem.Name = "setToolStripMenuItem";
+            this.setToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.setToolStripMenuItem.Text = "Set";
+            // 
+            // globalBackcolorToolStripMenuItem
+            // 
+            this.globalBackcolorToolStripMenuItem.Name = "globalBackcolorToolStripMenuItem";
+            this.globalBackcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.globalBackcolorToolStripMenuItem.Text = "Global backcolor";
+            this.globalBackcolorToolStripMenuItem.Click += new System.EventHandler(this.globalBackcolorToolStripMenuItem_Click);
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.launchAtStartupToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // launchAtStartupToolStripMenuItem
+            // 
+            this.launchAtStartupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.yesToolStripMenuItem,
+            this.noToolStripMenuItem});
+            this.launchAtStartupToolStripMenuItem.Name = "launchAtStartupToolStripMenuItem";
+            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.launchAtStartupToolStripMenuItem.Text = "Launch at startup";
+            // 
+            // yesToolStripMenuItem
+            // 
+            this.yesToolStripMenuItem.Name = "yesToolStripMenuItem";
+            this.yesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.yesToolStripMenuItem.Text = "Yes";
+            // 
+            // noToolStripMenuItem
+            // 
+            this.noToolStripMenuItem.Name = "noToolStripMenuItem";
+            this.noToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.noToolStripMenuItem.Text = "No";
+            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(729, 271);
+            this.ClientSize = new System.Drawing.Size(729, 290);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "Settings";
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
@@ -445,7 +510,10 @@
             this.ApplyCancelpanel.ResumeLayout(false);
             this.Editpanel.ResumeLayout(false);
             this.Editpanel.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -486,5 +554,12 @@
         private System.Windows.Forms.Button GlobalTextColorButton;
         private System.Windows.Forms.Button GlobalFontButton;
         private CueTextbox ButtonParametersBox;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem setToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem globalBackcolorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem launchAtStartupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem yesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noToolStripMenuItem;
     }
 }

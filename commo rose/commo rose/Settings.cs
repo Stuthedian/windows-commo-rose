@@ -168,6 +168,9 @@ namespace commo_rose
             apply_counter = 0;
             TransparencyKey = Color.FromArgb(255, 0, 255, 1);
             panel1.BackColor = TransparencyKey;
+
+
+            
         }
 
         protected override CreateParams CreateParams
@@ -909,8 +912,29 @@ namespace commo_rose
                 }
             }
         }
+
         #endregion
 
-        
+        private void globalBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = main.global_backcolor;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                main.global_backcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_global_backcolor(main.global_backcolor);
+                //int c = previousbuttons.Count;
+                //CustomButton customButton = currentButton;
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    //currentButton = button;
+                    //currentButton.BackColor = check_color_is_transparency_key(ColorPicker.Color);
+                    button.BackColor = main.global_backcolor;
+                    //currentButton.property_watcher = true;
+                    button.property_watcher = true;
+                }
+                //currentButton = customButton;
+                //previousbuttons.RemoveRange(c, previousbuttons.Count - c);
+            }
+        }
     }
 }
