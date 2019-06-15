@@ -20,6 +20,7 @@ namespace commo_rose
         private const int WS_EX_COMPOSITED = 0x02000000;
 
         private Form1 main;
+        private ActionButtonForm actionButtonForm;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
@@ -85,6 +86,7 @@ namespace commo_rose
         public Settings(Form1 main)
         {
             InitializeComponent();
+            actionButtonForm = new ActionButtonForm(main);
             this.main = main;
             main_buttons = main.buttons_array;
             panel1.Width = main.Width;
@@ -257,7 +259,7 @@ namespace commo_rose
                 MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
                 MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
             }
-            Saver.save_tab_general(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
+            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -270,7 +272,7 @@ namespace commo_rose
                 main.mouseOrKeyboardHook.action_button_keyboard =
                     (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
             }
-            Saver.save_tab_general(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
+            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         #endregion
@@ -904,6 +906,11 @@ namespace commo_rose
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void actionButtonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            actionButtonForm.ShowDialog();
         }
     }
 }

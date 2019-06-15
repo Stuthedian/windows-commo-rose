@@ -343,7 +343,7 @@ namespace commo_rose
             doc.Save(path_to_settings_filename);
         }
 
-        public static void save_tab_general(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
+        public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
         {
             XmlNode node;
             node = doc.DocumentElement.SelectSingleNode("Hook_target");
