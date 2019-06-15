@@ -53,6 +53,10 @@ namespace commo_rose
             }
             MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
             MouseKeyboardButtonsComboBox.SelectedIndexChanged += MouseButtonsComboBox_SelectedIndexChanged;
+            foreach (Control item in Controls)
+            {
+                item.TabStop = false;
+            }
         }
 
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
@@ -87,6 +91,19 @@ namespace commo_rose
                     (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
             }
             Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
+        }
+
+        private void ScanKeyTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            ScanKeyTextBox.Text = e.KeyCode.ToString();
+            e.SuppressKeyPress = true;
+            FakeLabel.Focus();
+        }
+
+        private void ScanKeyTextBox_Enter(object sender, EventArgs e)
+        {
+            ScanKeyTextBox.Text = "";
+            ScanKeyTextBox.Cue = "Press any key";
         }
     }
 }

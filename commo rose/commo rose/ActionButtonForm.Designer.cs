@@ -33,6 +33,8 @@
             this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
             this.MouseradioButton = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
+            this.FakeLabel = new System.Windows.Forms.Label();
+            this.ScanKeyTextBox = new commo_rose.CueTextbox();
             this.SuspendLayout();
             // 
             // MouseKeyboardButtonsComboBox
@@ -84,11 +86,31 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Action button key";
             // 
+            // FakeLabel
+            // 
+            this.FakeLabel.AutoSize = true;
+            this.FakeLabel.Location = new System.Drawing.Point(250, 26);
+            this.FakeLabel.Name = "FakeLabel";
+            this.FakeLabel.Size = new System.Drawing.Size(0, 13);
+            this.FakeLabel.TabIndex = 14;
+            // 
+            // ScanKeyTextBox
+            // 
+            this.ScanKeyTextBox.Cue = null;
+            this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 69);
+            this.ScanKeyTextBox.Name = "ScanKeyTextBox";
+            this.ScanKeyTextBox.Size = new System.Drawing.Size(100, 20);
+            this.ScanKeyTextBox.TabIndex = 15;
+            this.ScanKeyTextBox.Enter += new System.EventHandler(this.ScanKeyTextBox_Enter);
+            this.ScanKeyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScanKeyTextBox_KeyDown);
+            // 
             // ActionButtonForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(289, 101);
+            this.Controls.Add(this.ScanKeyTextBox);
+            this.Controls.Add(this.FakeLabel);
             this.Controls.Add(this.MouseKeyboardButtonsComboBox);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.KeyboardradioButton);
@@ -109,5 +131,7 @@
         private System.Windows.Forms.RadioButton KeyboardradioButton;
         private System.Windows.Forms.RadioButton MouseradioButton;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label FakeLabel;
+        private CueTextbox ScanKeyTextBox;
     }
 }
