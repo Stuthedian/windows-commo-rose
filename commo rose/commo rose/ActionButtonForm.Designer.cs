@@ -96,7 +96,7 @@
             this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ActionButtonForm";
-            this.Text = "ActionButtonForm";
+            this.Text = "Action button";
             this.ResumeLayout(false);
             this.PerformLayout();
 

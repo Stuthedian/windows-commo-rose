@@ -91,7 +91,6 @@ namespace commo_rose
             main_buttons = main.buttons_array;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
-            tabControl1.SelectTab("Style");
             Editpanel.Enabled = false;
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
@@ -128,22 +127,6 @@ namespace commo_rose
 
             yesToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
             noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
-
-            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
-            {
-                MouseradioButton.Checked = false;
-                KeyboardradioButton.Checked = true;
-                MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_keyboard.ToString();
-            }
-            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
-            {
-                MouseradioButton.Checked = true;
-                KeyboardradioButton.Checked = false;
-                MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
-            }
-            MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
                      
             foreach (var item in Enum.GetNames(typeof(Action_type)))
             {
@@ -171,9 +154,6 @@ namespace commo_rose
             apply_counter = 0;
             TransparencyKey = Color.FromArgb(255, 0, 255, 1);
             panel1.BackColor = TransparencyKey;
-
-
-            
         }
 
         protected override CreateParams CreateParams
@@ -239,45 +219,6 @@ namespace commo_rose
             TextColorpanel.BackColor = currentButton.ForeColor;
         }
 
-        #region tab General
-        
-        private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
-            {
-                main.mouseOrKeyboardHook.hook_target = Hook_target.Keyboard;
-                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
-                MouseKeyboardButtonsComboBox.Items.Clear();
-                MouseKeyboardButtonsComboBox.Items.AddRange(keyboard_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_keyboard.ToString();
-            }
-            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
-            {
-                main.mouseOrKeyboardHook.hook_target = Hook_target.Mouse;
-                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
-                MouseKeyboardButtonsComboBox.Items.Clear();
-                MouseKeyboardButtonsComboBox.Items.AddRange(mouse_buttons);
-                MouseKeyboardButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
-            }
-            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
-        }
-
-        private void MouseButtonsBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
-                main.mouseOrKeyboardHook.action_button_mouse =
-                    (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
-            {
-                main.mouseOrKeyboardHook.action_button_keyboard =
-                    (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseKeyboardButtonsComboBox.SelectedItem.ToString());
-            }
-            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
-        }
-
-        #endregion
-
-        #region tab Style
         private void resizer_MouseDown(object sender, MouseEventArgs e)
         {
             currentButton = (CustomButton)((Control)sender).Parent;
@@ -320,7 +261,7 @@ namespace commo_rose
                 Rectangle test_rect = currentButton.Bounds;
                 test_rect.X += e.X - MouseDownLocation.X;
                 test_rect.Y += e.Y - MouseDownLocation.Y;
-                if (!panel1.Bounds.Contains(test_rect))
+                if (!panel1.Bounds.Contains(this.RectangleToClient(panel1.RectangleToScreen(test_rect))))
                     return;
                 currentButton.Location = test_rect.Location;
             }
@@ -834,8 +775,6 @@ namespace commo_rose
                 }
             }
         }
-
-        #endregion
 
         private void globalBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
         {
