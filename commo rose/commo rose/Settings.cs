@@ -120,11 +120,12 @@ namespace commo_rose
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
             object value = subkey.GetValue(Form1.app_name);
             if (value != null && value.ToString() == Application.ExecutablePath)
-            {
-                checkBox1.Checked = true;
-            }
-            else checkBox1.Checked = false;
-            checkBox1.CheckedChanged += checkBox1_CheckedChanged;
+                yesToolStripMenuItem.Checked = true;
+            else
+                noToolStripMenuItem.Checked = true;
+
+            yesToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
+            noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
 
             if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
@@ -237,29 +238,7 @@ namespace commo_rose
         }
 
         #region tab General
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            RegistryKey rk;
-            try
-            {
-                rk = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                if (checkBox1.Checked)
-                {
-                    rk.SetValue(Form1.app_name, Application.ExecutablePath);
-                }
-                else
-                {
-                    rk.DeleteValue(Form1.app_name, false);
-                }
-                rk.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
+        
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
@@ -899,6 +878,31 @@ namespace commo_rose
                     button.Font = FontPicker.Font;
                     button.property_watcher = true;
                 }
+            }
+        }
+
+        private void yesNoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            yesToolStripMenuItem.Checked = !yesToolStripMenuItem.Checked;
+            noToolStripMenuItem.Checked = !noToolStripMenuItem.Checked;
+            RegistryKey rk;
+            try
+            {
+                rk = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                if (yesToolStripMenuItem.Checked)
+                {
+                    rk.SetValue(Form1.app_name, Application.ExecutablePath);
+                }
+                else
+                {
+                    rk.DeleteValue(Form1.app_name, false);
+                }
+                rk.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

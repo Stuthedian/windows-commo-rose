@@ -37,7 +37,6 @@
             this.Applybutton = new System.Windows.Forms.Button();
             this.Action_typeBox = new System.Windows.Forms.ComboBox();
             this.ApplyAllbutton = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
             this.MouseKeyboardButtonsComboBox = new System.Windows.Forms.ComboBox();
@@ -52,7 +51,6 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -70,6 +68,7 @@
             this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -156,16 +155,6 @@
             this.ApplyAllbutton.UseVisualStyleBackColor = true;
             this.ApplyAllbutton.Click += new System.EventHandler(this.ApplyAllbutton_Click);
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 6);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(109, 17);
-            this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Launch at startup";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.General);
@@ -184,7 +173,6 @@
             this.General.Controls.Add(this.KeyboardradioButton);
             this.General.Controls.Add(this.MouseradioButton);
             this.General.Controls.Add(this.label3);
-            this.General.Controls.Add(this.checkBox1);
             this.General.Location = new System.Drawing.Point(4, 22);
             this.General.Name = "General";
             this.General.Padding = new System.Windows.Forms.Padding(3);
@@ -324,14 +312,6 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
             // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
-            // 
             // Deletebutton
             // 
             this.Deletebutton.Location = new System.Drawing.Point(6, 109);
@@ -425,19 +405,19 @@
             this.yesToolStripMenuItem,
             this.noToolStripMenuItem});
             this.launchAtStartupToolStripMenuItem.Name = "launchAtStartupToolStripMenuItem";
-            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.launchAtStartupToolStripMenuItem.Text = "Launch at startup";
             // 
             // yesToolStripMenuItem
             // 
             this.yesToolStripMenuItem.Name = "yesToolStripMenuItem";
-            this.yesToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
+            this.yesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.yesToolStripMenuItem.Text = "Yes";
             // 
             // noToolStripMenuItem
             // 
             this.noToolStripMenuItem.Name = "noToolStripMenuItem";
-            this.noToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
+            this.noToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.noToolStripMenuItem.Text = "No";
             // 
             // setToolStripMenuItem
@@ -470,6 +450,14 @@
             this.globalFontToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.globalFontToolStripMenuItem.Text = "Global font";
             this.globalFontToolStripMenuItem.Click += new System.EventHandler(this.globalFontToolStripMenuItem_Click);
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Settings
             // 
@@ -508,7 +496,6 @@
         private System.Windows.Forms.Button Applybutton;
         private System.Windows.Forms.ComboBox Action_typeBox;
         private System.Windows.Forms.Button ApplyAllbutton;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage General;
         private System.Windows.Forms.TabPage Style;
