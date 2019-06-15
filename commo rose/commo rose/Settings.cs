@@ -48,6 +48,7 @@ namespace commo_rose
                     ButtonTextBox.Text = currentButton.Text;
                     ButtonParametersBox.Text = currentButton.Parameters;
                     Action_typeBox.SelectedItem = currentButton.action_type.ToString();
+                    ButtonParametersBox.Enabled = currentButton.action_type == Action_type.Nothing ? false : true;
                     BackColorpanel.BackColor = currentButton.BackColor;
                     TextColorpanel.BackColor = currentButton.ForeColor;
                     currentButton.BackColorChanged += CurrentButton_BackColorChanged;
@@ -463,6 +464,8 @@ namespace commo_rose
                     {
                         CustomButton.OverWrite(button, a[0]);
                         button.property_watcher = false;
+                        if (button == currentButton)
+                            currentButton = button;
                     }
                     else if (a.Length > 1)
                     {
@@ -512,6 +515,9 @@ namespace commo_rose
         {
             currentButton.action_type =
                 (Action_type)Enum.Parse(typeof(Action_type), Action_typeBox.SelectedItem.ToString());
+
+            ButtonParametersBox.Enabled =
+                currentButton.action_type == Action_type.Nothing ? false : true;
             update_cue();
         }
 
