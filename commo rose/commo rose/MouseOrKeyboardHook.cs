@@ -11,29 +11,6 @@ using WindowsInput.Native;
 
 namespace commo_rose
 {
-    /// <summary>
-    ///     The CallWndProc hook procedure is an application-defined or library-defined
-    ///     callback function used with the SetWindowsHookEx function. The HOOKPROC type
-    ///     defines a pointer to this callback function. CallWndProc is a placeholder for
-    ///     the application-defined or library-defined function name.
-    /// </summary>
-    /// <param name="nCode">
-    ///     Specifies whether the hook procedure must process the message.
-    /// </param>
-    /// <param name="wParam">
-    ///     Specifies whether the message was sent by the current thread.
-    /// </param>
-    /// <param name="lParam">
-    ///     Pointer to a CWPSTRUCT structure that contains details about the message.
-    /// </param>
-    /// <returns>
-    ///     If nCode is less than zero, the hook procedure must return the value returned
-    ///     by CallNextHookEx. If nCode is greater than or equal to zero, it is highly
-    ///     recommended that you call CallNextHookEx and return the value it returns;
-    ///     otherwise, other applications that have installed WH_CALLWNDPROC hooks will
-    ///     not receive hook notifications and may behave incorrectly as a result. If the
-    ///     hook procedure does not call CallNextHookEx, the return value should be zero.
-    /// </returns>
     public delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
     internal class NativeMethods
@@ -183,85 +160,7 @@ namespace commo_rose
         WM_SYSKEYDOWN = 0x0104,
         WM_SYSKEYUP = 0x0105
     }
-
-    //public class MouseHook
-    //{
-    //    public IntPtr _hGlobalLlHook;
-    //    public HookProc _globalLlHookCallback;
-    //    public MouseHook(HookProc hookProc)
-    //    {
-    //        // Create an instance of HookProc.
-    //        _globalLlHookCallback = hookProc;
-
-    //        _hGlobalLlHook = NativeMethods.SetWindowsHookEx(
-    //            HookType.WH_MOUSE_LL,
-    //            _globalLlHookCallback,
-    //            Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
-    //            0);
-
-    //        if (_hGlobalLlHook == IntPtr.Zero)
-    //        {
-    //            throw new Win32Exception("Unable to set MouseHook");
-    //        }
-    //    }
-
-    //    ~MouseHook()
-    //    {
-    //        ClearHook();
-    //    }
-
-    //    public virtual void ClearHook()
-    //    {
-    //        if (_hGlobalLlHook != IntPtr.Zero)
-    //        {
-    //            // Unhook the low-level mouse hook
-    //            if (!NativeMethods.UnhookWindowsHookEx(_hGlobalLlHook))
-    //                throw new Win32Exception("Unable to clear Hook");
-
-    //            _hGlobalLlHook = IntPtr.Zero;
-    //        }
-    //    }
-    //}
-
-    //public class KeyboardHook
-    //{
-    //    public IntPtr _hGlobalLlHook;
-    //    public HookProc _globalLlHookCallback;
-    //    public KeyboardHook(HookProc hookProc)
-    //    {
-    //        // Create an instance of HookProc.
-    //        _globalLlHookCallback = hookProc;
-
-    //        _hGlobalLlHook = NativeMethods.SetWindowsHookEx(
-    //            HookType.WH_KEYBOARD_LL,
-    //            _globalLlHookCallback,
-    //            Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]),
-    //            0);
-
-    //        if (_hGlobalLlHook == IntPtr.Zero)
-    //        {
-    //            throw new Win32Exception("Unable to set KeyboardHook");
-    //        }
-    //    }
-
-    //    ~KeyboardHook()
-    //    {
-    //        ClearHook();
-    //    }
-
-    //    public virtual void ClearHook()
-    //    {
-    //        if (_hGlobalLlHook != IntPtr.Zero)
-    //        {
-    //            // Unhook the low-level mouse hook
-    //            if (!NativeMethods.UnhookWindowsHookEx(_hGlobalLlHook))
-    //                throw new Win32Exception("Unable to clear Hook");
-
-    //            _hGlobalLlHook = IntPtr.Zero;
-    //        }
-    //    }
-    //}
-
+     
     public class MouseOrKeyboardHook
     {
         private form_action on_form_show;
@@ -276,7 +175,6 @@ namespace commo_rose
         public MouseButtons action_button_mouse { get; set; }
         public VirtualKeyCode action_button_keyboard { get; set; }
 
-        //public MouseOrKeyboardHook(Hook_target target, form_action show, form_action hide)
         public MouseOrKeyboardHook(form_action show, form_action hide)
         {
             on_form_show = show;
@@ -284,12 +182,6 @@ namespace commo_rose
             key_hook_handled = false;
             mouse_proc = LowLevelMouseProc;
             keyboard_proc = LowLevelKeyboardProc;
-            //hook_target = target;
-            //set_hook_target(hook_target);
-            //if (_hGlobalLlHook == IntPtr.Zero)
-            //{
-            //    throw new Win32Exception("Unable to set hook");
-            //}
         }
 
         public void set_hook_target(Hook_target target)
@@ -336,7 +228,7 @@ namespace commo_rose
                 KBDLLHOOKSTRUCT a = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(KBDLLHOOKSTRUCT));
 
                 KeyboardMessage wmMouse = (KeyboardMessage)wParam;
-                if (wmMouse == KeyboardMessage.WM_KEYDOWN)
+                if (wmMouse == KeyboardMessage.WM_KEYDOWN || wmMouse == KeyboardMessage.WM_SYSKEYDOWN)
                 {
                     if (a.vkCode == (int)action_button_keyboard)
                     {
@@ -348,7 +240,7 @@ namespace commo_rose
                         return 1;
                     }
                 }
-                else if (wmMouse == KeyboardMessage.WM_KEYUP)
+                else if (wmMouse == KeyboardMessage.WM_KEYUP || wmMouse == KeyboardMessage.WM_SYSKEYUP)
                 {
                     if (a.vkCode == (int)action_button_keyboard)
                     {

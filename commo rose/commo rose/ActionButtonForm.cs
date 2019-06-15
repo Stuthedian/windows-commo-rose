@@ -19,9 +19,7 @@ namespace commo_rose
 
         private Form1 main;
         private bool ignore_message;
-        private const int WM_KEYUP = 257;
-        private int LShift;
-        private int RShift;
+        private int LShift, RShift, Ctrl, Alt;
         public ActionButtonForm(Form1 main)
         {
             InitializeComponent();
@@ -56,6 +54,8 @@ namespace commo_rose
             ignore_message = true;
             LShift = MapVirtualKey((int)(Keys.LShiftKey), 0);
             RShift = MapVirtualKey((int)(Keys.RShiftKey), 0);
+            Ctrl = MapVirtualKey((int)(Keys.ControlKey), 0);
+            Alt = MapVirtualKey((int)(Keys.Menu), 0);
         }
 
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
@@ -92,9 +92,10 @@ namespace commo_rose
             if (ignore_message)
                 return base.ProcessKeyPreview(ref m);
             ignore_message = true;
-            if (m.Msg == WM_KEYUP)
+            if (m.Msg == (int)KeyboardMessage.WM_KEYUP || m.Msg == (int)KeyboardMessage.WM_SYSKEYUP)
             {
                 int KeyCode = (int)(((ulong)m.LParam & 0xFF0000) >> 16);
+                bool extended = (int)((ulong)m.LParam & 0x01000000) != 0;
                 if (KeyCode == LShift)
                 {
                     main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LSHIFT;
@@ -104,6 +105,32 @@ namespace commo_rose
                 {
                     main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RSHIFT;
                     ScanKeyTextBox.Text = VirtualKeyCode.RSHIFT.ToString();
+                }
+                else if (KeyCode == Ctrl)
+                {
+                    if(extended)
+                    {
+                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RCONTROL;
+                        ScanKeyTextBox.Text = VirtualKeyCode.RCONTROL.ToString();
+                    }
+                    else
+                    {
+                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LCONTROL;
+                        ScanKeyTextBox.Text = VirtualKeyCode.LCONTROL.ToString();
+                    }
+                }
+                else if (KeyCode == Alt)
+                {
+                    if (extended)
+                    {
+                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RMENU;
+                        ScanKeyTextBox.Text = VirtualKeyCode.RMENU.ToString();
+                    }
+                    else
+                    {
+                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LMENU;
+                        ScanKeyTextBox.Text = VirtualKeyCode.LMENU.ToString();
+                    }
                 }
                 else throw new NotImplementedException();
                 Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse,
@@ -116,7 +143,7 @@ namespace commo_rose
         {
             e.SuppressKeyPress = true;
             FakeLabel.Focus();
-            if (e.KeyCode == Keys.ShiftKey)
+            if (e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu)
             {
                 ignore_message = false;
             }
@@ -125,9 +152,9 @@ namespace commo_rose
                 main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)e.KeyValue;
                 ScanKeyTextBox.Text = ((VirtualKeyCode)e.KeyValue).ToString();
                 ignore_message = true;
+                Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
+                    main.mouseOrKeyboardHook.action_button_keyboard);
             }
-            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
-                main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         private void ScanKeyTextBox_Enter(object sender, EventArgs e)
