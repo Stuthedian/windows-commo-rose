@@ -43,6 +43,7 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -61,7 +62,6 @@
             this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -211,6 +211,14 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
             // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
             // Deletebutton
             // 
             this.Deletebutton.Location = new System.Drawing.Point(6, 109);
@@ -358,14 +366,6 @@
             this.globalFontToolStripMenuItem.Text = "Global font";
             this.globalFontToolStripMenuItem.Click += new System.EventHandler(this.globalFontToolStripMenuItem_Click);
             // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
-            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -379,6 +379,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "Settings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
             this.panel1.ResumeLayout(false);

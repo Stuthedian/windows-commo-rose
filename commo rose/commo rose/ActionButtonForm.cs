@@ -35,7 +35,7 @@ namespace commo_rose
                 KeyboardradioButton.Checked = true;
                 MouseButtonsComboBox.Visible = false;
                 ScanKeyTextBox.Visible = true;
-                ScanKeyTextBox.Text = main.mouseOrKeyboardHook.action_button_keyboard.ToString();
+                ScanKeyTextBox.Text = vk_to_appropriate_string(main.mouseOrKeyboardHook.action_button_keyboard);
             }
             else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
@@ -99,24 +99,24 @@ namespace commo_rose
                 if (KeyCode == LShift)
                 {
                     main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LSHIFT;
-                    ScanKeyTextBox.Text = VirtualKeyCode.LSHIFT.ToString();
+                    ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LSHIFT);
                 }
                 else if (KeyCode == RShift)
                 {
                     main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RSHIFT;
-                    ScanKeyTextBox.Text = VirtualKeyCode.RSHIFT.ToString();
+                    ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RSHIFT);
                 }
                 else if (KeyCode == Ctrl)
                 {
                     if(extended)
                     {
                         main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RCONTROL;
-                        ScanKeyTextBox.Text = VirtualKeyCode.RCONTROL.ToString();
+                        ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RCONTROL);
                     }
                     else
                     {
                         main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LCONTROL;
-                        ScanKeyTextBox.Text = VirtualKeyCode.LCONTROL.ToString();
+                        ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LCONTROL);
                     }
                 }
                 else if (KeyCode == Alt)
@@ -124,12 +124,12 @@ namespace commo_rose
                     if (extended)
                     {
                         main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RMENU;
-                        ScanKeyTextBox.Text = VirtualKeyCode.RMENU.ToString();
+                        ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RMENU);
                     }
                     else
                     {
                         main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LMENU;
-                        ScanKeyTextBox.Text = VirtualKeyCode.LMENU.ToString();
+                        ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LMENU);
                     }
                 }
                 else throw new NotImplementedException();
@@ -150,7 +150,7 @@ namespace commo_rose
             else
             {
                 main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)e.KeyValue;
-                ScanKeyTextBox.Text = ((VirtualKeyCode)e.KeyValue).ToString();
+                ScanKeyTextBox.Text = vk_to_appropriate_string((VirtualKeyCode)e.KeyValue);
                 ignore_message = true;
                 Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
                     main.mouseOrKeyboardHook.action_button_keyboard);
@@ -161,6 +161,46 @@ namespace commo_rose
         {
             ScanKeyTextBox.Text = "";
             ScanKeyTextBox.Cue = "Press any key";
+        }
+
+        private string vk_to_appropriate_string(VirtualKeyCode vk)
+        {
+            if(vk >= VirtualKeyCode.VK_0 && vk <= VirtualKeyCode.VK_Z)
+            {
+                return vk.ToString()[3].ToString();
+            }
+            else if(vk >= VirtualKeyCode.NUMPAD0 && vk <= VirtualKeyCode.NUMPAD9)
+            {
+                return vk.ToString()[0] + vk.ToString().Substring(1).ToLower();
+            }
+            switch (vk)
+            {
+                case VirtualKeyCode.NUMLOCK:
+                    return "Num Lock";
+                case VirtualKeyCode.CAPITAL:
+                    return "Caps Lock";
+                case VirtualKeyCode.SCROLL:
+                    return "Scroll Lock";
+                case VirtualKeyCode.LCONTROL:
+                case VirtualKeyCode.RCONTROL:
+                    return (vk.ToString()[0] == 'L' ? "Left" : "Right") + " Ctrl";
+                case VirtualKeyCode.LMENU:
+                case VirtualKeyCode.RMENU:
+                    return (vk.ToString()[0] == 'L' ? "Left" : "Right") + " Alt";
+                case VirtualKeyCode.LSHIFT:
+                case VirtualKeyCode.RSHIFT:
+                    return (vk.ToString()[0] == 'L' ? "Left" : "Right") + " Shift";
+                case VirtualKeyCode.PAUSE:
+                case VirtualKeyCode.HOME:
+                case VirtualKeyCode.END:
+                case VirtualKeyCode.INSERT:
+                case VirtualKeyCode.DELETE:
+                    return vk.ToString()[0] + vk.ToString().Substring(1).ToLower();
+                case VirtualKeyCode.SNAPSHOT:
+                    return "Print Screen";
+                default:break;
+            }
+            return vk.ToString();
         }
     }
 }
