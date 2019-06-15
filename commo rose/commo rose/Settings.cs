@@ -209,6 +209,7 @@ namespace commo_rose
             if (e.previous_state == false && ((CustomButton)sender).property_watcher == true)
             {
                 apply_counter++;
+                update_ApplyAllCancelAllpanel(true);
             }
             else if (e.previous_state == true && ((CustomButton)sender).property_watcher == false) 
             {
@@ -216,7 +217,8 @@ namespace commo_rose
                 if (apply_counter == 0)
                     update_ApplyAllCancelAllpanel(false);
             }
-            update_ApplyCancelpanel(((CustomButton)sender).property_watcher);
+            if((CustomButton)sender == currentButton)
+                update_ApplyCancelpanel(currentButton.property_watcher);
         }
 
         private void CurrentButton_PropertyChanged(object sender, EventArgs e)
@@ -570,7 +572,6 @@ namespace commo_rose
             if (flag)
             {
                 Applybutton.Enabled = Cancelbutton.Enabled = true;
-                update_ApplyAllCancelAllpanel(true);
             }
             else
             {
@@ -922,19 +923,32 @@ namespace commo_rose
             {
                 main.global_backcolor = check_color_is_transparency_key(ColorPicker.Color);
                 Saver.save_global_backcolor(main.global_backcolor);
-                //int c = previousbuttons.Count;
-                //CustomButton customButton = currentButton;
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
-                    //currentButton = button;
-                    //currentButton.BackColor = check_color_is_transparency_key(ColorPicker.Color);
                     button.BackColor = main.global_backcolor;
-                    //currentButton.property_watcher = true;
                     button.property_watcher = true;
                 }
-                //currentButton = customButton;
-                //previousbuttons.RemoveRange(c, previousbuttons.Count - c);
             }
+        }
+
+        private void globalTextcolorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorPicker.Color = main.global_textcolor;
+            if (DialogResult.OK == ColorPicker.ShowDialog())
+            {
+                main.global_textcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_global_textcolor(main.global_textcolor);
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    button.ForeColor = main.global_textcolor;
+                    button.property_watcher = true;
+                }
+            }
+        }
+
+        private void globalFontToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

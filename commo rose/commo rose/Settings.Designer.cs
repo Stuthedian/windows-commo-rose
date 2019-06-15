@@ -66,11 +66,13 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.setToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.launchAtStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.yesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -287,7 +289,7 @@
             this.Style.Location = new System.Drawing.Point(4, 22);
             this.Style.Name = "Style";
             this.Style.Padding = new System.Windows.Forms.Padding(3);
-            this.Style.Size = new System.Drawing.Size(721, 237);
+            this.Style.Size = new System.Drawing.Size(721, 240);
             this.Style.TabIndex = 1;
             this.Style.Text = "Style";
             this.Style.UseVisualStyleBackColor = true;
@@ -440,7 +442,9 @@
             // setToolStripMenuItem
             // 
             this.setToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.globalBackcolorToolStripMenuItem});
+            this.globalBackcolorToolStripMenuItem,
+            this.globalTextcolorToolStripMenuItem,
+            this.globalFontToolStripMenuItem});
             this.setToolStripMenuItem.Name = "setToolStripMenuItem";
             this.setToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.setToolStripMenuItem.Text = "Set";
@@ -451,14 +455,6 @@
             this.globalBackcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.globalBackcolorToolStripMenuItem.Text = "Global backcolor";
             this.globalBackcolorToolStripMenuItem.Click += new System.EventHandler(this.globalBackcolorToolStripMenuItem_Click);
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
             // 
             // optionsToolStripMenuItem
             // 
@@ -474,20 +470,42 @@
             this.yesToolStripMenuItem,
             this.noToolStripMenuItem});
             this.launchAtStartupToolStripMenuItem.Name = "launchAtStartupToolStripMenuItem";
-            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.launchAtStartupToolStripMenuItem.Text = "Launch at startup";
             // 
             // yesToolStripMenuItem
             // 
             this.yesToolStripMenuItem.Name = "yesToolStripMenuItem";
-            this.yesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.yesToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
             this.yesToolStripMenuItem.Text = "Yes";
             // 
             // noToolStripMenuItem
             // 
             this.noToolStripMenuItem.Name = "noToolStripMenuItem";
-            this.noToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.noToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
             this.noToolStripMenuItem.Text = "No";
+            // 
+            // globalTextcolorToolStripMenuItem
+            // 
+            this.globalTextcolorToolStripMenuItem.Name = "globalTextcolorToolStripMenuItem";
+            this.globalTextcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.globalTextcolorToolStripMenuItem.Text = "Global textcolor";
+            this.globalTextcolorToolStripMenuItem.Click += new System.EventHandler(this.globalTextcolorToolStripMenuItem_Click);
+            // 
+            // globalFontToolStripMenuItem
+            // 
+            this.globalFontToolStripMenuItem.Name = "globalFontToolStripMenuItem";
+            this.globalFontToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.globalFontToolStripMenuItem.Text = "Global font";
+            this.globalFontToolStripMenuItem.Click += new System.EventHandler(this.globalFontToolStripMenuItem_Click);
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Settings
             // 
@@ -561,5 +579,7 @@
         private System.Windows.Forms.ToolStripMenuItem launchAtStartupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem yesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem globalTextcolorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem globalFontToolStripMenuItem;
     }
 }
