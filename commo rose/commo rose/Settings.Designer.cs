@@ -40,9 +40,6 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.General = new System.Windows.Forms.TabPage();
-            this.GlobalBackColorButton = new System.Windows.Forms.Button();
-            this.GlobalTextColorButton = new System.Windows.Forms.Button();
-            this.GlobalFontButton = new System.Windows.Forms.Button();
             this.MouseKeyboardButtonsComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
@@ -55,6 +52,7 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -64,15 +62,14 @@
             this.ColorPicker = new System.Windows.Forms.ColorDialog();
             this.FontPicker = new System.Windows.Forms.FontDialog();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
-            this.setToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.launchAtStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.yesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.noToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -182,9 +179,6 @@
             // 
             // General
             // 
-            this.General.Controls.Add(this.GlobalBackColorButton);
-            this.General.Controls.Add(this.GlobalTextColorButton);
-            this.General.Controls.Add(this.GlobalFontButton);
             this.General.Controls.Add(this.MouseKeyboardButtonsComboBox);
             this.General.Controls.Add(this.label4);
             this.General.Controls.Add(this.KeyboardradioButton);
@@ -198,36 +192,6 @@
             this.General.TabIndex = 0;
             this.General.Text = "General";
             this.General.UseVisualStyleBackColor = true;
-            // 
-            // GlobalBackColorButton
-            // 
-            this.GlobalBackColorButton.Location = new System.Drawing.Point(14, 154);
-            this.GlobalBackColorButton.Name = "GlobalBackColorButton";
-            this.GlobalBackColorButton.Size = new System.Drawing.Size(121, 23);
-            this.GlobalBackColorButton.TabIndex = 10;
-            this.GlobalBackColorButton.Text = "Set global backcolor";
-            this.GlobalBackColorButton.UseVisualStyleBackColor = true;
-            this.GlobalBackColorButton.Click += new System.EventHandler(this.GlobalBackColorButton_Click);
-            // 
-            // GlobalTextColorButton
-            // 
-            this.GlobalTextColorButton.Location = new System.Drawing.Point(14, 183);
-            this.GlobalTextColorButton.Name = "GlobalTextColorButton";
-            this.GlobalTextColorButton.Size = new System.Drawing.Size(121, 23);
-            this.GlobalTextColorButton.TabIndex = 11;
-            this.GlobalTextColorButton.Text = "Set global textcolor";
-            this.GlobalTextColorButton.UseVisualStyleBackColor = true;
-            this.GlobalTextColorButton.Click += new System.EventHandler(this.GlobalTextColorButton_Click);
-            // 
-            // GlobalFontButton
-            // 
-            this.GlobalFontButton.Location = new System.Drawing.Point(14, 212);
-            this.GlobalFontButton.Name = "GlobalFontButton";
-            this.GlobalFontButton.Size = new System.Drawing.Size(121, 23);
-            this.GlobalFontButton.TabIndex = 12;
-            this.GlobalFontButton.Text = "Set global font";
-            this.GlobalFontButton.UseVisualStyleBackColor = true;
-            this.GlobalFontButton.Click += new System.EventHandler(this.GlobalFontButton_Click);
             // 
             // MouseKeyboardButtonsComboBox
             // 
@@ -360,6 +324,14 @@
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
             // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
             // Deletebutton
             // 
             this.Deletebutton.Location = new System.Drawing.Point(6, 109);
@@ -439,23 +411,6 @@
             this.menuStrip.TabIndex = 10;
             this.menuStrip.Text = "menuStrip1";
             // 
-            // setToolStripMenuItem
-            // 
-            this.setToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.globalBackcolorToolStripMenuItem,
-            this.globalTextcolorToolStripMenuItem,
-            this.globalFontToolStripMenuItem});
-            this.setToolStripMenuItem.Name = "setToolStripMenuItem";
-            this.setToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
-            this.setToolStripMenuItem.Text = "Set";
-            // 
-            // globalBackcolorToolStripMenuItem
-            // 
-            this.globalBackcolorToolStripMenuItem.Name = "globalBackcolorToolStripMenuItem";
-            this.globalBackcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.globalBackcolorToolStripMenuItem.Text = "Global backcolor";
-            this.globalBackcolorToolStripMenuItem.Click += new System.EventHandler(this.globalBackcolorToolStripMenuItem_Click);
-            // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -485,6 +440,23 @@
             this.noToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
             this.noToolStripMenuItem.Text = "No";
             // 
+            // setToolStripMenuItem
+            // 
+            this.setToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.globalBackcolorToolStripMenuItem,
+            this.globalTextcolorToolStripMenuItem,
+            this.globalFontToolStripMenuItem});
+            this.setToolStripMenuItem.Name = "setToolStripMenuItem";
+            this.setToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.setToolStripMenuItem.Text = "Set";
+            // 
+            // globalBackcolorToolStripMenuItem
+            // 
+            this.globalBackcolorToolStripMenuItem.Name = "globalBackcolorToolStripMenuItem";
+            this.globalBackcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.globalBackcolorToolStripMenuItem.Text = "Global backcolor";
+            this.globalBackcolorToolStripMenuItem.Click += new System.EventHandler(this.globalBackcolorToolStripMenuItem_Click);
+            // 
             // globalTextcolorToolStripMenuItem
             // 
             this.globalTextcolorToolStripMenuItem.Name = "globalTextcolorToolStripMenuItem";
@@ -498,14 +470,6 @@
             this.globalFontToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.globalFontToolStripMenuItem.Text = "Global font";
             this.globalFontToolStripMenuItem.Click += new System.EventHandler(this.globalFontToolStripMenuItem_Click);
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Settings
             // 
@@ -568,9 +532,6 @@
         private System.Windows.Forms.FontDialog FontPicker;
         private System.Windows.Forms.Button Addbutton;
         private System.Windows.Forms.Button Deletebutton;
-        private System.Windows.Forms.Button GlobalBackColorButton;
-        private System.Windows.Forms.Button GlobalTextColorButton;
-        private System.Windows.Forms.Button GlobalFontButton;
         private CueTextbox ButtonParametersBox;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem setToolStripMenuItem;

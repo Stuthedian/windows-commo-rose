@@ -294,66 +294,6 @@ namespace commo_rose
             Saver.save_tab_general(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
-        private void GlobalBackColorButton_Click(object sender, EventArgs e)
-        {
-            ColorPicker.Color = main.global_backcolor;
-            if (DialogResult.OK == ColorPicker.ShowDialog())
-            {
-                main.global_backcolor = ColorPicker.Color;
-                Saver.save_global_backcolor(main.global_backcolor);
-                int c = previousbuttons.Count;
-                CustomButton customButton = currentButton;
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
-                {
-                    currentButton = button;
-                    currentButton.BackColor = check_color_is_transparency_key(ColorPicker.Color);
-                    currentButton.property_watcher = true;
-                }
-                currentButton = customButton;
-                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
-            }
-        }
-
-        private void GlobalTextColorButton_Click(object sender, EventArgs e)
-        {
-            ColorPicker.Color = main.global_textcolor;
-            if (DialogResult.OK == ColorPicker.ShowDialog())
-            {
-                main.global_textcolor = ColorPicker.Color;
-                Saver.save_global_textcolor(main.global_textcolor);
-                int c = previousbuttons.Count;
-                CustomButton customButton = currentButton;
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
-                {
-                    currentButton = button;
-                    currentButton.ForeColor = check_color_is_transparency_key(ColorPicker.Color);
-                    currentButton.property_watcher = true;
-                }
-                currentButton = customButton;
-                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
-            }
-        }
-
-        private void GlobalFontButton_Click(object sender, EventArgs e)
-        {
-            FontPicker.Font = main.global_font;
-            FontPicker.ShowApply = false;
-            if (DialogResult.OK == FontPicker.ShowDialog())
-            {
-                main.global_font = FontPicker.Font;
-                Saver.save_global_font(main.global_font);
-                int c = previousbuttons.Count;
-                CustomButton customButton = currentButton;
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
-                {
-                    currentButton = button;
-                    currentButton.Font = FontPicker.Font;
-                    currentButton.property_watcher = true;
-                }
-                currentButton = customButton;
-                previousbuttons.RemoveRange(c, previousbuttons.Count - c);
-            }
-        }
         #endregion
 
         #region tab Style
@@ -948,7 +888,18 @@ namespace commo_rose
 
         private void globalFontToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            FontPicker.Font = main.global_font;
+            FontPicker.ShowApply = false;
+            if (DialogResult.OK == FontPicker.ShowDialog())
+            {
+                main.global_font = FontPicker.Font;
+                Saver.save_global_font(main.global_font);
+                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                {
+                    button.Font = FontPicker.Font;
+                    button.property_watcher = true;
+                }
+            }
         }
     }
 }
