@@ -41,7 +41,7 @@
             // 
             this.MouseButtonsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MouseButtonsComboBox.FormattingEnabled = true;
-            this.MouseButtonsComboBox.Location = new System.Drawing.Point(122, 33);
+            this.MouseButtonsComboBox.Location = new System.Drawing.Point(142, 33);
             this.MouseButtonsComboBox.Name = "MouseButtonsComboBox";
             this.MouseButtonsComboBox.Size = new System.Drawing.Size(100, 21);
             this.MouseButtonsComboBox.TabIndex = 12;
@@ -98,7 +98,7 @@
             // 
             this.ScanKeyTextBox.Cue = null;
             this.ScanKeyTextBox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 33);
+            this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 30);
             this.ScanKeyTextBox.Name = "ScanKeyTextBox";
             this.ScanKeyTextBox.Size = new System.Drawing.Size(140, 26);
             this.ScanKeyTextBox.TabIndex = 15;
