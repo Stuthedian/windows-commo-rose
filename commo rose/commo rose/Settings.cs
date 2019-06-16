@@ -94,11 +94,9 @@ namespace commo_rose
             Editpanel.Enabled = false;
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
-            Point point = panel1.Location;
+            Point point = new Point(0, 0);
             point.X += panel1.Width /2;
             point.Y += panel1.Height /2;
-            point.X -= CursorpictureBox.Width / 2;
-            point.Y -= CursorpictureBox.Height / 2;
             CursorpictureBox.Location = point;
             
             mouse_buttons = new object[] {
