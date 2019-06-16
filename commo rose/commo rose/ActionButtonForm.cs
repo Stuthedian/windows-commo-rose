@@ -64,6 +64,7 @@ namespace commo_rose
             {
                 main.mouseOrKeyboardHook.hook_target = Hook_target.Keyboard;
                 main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
+                ScanKeyTextBox.Text = vk_to_appropriate_string(main.mouseOrKeyboardHook.action_button_keyboard);
                 MouseButtonsComboBox.Visible = false;
                 ScanKeyTextBox.Visible = true;
             }
@@ -71,9 +72,9 @@ namespace commo_rose
             {
                 main.mouseOrKeyboardHook.hook_target = Hook_target.Mouse;
                 main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
+                MouseButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
                 MouseButtonsComboBox.Visible = true;
                 ScanKeyTextBox.Visible = false;
-                MouseButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
             }
             Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
                 main.mouseOrKeyboardHook.action_button_keyboard);
@@ -209,6 +210,50 @@ namespace commo_rose
                     return "Page Down";
                 case VirtualKeyCode.PRIOR:
                     return "Page Up";
+                case VirtualKeyCode.RETURN:
+                    return "Enter";
+                case VirtualKeyCode.BACK:
+                    return "Backspace";
+                case VirtualKeyCode.OEM_1:
+                    return ":;";
+                case VirtualKeyCode.OEM_2:
+                    return "?/";
+                case VirtualKeyCode.OEM_3:
+                    return "~`";
+                case VirtualKeyCode.OEM_4:
+                    return "{[";
+                case VirtualKeyCode.OEM_5:
+                    return "|\\";
+                case VirtualKeyCode.OEM_6:
+                    return "}]";
+                case VirtualKeyCode.OEM_7:
+                    return "\" \'";
+                case VirtualKeyCode.OEM_PLUS:
+                    return "+";
+                case VirtualKeyCode.OEM_MINUS:
+                    return "-";
+                case VirtualKeyCode.OEM_COMMA:
+                    return ",";
+                case VirtualKeyCode.OEM_PERIOD:
+                    return ".";
+                case VirtualKeyCode.CLEAR:
+                    return "Numpad Clear";
+                case VirtualKeyCode.ADD:
+                    return "Numpad +";
+                case VirtualKeyCode.SUBTRACT:
+                    return "Numpad -";
+                case VirtualKeyCode.MULTIPLY:
+                    return "Numpad *";
+                case VirtualKeyCode.DIVIDE:
+                    return "Numpad /";
+                case VirtualKeyCode.DECIMAL:
+                    return "Numpad .";
+                case VirtualKeyCode.MEDIA_PLAY_PAUSE:
+                    return "Play/Pause";
+                case VirtualKeyCode.VOLUME_DOWN:
+                case VirtualKeyCode.VOLUME_MUTE:
+                case VirtualKeyCode.VOLUME_UP:
+                    return "Volume " + vk.ToString()[7] + vk.ToString().Substring(8).ToLower();
                 default:break;
             }
             return vk.ToString();

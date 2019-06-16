@@ -80,7 +80,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(127, 9);
+            this.label3.Location = new System.Drawing.Point(147, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(90, 13);
             this.label3.TabIndex = 8;
@@ -97,10 +97,12 @@
             // ScanKeyTextBox
             // 
             this.ScanKeyTextBox.Cue = null;
+            this.ScanKeyTextBox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ScanKeyTextBox.Location = new System.Drawing.Point(122, 33);
             this.ScanKeyTextBox.Name = "ScanKeyTextBox";
-            this.ScanKeyTextBox.Size = new System.Drawing.Size(100, 20);
+            this.ScanKeyTextBox.Size = new System.Drawing.Size(140, 26);
             this.ScanKeyTextBox.TabIndex = 15;
+            this.ScanKeyTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ScanKeyTextBox.Enter += new System.EventHandler(this.ScanKeyTextBox_Enter);
             this.ScanKeyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScanKeyTextBox_KeyDown);
             // 
