@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 using System.Threading;
+using System.ComponentModel;
 using WindowsInput.Native;
 using WindowsInput;
 
@@ -13,17 +14,40 @@ namespace commo_rose
     public class CustomButton : Button
     {
         public bool mouseClicked;
-        public bool property_changed { get; private set; }
+        private bool _property_watcher;
+        public bool property_watcher
+        {
+            get { return _property_watcher; }
+            set
+            {
+                bool temp = _property_watcher;
+                _property_watcher = value;
+                OnPropertyWatcherChanged(temp);
+            }
+        }
         public bool Selected { get; private set; }
-        public Action_type action_type { get; set; }
-        public string Parameters;
+        private Action_type _action_type;
+        public Action_type action_type
+        {
+            get { return _action_type; }
+            set { _action_type = value; Onaction_typeChanged(); }
+        }
+        private string _Parameters;
+        public string Parameters
+        {
+            get { return _Parameters; }
+            set { _Parameters = value; OnParametersChanged(); }
+        }
         public List<IAction> actions;
         public PictureBox resizer;
 
+        public event EventHandler ParametersChanged;
+        public event EventHandler action_typeChanged;
+        public event EventHandler<PropertyWatcherEventArgs> PropertyWatcherChanged;
 
         public CustomButton() : base()
         {
-            property_changed = false;
+            property_watcher = false;
             Selected = false;
             FlatStyle = FlatStyle.Flat;
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
@@ -39,14 +63,39 @@ namespace commo_rose
             resizer.Location = new Point(Width - resizer.Width,
                 Height - resizer.Height);
             resizer.BackColor = Color.Transparent;
-            
+
+            MinimumSize = new Size(resizer.Width, resizer.Height);
             MouseEnter += switch_selection;
             MouseLeave += switch_selection;
             BackColorChanged += CustomButton_BackColorChanged;
+            Parameters = "";
             BackColor = Color.White;
             ForeColor = Color.Black;
             action_type = Action_type.Nothing;
             actions = new List<IAction>();            
+        }
+
+        public void Onaction_typeChanged()
+        {
+            EventHandler handler = action_typeChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        public void OnParametersChanged()
+        {
+            EventHandler handler = ParametersChanged;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+        public void OnPropertyWatcherChanged(bool previous_state)
+        {
+            EventHandler<PropertyWatcherEventArgs> handler = PropertyWatcherChanged;
+            PropertyWatcherEventArgs args = new PropertyWatcherEventArgs();
+            args.previous_state = previous_state;
+            if (handler != null)
+                handler(this, args);
         }
 
         protected override bool ShowFocusCues
@@ -69,12 +118,6 @@ namespace commo_rose
             ForeColor = tmp;
         }
 
-        public void set_property_changed(bool flag, Action<bool> func)
-        {
-            property_changed = flag;
-            func(flag);
-        }
-
         public CustomButton Clone()
         {
             CustomButton customButton = new CustomButton();
@@ -87,7 +130,7 @@ namespace commo_rose
             destination.actions = source.actions.ToList();
             destination.BackColor = source.BackColor;
             destination.ForeColor = source.ForeColor;
-            destination.Font = source.Font;
+            destination.Font = (Font)source.Font.Clone();
             destination.Width = source.Width;
             destination.Height = source.Height;
             destination.Name = source.Name;
@@ -106,6 +149,7 @@ namespace commo_rose
                     case Action_type.Send:
                     case Action_type.Run:
                     case Action_type.RunAsAdmin:
+                    case Action_type.RunSilent:
                         actions[0].exec();
                         break;
                     case Action_type.Generic:
@@ -124,15 +168,19 @@ namespace commo_rose
                         thread.IsBackground = true;
                         thread.Start();
                         break;
-                    default:
-                        break;
+                    default:throw new NotImplementedException(); break;
                 }
             }
-            catch (Exception e) { MessageBox.Show(e.Message); }
+            catch (Win32Exception e)
+            {
+                const int ERROR_CANCELLED = 0x000004C7;
+                if(e.NativeErrorCode != ERROR_CANCELLED)
+                    MessageBox.Show(e.Message);
+            }
         }
     }   
 
-    public enum Action_type { Nothing, Send, Run, RunAsAdmin, Generic }
+    public enum Action_type { Nothing, Send, Run, RunAsAdmin, RunSilent, Generic }
 
     public interface IAction
     {
@@ -142,21 +190,36 @@ namespace commo_rose
     public class CustomButton_Process : IAction
     {
         public Process process;
-        public CustomButton_Process(bool admin, string command, string command_args = "")
+        public Process_type process_type;
+        public CustomButton_Process(Process_type process_type, string command, string command_args = "")
         {
             process = new Process();
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = command;
             process.StartInfo.Arguments = command_args;
-            if (admin)
+            this.process_type = process_type;
+            if(process_type == Process_type.Normal)
+            {
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.UseShellExecute = true;
+            }
+            else if (process_type == Process_type.Admin)
+            {
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.UseShellExecute = true;
                 process.StartInfo.Verb = "runas";
+            }
+            else if (process_type == Process_type.Silent)
+            {
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+            }
         }
         public void exec()
         {
             process.Start();
-        }
+        } 
     }
+    public enum Process_type    { Normal, Admin, Silent };
 
     public class CustomButton_Send : IAction
     {
@@ -202,5 +265,10 @@ namespace commo_rose
         {
             inputSimulator.Keyboard.ModifiedKeyStroke(modifier_keys, ordinary_keys);
         }
+    }
+
+    public class PropertyWatcherEventArgs : EventArgs
+    {
+        public bool previous_state;
     }
 }

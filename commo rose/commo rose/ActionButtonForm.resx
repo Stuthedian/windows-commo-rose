@@ -117,23 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="CursorpictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAAwAAAATCAYAAACk9eypAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAKZJREFUOE+VkrEKwjAQhi8v0L7/c+jo1K2zUFyLS3EqGFBx0Hw1qWdI0vjBhdzx
-        fySBiJjmtVQ1Ltx1/R+SC0L9SV6AOkkJsC1FApSlhAB5KSNAWioI98czIRUEmOdrJG0IME0XJVUIMI7n
-        tGDtze/Uo3WxBAiLNHa3Pyz9JxDjhRCmN6Y9MvteQ+MGOhxm/GBICmtpXA/DcMpcLcaFCEOdAAR/wiJv
-        6xJyDj4uZWEAAAAASUVORK5CYII=
-</value>
-  </data>
-  <metadata name="ColorPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="FontPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>130, 17</value>
-  </metadata>
-  <metadata name="menuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>238, 17</value>
-  </metadata>
 </root>

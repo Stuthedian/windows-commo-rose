@@ -12,20 +12,22 @@ namespace commo_rose
     {
         private static XmlDocument doc;
         private static XmlNode CustomButtons;
-        private const string settings_filename = ".settings.xml";
         private static readonly string path_to_settings_filename = 
-            Path.Combine(Application.StartupPath, settings_filename);
+            Path.Combine(Application.StartupPath, ".settings.xml");
 
         private static void create_new_settings_file()
         {
             XmlWriter writer = XmlWriter.Create(path_to_settings_filename);
             writer.WriteStartDocument();
             writer.WriteStartElement("Settings");
+            writer.WriteAttributeString("global_backcolor", Color.White.ToArgb().ToString());
+            writer.WriteAttributeString("global_textcolor", Color.Black.ToArgb().ToString());
+            writer.WriteAttributeString("global_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
             writer.WriteStartElement("Hook_target");
             writer.WriteString(Hook_target.Keyboard.ToString());
             writer.WriteEndElement();
             writer.WriteStartElement("Hook_key");
-            writer.WriteString(Keys.NumPad0.ToString());
+            writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
             writer.WriteEndElement();
             writer.WriteStartElement("CustomButtons");
             writer.WriteString("\n");
@@ -69,8 +71,8 @@ namespace commo_rose
                 writer.WriteAttributeString(button.Name + ".Text", button.Text);
                 writer.WriteAttributeString(button.Name + ".action_type", button.action_type.ToString());
                 writer.WriteAttributeString(button.Name + ".Parameters", button.Parameters);
-                writer.WriteAttributeString(button.Name + ".BackColor", Color.FromArgb(201, 120, 0).ToArgb().ToString());
-                writer.WriteAttributeString(button.Name + ".ForeColor", Color.FromArgb(247, 218, 2).ToArgb().ToString());
+                writer.WriteAttributeString(button.Name + ".BackColor", button.BackColor.ToArgb().ToString());
+                writer.WriteAttributeString(button.Name + ".ForeColor", button.ForeColor.ToArgb().ToString());
                 writer.WriteAttributeString(button.Name + ".Width", "92");
                 writer.WriteAttributeString(button.Name + ".Height", "31");
                 writer.WriteAttributeString(button.Name + ".Font", new FontConverter().ConvertToString(button.Font));
@@ -101,19 +103,6 @@ namespace commo_rose
                         }
                         writer.WriteEndElement();
                     }
-                    else if (action is CustomButton_Process)
-                    {
-                        writer.WriteAttributeString("IAction_type", "CustomButton_Process");
-                        writer.WriteString("\n");
-                        writer.WriteStartElement("process");
-                        writer.WriteAttributeString("process.StartInfo.FileName",
-                            ((CustomButton_Process)action).process.StartInfo.FileName);
-                        writer.WriteAttributeString("process.StartInfo.Arguments",
-                            ((CustomButton_Process)action).process.StartInfo.Arguments);
-                        writer.WriteAttributeString("process.StartInfo.Verb",
-                            ((CustomButton_Process)action).process.StartInfo.Verb);
-                        writer.WriteEndElement();
-                    }
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -140,18 +129,22 @@ namespace commo_rose
             XmlNode node, list_of_actions, modifiers_node, ordinary_node, process_node;
             Point point = new Point();
 
+            node = doc.DocumentElement;
+            main.global_backcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_backcolor"].Value));
+            main.global_textcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_textcolor"].Value));
+            main.global_font = (Font)new FontConverter().ConvertFromString(node.Attributes["global_font"].Value);
             node = doc.DocumentElement.SelectSingleNode("Hook_target");
-            main.hook_target = (Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText);
+            main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText));
             node = doc.DocumentElement.SelectSingleNode("Hook_key");
-            if(main.hook_target == Hook_target.Keyboard)
+            if(main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                main.action_button_keyboard = (Keys)Enum.Parse(typeof(Keys), node.InnerText);
-                main.action_button_mouse = MouseButtons.XButton1;
+                main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_mouse = MouseButtons.XButton1;
             }
-            else if(main.hook_target == Hook_target.Mouse)
+            else if(main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
-                main.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
-                main.action_button_keyboard = Keys.NumPad0;
+                main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
 
             CustomButton customButton;
@@ -201,7 +194,7 @@ namespace commo_rose
                         CustomButton_Process customButton_Process;
                         process_node = action_node.SelectSingleNode("process");
                         customButton_Process = new CustomButton_Process(
-                            process_node.Attributes["process.StartInfo.Verb"].Value == "" ? false : true,
+                            (Process_type)Enum.Parse(typeof(Process_type), process_node.Attributes["process_type"].Value),
                             process_node.Attributes["process.StartInfo.FileName"].Value,
                             process_node.Attributes["process.StartInfo.Arguments"].Value);
                         customButton.actions.Add(customButton_Process);
@@ -214,8 +207,6 @@ namespace commo_rose
         
         public static void save_button_settings(CustomButton button, bool is_added)
         {
-            if (doc == null && CustomButtons != null)
-                return;
             if(is_added)
             {
                 XmlElement node, list_of_actions, action_node, 
@@ -269,9 +260,10 @@ namespace commo_rose
                         attr.Value = ((CustomButton_Process)action).process.StartInfo.Arguments;
                         process_node.SetAttributeNode(attr);
 
-                        attr = doc.CreateAttribute("process.StartInfo.Verb");
-                        attr.Value = ((CustomButton_Process)action).process.StartInfo.Verb;
+                        attr = doc.CreateAttribute("process_type");
+                        attr.Value = ((CustomButton_Process)action).process_type.ToString();
                         process_node.SetAttributeNode(attr);
+
                         action_node.AppendChild(process_node);
                     }
                     list_of_actions.AppendChild(action_node);
@@ -333,9 +325,10 @@ namespace commo_rose
                         attr.Value = ((CustomButton_Process)action).process.StartInfo.Arguments;
                         process_node.SetAttributeNode(attr);
 
-                        attr = doc.CreateAttribute("process.StartInfo.Verb");
-                        attr.Value = ((CustomButton_Process)action).process.StartInfo.Verb;
+                        attr = doc.CreateAttribute("process_type");
+                        attr.Value = ((CustomButton_Process)action).process_type.ToString();
                         process_node.SetAttributeNode(attr);
+
                         action_node.AppendChild(process_node);
                     }
                     list_of_actions.AppendChild(action_node);
@@ -346,28 +339,45 @@ namespace commo_rose
 
         public static void delete_button(CustomButton button)
         {
-            if (doc == null && CustomButtons != null)
-                return;
             CustomButtons.RemoveChild(CustomButtons.SelectSingleNode(button.Name));
             doc.Save(path_to_settings_filename);
         }
 
-        public static void save_tab_general(Hook_target target, MouseButtons mbutton, Keys key)
+        public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
         {
-            if (doc == null)
-                return;
             XmlNode node;
             node = doc.DocumentElement.SelectSingleNode("Hook_target");
             node.InnerText = target.ToString();
             node = doc.DocumentElement.SelectSingleNode("Hook_key");
             if (target == Hook_target.Keyboard)
             {
-                node.InnerText = key.ToString();
+                node.InnerText = vk.ToString();
             }
             else if (target == Hook_target.Mouse)
             {
                 node.InnerText = mbutton.ToString();
             }
+            doc.Save(path_to_settings_filename);
+        }
+
+        public static void save_global_backcolor(Color color)
+        {
+            XmlNode node = doc.DocumentElement;
+            node.Attributes["global_backcolor"].Value = color.ToArgb().ToString();
+            doc.Save(path_to_settings_filename);
+        }
+
+        public static void save_global_textcolor(Color color)
+        {
+            XmlNode node = doc.DocumentElement;
+            node.Attributes["global_textcolor"].Value = color.ToArgb().ToString();
+            doc.Save(path_to_settings_filename);
+        }
+
+        public static void save_global_font(Font font)
+        {
+            XmlNode node = doc.DocumentElement;
+            node.Attributes["global_font"].Value = new FontConverter().ConvertToString(font);
             doc.Save(path_to_settings_filename);
         }
     }
