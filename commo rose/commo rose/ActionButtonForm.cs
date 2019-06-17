@@ -256,7 +256,8 @@ namespace commo_rose
                     return "Volume " + vk.ToString()[7] + vk.ToString().Substring(8).ToLower();
                 default:break;
             }
-            return vk.ToString();
+            
+            return vk.ToString().ToUpper()[0] + vk.ToString().Substring(1).Replace('_', ' ').ToLower();
         }
     }
 }
