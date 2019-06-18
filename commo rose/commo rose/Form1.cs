@@ -29,7 +29,9 @@ namespace commo_rose
         
         public IntPtr form_handle;
 
-        public List<CustomButton> buttons_array;
+        public Preset current_preset { get; set; }
+        public List<Preset> presets_array;
+        //public List<CustomButton> buttons_array;
         public Color global_backcolor;
         public Color global_textcolor;
         public Font global_font;
@@ -42,7 +44,8 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             form_handle = this.Handle;
-            buttons_array = new List<CustomButton>();
+            //buttons_array = new List<CustomButton>();
+            presets_array = new List<Preset>();
 
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
@@ -98,7 +101,7 @@ namespace commo_rose
 
         private void activate_selected_button()
         {
-            foreach (CustomButton button in buttons_array)
+            foreach (CustomButton button in current_preset.buttons_array)
             {
                 if (button.Selected)
                 {
@@ -140,5 +143,11 @@ namespace commo_rose
                 settings.Activate();
             }
         }
+    }
+
+    public struct Preset
+    {
+        public string name;
+        public List<CustomButton> buttons_array;
     }
 }

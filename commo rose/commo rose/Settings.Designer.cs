@@ -62,6 +62,7 @@
             this.globalBackcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.PresetComboBox = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -75,7 +76,7 @@
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel1.Controls.Add(this.CursorpictureBox);
-            this.panel1.Location = new System.Drawing.Point(12, 27);
+            this.panel1.Location = new System.Drawing.Point(12, 36);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(405, 232);
             this.panel1.TabIndex = 0;
@@ -149,7 +150,7 @@
             // 
             this.SaveCancelAllpanel.Controls.Add(this.ApplyAllbutton);
             this.SaveCancelAllpanel.Controls.Add(this.CancelAllbutton);
-            this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 187);
+            this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 205);
             this.SaveCancelAllpanel.Name = "SaveCancelAllpanel";
             this.SaveCancelAllpanel.Size = new System.Drawing.Size(165, 33);
             this.SaveCancelAllpanel.TabIndex = 12;
@@ -166,7 +167,7 @@
             // 
             // Addbutton
             // 
-            this.Addbutton.Location = new System.Drawing.Point(617, 211);
+            this.Addbutton.Location = new System.Drawing.Point(617, 229);
             this.Addbutton.Name = "Addbutton";
             this.Addbutton.Size = new System.Drawing.Size(75, 23);
             this.Addbutton.TabIndex = 18;
@@ -178,7 +179,7 @@
             // 
             this.ApplyCancelpanel.Controls.Add(this.Cancelbutton);
             this.ApplyCancelpanel.Controls.Add(this.Applybutton);
-            this.ApplyCancelpanel.Location = new System.Drawing.Point(423, 226);
+            this.ApplyCancelpanel.Location = new System.Drawing.Point(423, 244);
             this.ApplyCancelpanel.Name = "ApplyCancelpanel";
             this.ApplyCancelpanel.Size = new System.Drawing.Size(165, 33);
             this.ApplyCancelpanel.TabIndex = 10;
@@ -206,7 +207,7 @@
             this.Editpanel.Controls.Add(this.ButtonTextBox);
             this.Editpanel.Controls.Add(this.Action_typeBox);
             this.Editpanel.Controls.Add(this.label2);
-            this.Editpanel.Location = new System.Drawing.Point(423, 27);
+            this.Editpanel.Location = new System.Drawing.Point(423, 63);
             this.Editpanel.Name = "Editpanel";
             this.Editpanel.Size = new System.Drawing.Size(296, 139);
             this.Editpanel.TabIndex = 8;
@@ -366,10 +367,20 @@
             this.globalFontToolStripMenuItem.Text = "Global font";
             this.globalFontToolStripMenuItem.Click += new System.EventHandler(this.globalFontToolStripMenuItem_Click);
             // 
+            // PresetComboBox
+            // 
+            this.PresetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PresetComboBox.FormattingEnabled = true;
+            this.PresetComboBox.Location = new System.Drawing.Point(423, 36);
+            this.PresetComboBox.Name = "PresetComboBox";
+            this.PresetComboBox.Size = new System.Drawing.Size(121, 21);
+            this.PresetComboBox.TabIndex = 19;
+            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(726, 268);
+            this.ClientSize = new System.Drawing.Size(726, 293);
+            this.Controls.Add(this.PresetComboBox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.Editpanel);
             this.Controls.Add(this.ApplyCancelpanel);
@@ -430,5 +441,6 @@
         private System.Windows.Forms.ToolStripMenuItem globalTextcolorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem globalFontToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionButtonToolStripMenuItem;
+        private System.Windows.Forms.ComboBox PresetComboBox;
     }
 }

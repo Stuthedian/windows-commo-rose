@@ -29,7 +29,8 @@ namespace commo_rose
             writer.WriteStartElement("Hook_key");
             writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
             writer.WriteEndElement();
-            writer.WriteStartElement("CustomButtons");
+            writer.WriteStartElement("Presets");
+            writer.WriteStartElement("Desktop");
             writer.WriteString("\n");
             CustomButton customButton;
             List<CustomButton> buttons;
@@ -113,6 +114,7 @@ namespace commo_rose
             }
             writer.WriteEndElement();
             writer.WriteEndElement();
+            writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
@@ -146,63 +148,73 @@ namespace commo_rose
                 main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
                 main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
-
-            CustomButton customButton;
-            CustomButtons = doc.DocumentElement.SelectSingleNode("CustomButtons");
-            foreach (XmlNode item in CustomButtons.ChildNodes)
+            Preset preset;
+            XmlNode preset_node = doc.DocumentElement.SelectSingleNode("Presets");
+            foreach (XmlNode item in preset_node.ChildNodes)
             {
-                customButton = new CustomButton();
-                customButton.Name = item.LocalName;
-                point.X = int.Parse(item.Attributes[customButton.Name + ".Location.X"].Value);
-                point.Y = int.Parse(item.Attributes[customButton.Name + ".Location.Y"].Value);
-                customButton.Location = point;
-                customButton.Text = item.Attributes[customButton.Name + ".Text"].Value;
-                customButton.action_type =
-                    (Action_type)Enum.Parse(typeof(Action_type), item.Attributes[customButton.Name + ".action_type"].Value);
-                customButton.Parameters = item.Attributes[customButton.Name + ".Parameters"].Value;
-                customButton.BackColor = Color.FromArgb(Convert.ToInt32(item.Attributes[customButton.Name + ".BackColor"].Value));
-                customButton.ForeColor = Color.FromArgb(Convert.ToInt32(item.Attributes[customButton.Name + ".ForeColor"].Value));
-                customButton.Width = int.Parse(item.Attributes[customButton.Name + ".Width"].Value);
-                customButton.Height = int.Parse(item.Attributes[customButton.Name + ".Height"].Value);
-                customButton.Font = (Font)new FontConverter().ConvertFromString(item.Attributes[customButton.Name + ".Font"].Value);
+                preset = new Preset();
+                preset.name = item.LocalName;
+                preset.buttons_array = new List<CustomButton>();
 
-                list_of_actions = item.SelectSingleNode("List_of_Actions");
-                foreach (XmlNode action_node in list_of_actions.ChildNodes)
+                CustomButton customButton;
+                foreach (XmlNode item_child in item.ChildNodes)
                 {
-                    if(action_node.Attributes["IAction_type"].Value == "CustomButton_Send")
-                    {
-                        CustomButton_Send customButton_Send;
-                        modifiers_node = action_node.SelectSingleNode("modifier_keys");
-                        string[] a = modifiers_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        List<VirtualKeyCode> v = new List<VirtualKeyCode>();
-                        foreach (var item_ in a)
-                        {
-                            v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
-                        }
+                    customButton = new CustomButton();
+                    customButton.Name = item_child.LocalName;
+                    point.X = int.Parse(item_child.Attributes[customButton.Name + ".Location.X"].Value);
+                    point.Y = int.Parse(item_child.Attributes[customButton.Name + ".Location.Y"].Value);
+                    customButton.Location = point;
+                    customButton.Text = item_child.Attributes[customButton.Name + ".Text"].Value;
+                    customButton.action_type =
+                        (Action_type)Enum.Parse(typeof(Action_type), item_child.Attributes[customButton.Name + ".action_type"].Value);
+                    customButton.Parameters = item_child.Attributes[customButton.Name + ".Parameters"].Value;
+                    customButton.BackColor = Color.FromArgb(Convert.ToInt32(item_child.Attributes[customButton.Name + ".BackColor"].Value));
+                    customButton.ForeColor = Color.FromArgb(Convert.ToInt32(item_child.Attributes[customButton.Name + ".ForeColor"].Value));
+                    customButton.Width = int.Parse(item_child.Attributes[customButton.Name + ".Width"].Value);
+                    customButton.Height = int.Parse(item_child.Attributes[customButton.Name + ".Height"].Value);
+                    customButton.Font = (Font)new FontConverter().ConvertFromString(item_child.Attributes[customButton.Name + ".Font"].Value);
 
-                        ordinary_node = action_node.SelectSingleNode("ordinary_keys");
-                        a = ordinary_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var item_ in a)
-                        {
-                            v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
-                        }
-                        customButton_Send = new CustomButton_Send(v);
-                        customButton.actions.Add(customButton_Send);
-                    }
-                    else if(action_node.Attributes["IAction_type"].Value == "CustomButton_Process")
+                    list_of_actions = item_child.SelectSingleNode("List_of_Actions");
+                    foreach (XmlNode action_node in list_of_actions.ChildNodes)
                     {
-                        CustomButton_Process customButton_Process;
-                        process_node = action_node.SelectSingleNode("process");
-                        customButton_Process = new CustomButton_Process(
-                            (Process_type)Enum.Parse(typeof(Process_type), process_node.Attributes["process_type"].Value),
-                            process_node.Attributes["process.StartInfo.FileName"].Value,
-                            process_node.Attributes["process.StartInfo.Arguments"].Value);
-                        customButton.actions.Add(customButton_Process);
+                        if (action_node.Attributes["IAction_type"].Value == "CustomButton_Send")
+                        {
+                            CustomButton_Send customButton_Send;
+                            modifiers_node = action_node.SelectSingleNode("modifier_keys");
+                            string[] a = modifiers_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            List<VirtualKeyCode> v = new List<VirtualKeyCode>();
+                            foreach (var item_ in a)
+                            {
+                                v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
+                            }
+
+                            ordinary_node = action_node.SelectSingleNode("ordinary_keys");
+                            a = ordinary_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var item_ in a)
+                            {
+                                v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
+                            }
+                            customButton_Send = new CustomButton_Send(v);
+                            customButton.actions.Add(customButton_Send);
+                        }
+                        else if (action_node.Attributes["IAction_type"].Value == "CustomButton_Process")
+                        {
+                            CustomButton_Process customButton_Process;
+                            process_node = action_node.SelectSingleNode("process");
+                            customButton_Process = new CustomButton_Process(
+                                (Process_type)Enum.Parse(typeof(Process_type), process_node.Attributes["process_type"].Value),
+                                process_node.Attributes["process.StartInfo.FileName"].Value,
+                                process_node.Attributes["process.StartInfo.Arguments"].Value);
+                            customButton.actions.Add(customButton_Process);
+                        }
                     }
+                    customButton.Parent = main;
+                    preset.buttons_array.Add(customButton);
                 }
-                customButton.Parent = main;
-                main.buttons_array.Add(customButton);
+                main.presets_array.Add(preset);
             }
+            main.current_preset = main.presets_array.Find(x => x.name == "Desktop");
+            
         }
         
         public static void save_button_settings(CustomButton button, bool is_added)

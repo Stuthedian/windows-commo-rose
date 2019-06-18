@@ -77,7 +77,8 @@ namespace commo_rose
             }
         }
 
-        private List<CustomButton> main_buttons;
+        private Preset current_preset;
+        private List<Preset> presets_array;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
 
@@ -88,7 +89,13 @@ namespace commo_rose
             InitializeComponent();
             actionButtonForm = new ActionButtonForm(main);
             this.main = main;
-            main_buttons = main.buttons_array;
+            current_preset = main.current_preset;
+            presets_array = main.presets_array;
+            foreach (var item in presets_array)
+            {
+                PresetComboBox.Items.Add(item.name);
+            }
+            PresetComboBox.SelectedItem = current_preset.name;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             Editpanel.Enabled = false;
@@ -131,7 +138,7 @@ namespace commo_rose
                 Action_typeBox.Items.Add(item);
             }
             
-            foreach (CustomButton button in main_buttons)
+            foreach (CustomButton button in main.current_preset.buttons_array)
             {
                 panel1.Controls.Add(button.Clone());
                 CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
@@ -267,7 +274,7 @@ namespace commo_rose
 
         private void Cancelbutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
             if (a.Length == 0)
             {
                 delete_current_button_from_panel();
@@ -318,7 +325,7 @@ namespace commo_rose
             {
                 if (button.property_watcher)
                 {
-                    CustomButton[] a = main_buttons.Where(x => x.Name == button.Name).ToArray();
+                    CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == button.Name).ToArray();
                     if (a.Length == 0)
                     {
                         delete_button_from_panel(button);
@@ -351,12 +358,12 @@ namespace commo_rose
                 return error_message;
             }
             CustomButton target_button;
-            var a = main_buttons.Where(x => x.Name == customButton.Name).ToArray();
+            var a = current_preset.buttons_array.Where(x => x.Name == customButton.Name).ToArray();
 
             if (a.Length == 0)
             {
                 target_button = new CustomButton();
-                main_buttons.Add(target_button);
+                current_preset.buttons_array.Add(target_button);
                 target_button.Parent = main;
                 Saver.save_button_settings(customButton, true);
             }
@@ -723,7 +730,7 @@ namespace commo_rose
 
         private void Deletebutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = main_buttons.Where(x => x.Name == currentButton.Name).ToArray();
+            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
             if(a.Length == 0)
             {
                 delete_current_button_from_panel();
@@ -735,7 +742,7 @@ namespace commo_rose
                 {
                     Saver.delete_button(currentButton);
                     a[0].Parent = null;
-                    main_buttons.Remove(a[0]);
+                    current_preset.buttons_array.Remove(a[0]);
                     delete_current_button_from_panel();
                 }
             }
