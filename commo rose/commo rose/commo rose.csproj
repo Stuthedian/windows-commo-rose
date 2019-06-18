@@ -80,6 +80,7 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="VirtualDesktop.cs" />
     <EmbeddedResource Include="ActionButtonForm.resx">
       <DependentUpon>ActionButtonForm.cs</DependentUpon>
     </EmbeddedResource>

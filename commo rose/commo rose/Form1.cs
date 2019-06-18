@@ -53,6 +53,8 @@ namespace commo_rose
             Saver.load_settings(this);
             settings = new Settings(this);
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);
+
+            VirtualDesktop.Desktop.PinWindow(form_handle);
         }
 
         
