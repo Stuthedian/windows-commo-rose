@@ -54,7 +54,8 @@ namespace commo_rose
             settings = new Settings(this);
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);
 
-            VirtualDesktop.Desktop.PinWindow(form_handle);
+            if(Environment.OSVersion.Version.Major == 10)
+                VirtualDesktop.Desktop.PinWindow(form_handle);
         }
 
         
