@@ -43,7 +43,6 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -63,12 +62,18 @@
             this.globalTextcolorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PresetComboBox = new System.Windows.Forms.ComboBox();
+            this.PresetPanel = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.AddPresetButton = new System.Windows.Forms.Button();
+            this.RemovePresetButton = new System.Windows.Forms.Button();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
             this.ApplyCancelpanel.SuspendLayout();
             this.Editpanel.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            this.PresetPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -76,7 +81,7 @@
             this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.panel1.Controls.Add(this.CursorpictureBox);
-            this.panel1.Location = new System.Drawing.Point(12, 36);
+            this.panel1.Location = new System.Drawing.Point(9, 66);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(405, 232);
             this.panel1.TabIndex = 0;
@@ -111,7 +116,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 65);
+            this.label2.Location = new System.Drawing.Point(6, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 3;
@@ -131,7 +136,7 @@
             // 
             this.Action_typeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Action_typeBox.FormattingEnabled = true;
-            this.Action_typeBox.Location = new System.Drawing.Point(46, 61);
+            this.Action_typeBox.Location = new System.Drawing.Point(46, 43);
             this.Action_typeBox.Name = "Action_typeBox";
             this.Action_typeBox.Size = new System.Drawing.Size(85, 21);
             this.Action_typeBox.TabIndex = 6;
@@ -150,9 +155,9 @@
             // 
             this.SaveCancelAllpanel.Controls.Add(this.ApplyAllbutton);
             this.SaveCancelAllpanel.Controls.Add(this.CancelAllbutton);
-            this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 205);
+            this.SaveCancelAllpanel.Location = new System.Drawing.Point(423, 230);
             this.SaveCancelAllpanel.Name = "SaveCancelAllpanel";
-            this.SaveCancelAllpanel.Size = new System.Drawing.Size(165, 33);
+            this.SaveCancelAllpanel.Size = new System.Drawing.Size(165, 30);
             this.SaveCancelAllpanel.TabIndex = 12;
             // 
             // CancelAllbutton
@@ -167,7 +172,7 @@
             // 
             // Addbutton
             // 
-            this.Addbutton.Location = new System.Drawing.Point(617, 229);
+            this.Addbutton.Location = new System.Drawing.Point(629, 248);
             this.Addbutton.Name = "Addbutton";
             this.Addbutton.Size = new System.Drawing.Size(75, 23);
             this.Addbutton.TabIndex = 18;
@@ -179,9 +184,9 @@
             // 
             this.ApplyCancelpanel.Controls.Add(this.Cancelbutton);
             this.ApplyCancelpanel.Controls.Add(this.Applybutton);
-            this.ApplyCancelpanel.Location = new System.Drawing.Point(423, 244);
+            this.ApplyCancelpanel.Location = new System.Drawing.Point(423, 268);
             this.ApplyCancelpanel.Name = "ApplyCancelpanel";
-            this.ApplyCancelpanel.Size = new System.Drawing.Size(165, 33);
+            this.ApplyCancelpanel.Size = new System.Drawing.Size(165, 30);
             this.ApplyCancelpanel.TabIndex = 10;
             // 
             // Cancelbutton
@@ -207,22 +212,14 @@
             this.Editpanel.Controls.Add(this.ButtonTextBox);
             this.Editpanel.Controls.Add(this.Action_typeBox);
             this.Editpanel.Controls.Add(this.label2);
-            this.Editpanel.Location = new System.Drawing.Point(423, 63);
+            this.Editpanel.Location = new System.Drawing.Point(420, 66);
             this.Editpanel.Name = "Editpanel";
-            this.Editpanel.Size = new System.Drawing.Size(296, 139);
+            this.Editpanel.Size = new System.Drawing.Size(296, 122);
             this.Editpanel.TabIndex = 8;
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 85);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Deletebutton
             // 
-            this.Deletebutton.Location = new System.Drawing.Point(6, 109);
+            this.Deletebutton.Location = new System.Drawing.Point(6, 91);
             this.Deletebutton.Name = "Deletebutton";
             this.Deletebutton.Size = new System.Drawing.Size(96, 23);
             this.Deletebutton.TabIndex = 19;
@@ -232,7 +229,7 @@
             // 
             // Fontbutton
             // 
-            this.Fontbutton.Location = new System.Drawing.Point(206, 84);
+            this.Fontbutton.Location = new System.Drawing.Point(209, 65);
             this.Fontbutton.Name = "Fontbutton";
             this.Fontbutton.Size = new System.Drawing.Size(75, 23);
             this.Fontbutton.TabIndex = 17;
@@ -295,7 +292,7 @@
             this.setToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(726, 24);
+            this.menuStrip.Size = new System.Drawing.Size(722, 24);
             this.menuStrip.TabIndex = 10;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -371,16 +368,62 @@
             // 
             this.PresetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PresetComboBox.FormattingEnabled = true;
-            this.PresetComboBox.Location = new System.Drawing.Point(423, 36);
+            this.PresetComboBox.Location = new System.Drawing.Point(82, 6);
             this.PresetComboBox.Name = "PresetComboBox";
             this.PresetComboBox.Size = new System.Drawing.Size(121, 21);
             this.PresetComboBox.TabIndex = 19;
             // 
+            // PresetPanel
+            // 
+            this.PresetPanel.Controls.Add(this.RemovePresetButton);
+            this.PresetPanel.Controls.Add(this.AddPresetButton);
+            this.PresetPanel.Controls.Add(this.label3);
+            this.PresetPanel.Controls.Add(this.PresetComboBox);
+            this.PresetPanel.Location = new System.Drawing.Point(0, 27);
+            this.PresetPanel.Name = "PresetPanel";
+            this.PresetPanel.Size = new System.Drawing.Size(423, 33);
+            this.PresetPanel.TabIndex = 20;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "Current preset";
+            // 
+            // AddPresetButton
+            // 
+            this.AddPresetButton.Location = new System.Drawing.Point(220, 5);
+            this.AddPresetButton.Name = "AddPresetButton";
+            this.AddPresetButton.Size = new System.Drawing.Size(94, 23);
+            this.AddPresetButton.TabIndex = 21;
+            this.AddPresetButton.Text = "Add preset";
+            this.AddPresetButton.UseVisualStyleBackColor = true;
+            // 
+            // RemovePresetButton
+            // 
+            this.RemovePresetButton.Location = new System.Drawing.Point(320, 5);
+            this.RemovePresetButton.Name = "RemovePresetButton";
+            this.RemovePresetButton.Size = new System.Drawing.Size(94, 23);
+            this.RemovePresetButton.TabIndex = 22;
+            this.RemovePresetButton.Text = "Remove preset";
+            this.RemovePresetButton.UseVisualStyleBackColor = true;
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
+            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(726, 293);
-            this.Controls.Add(this.PresetComboBox);
+            this.ClientSize = new System.Drawing.Size(722, 307);
+            this.Controls.Add(this.PresetPanel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.Editpanel);
             this.Controls.Add(this.ApplyCancelpanel);
@@ -401,6 +444,8 @@
             this.Editpanel.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.PresetPanel.ResumeLayout(false);
+            this.PresetPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,5 +487,9 @@
         private System.Windows.Forms.ToolStripMenuItem globalFontToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem actionButtonToolStripMenuItem;
         private System.Windows.Forms.ComboBox PresetComboBox;
+        private System.Windows.Forms.Panel PresetPanel;
+        private System.Windows.Forms.Button RemovePresetButton;
+        private System.Windows.Forms.Button AddPresetButton;
+        private System.Windows.Forms.Label label3;
     }
 }
