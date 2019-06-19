@@ -43,6 +43,7 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -63,10 +64,9 @@
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PresetComboBox = new System.Windows.Forms.ComboBox();
             this.PresetPanel = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.AddPresetButton = new System.Windows.Forms.Button();
             this.RemovePresetButton = new System.Windows.Forms.Button();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
+            this.AddPresetButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -216,6 +216,14 @@
             this.Editpanel.Name = "Editpanel";
             this.Editpanel.Size = new System.Drawing.Size(296, 122);
             this.Editpanel.TabIndex = 8;
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Deletebutton
             // 
@@ -384,24 +392,6 @@
             this.PresetPanel.Size = new System.Drawing.Size(423, 33);
             this.PresetPanel.TabIndex = 20;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 10);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(73, 13);
-            this.label3.TabIndex = 20;
-            this.label3.Text = "Current preset";
-            // 
-            // AddPresetButton
-            // 
-            this.AddPresetButton.Location = new System.Drawing.Point(220, 5);
-            this.AddPresetButton.Name = "AddPresetButton";
-            this.AddPresetButton.Size = new System.Drawing.Size(94, 23);
-            this.AddPresetButton.TabIndex = 21;
-            this.AddPresetButton.Text = "Add preset";
-            this.AddPresetButton.UseVisualStyleBackColor = true;
-            // 
             // RemovePresetButton
             // 
             this.RemovePresetButton.Location = new System.Drawing.Point(320, 5);
@@ -411,13 +401,24 @@
             this.RemovePresetButton.Text = "Remove preset";
             this.RemovePresetButton.UseVisualStyleBackColor = true;
             // 
-            // ButtonParametersBox
+            // AddPresetButton
             // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
+            this.AddPresetButton.Location = new System.Drawing.Point(220, 5);
+            this.AddPresetButton.Name = "AddPresetButton";
+            this.AddPresetButton.Size = new System.Drawing.Size(94, 23);
+            this.AddPresetButton.TabIndex = 21;
+            this.AddPresetButton.Text = "Add preset";
+            this.AddPresetButton.UseVisualStyleBackColor = true;
+            this.AddPresetButton.Click += new System.EventHandler(this.AddPresetButton_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(3, 10);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 20;
+            this.label3.Text = "Current preset";
             // 
             // Settings
             // 

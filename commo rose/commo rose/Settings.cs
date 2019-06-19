@@ -96,6 +96,7 @@ namespace commo_rose
                 PresetComboBox.Items.Add(item.name);
             }
             PresetComboBox.SelectedItem = current_preset.name;
+            PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
             panel1.Width = main.Width;
             panel1.Height = main.Height;
             Editpanel.Enabled = false;
@@ -159,6 +160,33 @@ namespace commo_rose
             apply_counter = 0;
             //TransparencyKey = Color.FromArgb(255, 0, 255, 1);
             //panel1.BackColor = TransparencyKey;
+        }
+
+        private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
+            main.current_preset = current_preset;
+            panel1.Controls.Clear();
+            foreach (CustomButton button in current_preset.buttons_array)
+            {
+                panel1.Controls.Add(button.Clone());
+                CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
+                b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
+                b.MouseDown += Button_MouseDown;
+                b.MouseMove += Button_MouseMove;
+                b.resizer.MouseDown += resizer_MouseDown;
+                b.resizer.MouseMove += resizer_MouseMove;
+                b.resizer.MouseUp += resizer_MouseUp;
+                b.resizer.Cursor = Cursors.SizeNWSE;
+                b.resizer.BringToFront();
+                b.BringToFront();
+            }
+            currentButton = null;
+            previousbuttons = new List<CustomButton>();
+            previousbuttons.Add(currentButton);
+            update_ApplyCancelpanel(false);
+            update_ApplyAllCancelAllpanel(false);
+            apply_counter = 0;
         }
 
         protected override CreateParams CreateParams
@@ -855,6 +883,17 @@ namespace commo_rose
         private void actionButtonToolStripMenuItem_Click(object sender, EventArgs e)
         {
             actionButtonForm.ShowDialog();
+        }
+
+        private void AddPresetButton_Click(object sender, EventArgs e)
+        {
+            Preset preset = new Preset();
+            preset.name = "Preset0";
+            preset.buttons_array = new List<CustomButton>();
+            presets_array.Add(preset);
+            PresetComboBox.Items.Add(preset.name);
+            PresetComboBox.SelectedItem = preset.name;
+            Saver.save_new_preset(preset.name);
         }
     }
 }

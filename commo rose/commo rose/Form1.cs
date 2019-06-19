@@ -29,7 +29,26 @@ namespace commo_rose
         
         public IntPtr form_handle;
 
-        public Preset current_preset { get; set; }
+        private Preset _current_preset;
+        public Preset current_preset
+        {
+            get { return _current_preset; }
+            set
+            {
+                if(_current_preset.buttons_array != null)
+                {
+                    foreach (CustomButton button in _current_preset.buttons_array)
+                    {
+                        button.Parent = null;
+                    }
+                }
+                _current_preset = value;
+                foreach (CustomButton button in current_preset.buttons_array)
+                {
+                    button.Parent = this;
+                }
+            }
+        }
         public List<Preset> presets_array;
         //public List<CustomButton> buttons_array;
         public Color global_backcolor;

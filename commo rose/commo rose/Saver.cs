@@ -12,12 +12,12 @@ namespace commo_rose
     {
         private static XmlDocument doc;
         private static XmlNode preset_node;
-        private static readonly string path_to_settings_filename = 
+        private static readonly string path_to_settings_file = 
             Path.Combine(Application.StartupPath, ".settings.xml");
 
         private static void create_new_settings_file()
         {
-            XmlWriter writer = XmlWriter.Create(path_to_settings_filename);
+            XmlWriter writer = XmlWriter.Create(path_to_settings_file);
             writer.WriteStartDocument();
             writer.WriteStartElement("Settings");
             writer.WriteAttributeString("global_backcolor", Color.White.ToArgb().ToString());
@@ -122,12 +122,12 @@ namespace commo_rose
 
         public static void load_settings(Form1 main)
         {
-            if (!File.Exists(path_to_settings_filename))
+            if (!File.Exists(path_to_settings_file))
             {
                 create_new_settings_file();
             }
             doc = new XmlDocument();
-            doc.Load(path_to_settings_filename);
+            doc.Load(path_to_settings_file);
             XmlNode node, list_of_actions, modifiers_node, ordinary_node, process_node;
             Point point = new Point();
 
@@ -208,7 +208,7 @@ namespace commo_rose
                             customButton.actions.Add(customButton_Process);
                         }
                     }
-                    customButton.Parent = main;
+                    //customButton.Parent = main;
                     preset.buttons_array.Add(customButton);
                 }
                 main.presets_array.Add(preset);
@@ -346,14 +346,21 @@ namespace commo_rose
                     list_of_actions.AppendChild(action_node);
                 }
             }
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
         }
 
         public static void delete_button(string preset_name, CustomButton button)
         {
             XmlNode preset = preset_node.SelectSingleNode(preset_name);
             preset.RemoveChild(preset.SelectSingleNode(button.Name));
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
+        }
+
+        public static void save_new_preset(string preset_name)
+        {
+            XmlNode preset = doc.CreateElement(preset_name);
+            preset_node.AppendChild(preset);
+            doc.Save(path_to_settings_file);
         }
 
         public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
@@ -370,28 +377,28 @@ namespace commo_rose
             {
                 node.InnerText = mbutton.ToString();
             }
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
         }
 
         public static void save_global_backcolor(Color color)
         {
             XmlNode node = doc.DocumentElement;
             node.Attributes["global_backcolor"].Value = color.ToArgb().ToString();
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
         }
 
         public static void save_global_textcolor(Color color)
         {
             XmlNode node = doc.DocumentElement;
             node.Attributes["global_textcolor"].Value = color.ToArgb().ToString();
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
         }
 
         public static void save_global_font(Font font)
         {
             XmlNode node = doc.DocumentElement;
             node.Attributes["global_font"].Value = new FontConverter().ConvertToString(font);
-            doc.Save(path_to_settings_filename);
+            doc.Save(path_to_settings_file);
         }
     }
 }
