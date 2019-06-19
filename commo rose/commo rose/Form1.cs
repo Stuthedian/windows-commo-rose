@@ -125,16 +125,16 @@ namespace commo_rose
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
-            uint process_id;
-            GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
-            if ("chrome" == System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName)
-            {
-                current_preset = presets_array.Find(x => x.name == "Chrome");
-            }
-            else
-            {
-                current_preset = presets_array.Find(x => x.name == "Desktop");
-            }
+            //uint process_id;
+            //GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            //if ("chrome" == System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName)
+            //{
+            //    current_preset = presets_array.Find(x => x.name == "Chrome");
+            //}
+            //else
+            //{
+            //    current_preset = presets_array.Find(x => x.name == "Desktop");
+            //}
             Opacity = 1.0;
         }
 
@@ -165,5 +165,12 @@ namespace commo_rose
     {
         public string name;
         public List<CustomButton> buttons_array;
+        public List<string> processes;
+
+        public Preset()
+        {
+            buttons_array = new List<CustomButton>();
+            processes = new List<string>();
+        }
     }
 }

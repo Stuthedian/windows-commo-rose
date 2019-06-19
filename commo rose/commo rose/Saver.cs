@@ -32,6 +32,9 @@ namespace commo_rose
             writer.WriteStartElement("Presets");
             writer.WriteStartElement("Preset");
             writer.WriteAttributeString("Name", "Desktop");
+            writer.WriteStartElement("Processes");
+            writer.WriteEndElement();
+            writer.WriteStartElement("Buttons");
             writer.WriteString("\n");
             CustomButton customButton;
             List<CustomButton> buttons;
@@ -116,6 +119,7 @@ namespace commo_rose
             writer.WriteEndElement();
             writer.WriteEndElement();
             writer.WriteEndElement();
+            writer.WriteEndElement();
             writer.WriteEndDocument();
             writer.Flush();
             writer.Close();
@@ -151,31 +155,35 @@ namespace commo_rose
             }
             Preset preset;
             preset_node = doc.DocumentElement.SelectSingleNode("Presets");
-            foreach (XmlNode item in preset_node.ChildNodes)
+            foreach (XmlNode preset_node_child in preset_node.ChildNodes)
             {
                 preset = new Preset();
-                preset.name = item.Attributes["Name"].Value;
-                preset.buttons_array = new List<CustomButton>();
-
+                preset.name = preset_node_child.Attributes["Name"].Value;
+                XmlNode processes_node = preset_node_child.SelectSingleNode("Processes");
+                foreach (XmlNode processes_node_child in processes_node.ChildNodes)
+                {
+                    preset.processes.Add(processes_node_child.Name);
+                }
                 CustomButton customButton;
-                foreach (XmlNode item_child in item.ChildNodes)
+                XmlNode buttons_node = preset_node_child.SelectSingleNode("Buttons");
+                foreach (XmlNode buttons_node_child in buttons_node.ChildNodes)
                 {
                     customButton = new CustomButton();
-                    customButton.Name = item_child.LocalName;
-                    point.X = int.Parse(item_child.Attributes[customButton.Name + ".Location.X"].Value);
-                    point.Y = int.Parse(item_child.Attributes[customButton.Name + ".Location.Y"].Value);
+                    customButton.Name = buttons_node_child.LocalName;
+                    point.X = int.Parse(buttons_node_child.Attributes[customButton.Name + ".Location.X"].Value);
+                    point.Y = int.Parse(buttons_node_child.Attributes[customButton.Name + ".Location.Y"].Value);
                     customButton.Location = point;
-                    customButton.Text = item_child.Attributes[customButton.Name + ".Text"].Value;
+                    customButton.Text = buttons_node_child.Attributes[customButton.Name + ".Text"].Value;
                     customButton.action_type =
-                        (Action_type)Enum.Parse(typeof(Action_type), item_child.Attributes[customButton.Name + ".action_type"].Value);
-                    customButton.Parameters = item_child.Attributes[customButton.Name + ".Parameters"].Value;
-                    customButton.BackColor = Color.FromArgb(Convert.ToInt32(item_child.Attributes[customButton.Name + ".BackColor"].Value));
-                    customButton.ForeColor = Color.FromArgb(Convert.ToInt32(item_child.Attributes[customButton.Name + ".ForeColor"].Value));
-                    customButton.Width = int.Parse(item_child.Attributes[customButton.Name + ".Width"].Value);
-                    customButton.Height = int.Parse(item_child.Attributes[customButton.Name + ".Height"].Value);
-                    customButton.Font = (Font)new FontConverter().ConvertFromString(item_child.Attributes[customButton.Name + ".Font"].Value);
+                        (Action_type)Enum.Parse(typeof(Action_type), buttons_node_child.Attributes[customButton.Name + ".action_type"].Value);
+                    customButton.Parameters = buttons_node_child.Attributes[customButton.Name + ".Parameters"].Value;
+                    customButton.BackColor = Color.FromArgb(Convert.ToInt32(buttons_node_child.Attributes[customButton.Name + ".BackColor"].Value));
+                    customButton.ForeColor = Color.FromArgb(Convert.ToInt32(buttons_node_child.Attributes[customButton.Name + ".ForeColor"].Value));
+                    customButton.Width = int.Parse(buttons_node_child.Attributes[customButton.Name + ".Width"].Value);
+                    customButton.Height = int.Parse(buttons_node_child.Attributes[customButton.Name + ".Height"].Value);
+                    customButton.Font = (Font)new FontConverter().ConvertFromString(buttons_node_child.Attributes[customButton.Name + ".Font"].Value);
 
-                    list_of_actions = item_child.SelectSingleNode("List_of_Actions");
+                    list_of_actions = buttons_node_child.SelectSingleNode("List_of_Actions");
                     foreach (XmlNode action_node in list_of_actions.ChildNodes)
                     {
                         if (action_node.Attributes["IAction_type"].Value == "CustomButton_Send")
@@ -281,13 +289,15 @@ namespace commo_rose
                     list_of_actions.AppendChild(action_node);
                 }
                 node.AppendChild(list_of_actions);
-                preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").AppendChild(node);
+                XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+                preset.SelectSingleNode("Buttons").AppendChild(node);
             }
             else
             {
                 XmlNode node, list_of_actions;
                 XmlElement action_node, modifiers_node, ordinary_node, process_node;
-                node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode(button.Name);
+                XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+                node = preset.SelectSingleNode("Buttons").SelectSingleNode(button.Name);
                 node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
                 node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
@@ -351,7 +361,7 @@ namespace commo_rose
 
         public static void delete_button(string preset_name, CustomButton button)
         {
-            XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+            XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Buttons");
             preset.RemoveChild(preset.SelectSingleNode(button.Name));
             doc.Save(path_to_settings_file);
         }
@@ -360,6 +370,8 @@ namespace commo_rose
         {
             XmlElement preset = doc.CreateElement("Preset");
             preset.SetAttribute("Name", preset_name);
+            preset.AppendChild(doc.CreateElement("Processes"));
+            preset.AppendChild(doc.CreateElement("Buttons"));
             preset_node.AppendChild(preset);
             doc.Save(path_to_settings_file);
         }
