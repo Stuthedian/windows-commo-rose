@@ -22,6 +22,7 @@ namespace commo_rose
         private Form1 main;
         private ActionButtonForm actionButtonForm;
         private PresetName presetName;
+        private BindProcess bindProcess;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
@@ -90,6 +91,7 @@ namespace commo_rose
             InitializeComponent();
             actionButtonForm = new ActionButtonForm(main);
             presetName = new PresetName(this);
+            bindProcess = new BindProcess();
             this.main = main;
             current_preset = main.current_preset;
             presets_array = main.presets_array;
@@ -938,6 +940,14 @@ namespace commo_rose
             update_ApplyCancelpanel(false);
             update_ApplyAllCancelAllpanel(false);
             apply_counter = 0;
+        }
+
+        private void BindButton_Click(object sender, EventArgs e)
+        {
+            if(current_preset.name != "Desktop")
+                bindProcess.ShowDialog();
+            else
+                MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
         }
     }
 }

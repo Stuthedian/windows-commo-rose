@@ -43,15 +43,13 @@ namespace commo_rose
                 {
                     foreach (CustomButton button in _current_preset.buttons_array)
                     {
-                        //button.Parent = null;
-                        button.Visible = false;
+                        button.Parent = null;
                     }
                 }
                 _current_preset = value;
                 foreach (CustomButton button in current_preset.buttons_array)
                 {
-                    //button.Parent = this;
-                    button.Visible = true;
+                    button.Parent = this;
                 }
             }
         }
@@ -109,19 +107,6 @@ namespace commo_rose
             this.Close();
         }
             
-        //private void check_button_bounds()
-        //{
-        //    foreach (CustomButton button in Controls.OfType<CustomButton>().ToArray())
-        //    {
-        //        Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-        //        if (!screen.Contains(RectangleToScreen(button.Bounds)))
-        //        {
-        //            button.Visible = false;
-        //        }
-        //        else { button.Visible = true; }
-        //    }
-        //}
-
         private void activate_selected_button()
         {
             foreach (CustomButton button in current_preset.buttons_array)
@@ -144,30 +129,12 @@ namespace commo_rose
             GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
             if ("chrome" == System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName)
             {
-                foreach (var item in presets_array)
-                {
-                    if (item.name == "Chrome")
-                    {
-                        current_preset = item;
-                        break;
-                    }
-                }
-                //current_preset = presets_array.Find(x => x.name == "Chrome");
+                current_preset = presets_array.Find(x => x.name == "Chrome");
             }
             else
             {
-                foreach (var item in presets_array)
-                {
-                    if (item.name == "Desktop")
-                    {
-                        current_preset = item;
-                        break;
-                    }
-                }
-                //current_preset = presets_array.Find(x => x.name == "Desktop");
+                current_preset = presets_array.Find(x => x.name == "Desktop");
             }
-            ////check_button_bounds();
-            //System.Threading.Thread.Sleep(1000);
             Opacity = 1.0;
         }
 

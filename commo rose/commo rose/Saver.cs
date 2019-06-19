@@ -209,8 +209,6 @@ namespace commo_rose
                             customButton.actions.Add(customButton_Process);
                         }
                     }
-                    customButton.Parent = main;
-                    customButton.Visible = false;
                     preset.buttons_array.Add(customButton);
                 }
                 main.presets_array.Add(preset);
