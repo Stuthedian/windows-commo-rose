@@ -30,7 +30,8 @@ namespace commo_rose
             writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
             writer.WriteEndElement();
             writer.WriteStartElement("Presets");
-            writer.WriteStartElement("Desktop");
+            writer.WriteStartElement("Preset");
+            writer.WriteAttributeString("Name", "Desktop");
             writer.WriteString("\n");
             CustomButton customButton;
             List<CustomButton> buttons;
@@ -153,7 +154,7 @@ namespace commo_rose
             foreach (XmlNode item in preset_node.ChildNodes)
             {
                 preset = new Preset();
-                preset.name = item.LocalName;
+                preset.name = item.Attributes["Name"].Value;
                 preset.buttons_array = new List<CustomButton>();
 
                 CustomButton customButton;
@@ -208,7 +209,6 @@ namespace commo_rose
                             customButton.actions.Add(customButton_Process);
                         }
                     }
-                    //customButton.Parent = main;
                     preset.buttons_array.Add(customButton);
                 }
                 main.presets_array.Add(preset);
@@ -281,13 +281,13 @@ namespace commo_rose
                     list_of_actions.AppendChild(action_node);
                 }
                 node.AppendChild(list_of_actions);
-                preset_node.SelectSingleNode(preset_name).AppendChild(node);
+                preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").AppendChild(node);
             }
             else
             {
                 XmlNode node, list_of_actions;
                 XmlElement action_node, modifiers_node, ordinary_node, process_node;
-                node = preset_node.SelectSingleNode(preset_name).SelectSingleNode(button.Name);
+                node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode(button.Name);
                 node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
                 node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
@@ -351,15 +351,23 @@ namespace commo_rose
 
         public static void delete_button(string preset_name, CustomButton button)
         {
-            XmlNode preset = preset_node.SelectSingleNode(preset_name);
+            XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
             preset.RemoveChild(preset.SelectSingleNode(button.Name));
             doc.Save(path_to_settings_file);
         }
 
         public static void save_new_preset(string preset_name)
         {
-            XmlNode preset = doc.CreateElement(preset_name);
+            XmlElement preset = doc.CreateElement("Preset");
+            preset.SetAttribute("Name", preset_name);
             preset_node.AppendChild(preset);
+            doc.Save(path_to_settings_file);
+        }
+
+        public static void delete_preset(string preset_name)
+        {
+            XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+            preset_node.RemoveChild(preset);
             doc.Save(path_to_settings_file);
         }
 

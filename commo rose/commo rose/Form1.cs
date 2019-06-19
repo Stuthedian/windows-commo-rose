@@ -50,7 +50,6 @@ namespace commo_rose
             }
         }
         public List<Preset> presets_array;
-        //public List<CustomButton> buttons_array;
         public Color global_backcolor;
         public Color global_textcolor;
         public Font global_font;
@@ -63,7 +62,6 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             form_handle = this.Handle;
-            //buttons_array = new List<CustomButton>();
             presets_array = new List<Preset>();
 
             notifyIcon1.Text = app_name;

@@ -119,6 +119,7 @@
             this.Controls.Add(this.MouseradioButton);
             this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "ActionButtonForm";
             this.Text = "Action button";
             this.ResumeLayout(false);

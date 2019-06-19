@@ -21,6 +21,7 @@ namespace commo_rose
 
         private Form1 main;
         private ActionButtonForm actionButtonForm;
+        private PresetName presetName;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
@@ -78,7 +79,7 @@ namespace commo_rose
         }
 
         private Preset current_preset;
-        private List<Preset> presets_array;
+        public List<Preset> presets_array;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
 
@@ -88,6 +89,7 @@ namespace commo_rose
         {
             InitializeComponent();
             actionButtonForm = new ActionButtonForm(main);
+            presetName = new PresetName(this);
             this.main = main;
             current_preset = main.current_preset;
             presets_array = main.presets_array;
@@ -887,13 +889,31 @@ namespace commo_rose
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            Preset preset = new Preset();
-            preset.name = "Preset0";
-            preset.buttons_array = new List<CustomButton>();
-            presets_array.Add(preset);
-            PresetComboBox.Items.Add(preset.name);
-            PresetComboBox.SelectedItem = preset.name;
-            Saver.save_new_preset(preset.name);
+            if(DialogResult.OK == presetName.ShowDialog())
+            {
+                Preset preset = new Preset();
+                preset.name = presetName.textBox1.Text.Trim();
+                preset.buttons_array = new List<CustomButton>();
+                presets_array.Add(preset);
+                PresetComboBox.Items.Add(preset.name);
+                PresetComboBox.SelectedItem = preset.name;
+                Saver.save_new_preset(preset.name);
+            }
+            
+        }
+
+        private void DeletePresetButton_Click(object sender, EventArgs e)
+        {
+            if (current_preset.name != "Desktop")
+            {
+                Saver.delete_preset(current_preset.name);
+                presets_array.Remove(current_preset);
+                main.presets_array.Remove(current_preset);
+                PresetComboBox.Items.Remove(current_preset.name);
+                PresetComboBox.SelectedItem = "Desktop";
+            }
+            else
+                MessageBox.Show("Desktop preset can't be deleted");
         }
     }
 }

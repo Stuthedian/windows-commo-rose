@@ -64,7 +64,7 @@
             this.globalFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PresetComboBox = new System.Windows.Forms.ComboBox();
             this.PresetPanel = new System.Windows.Forms.Panel();
-            this.RemovePresetButton = new System.Windows.Forms.Button();
+            this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
@@ -383,7 +383,7 @@
             // 
             // PresetPanel
             // 
-            this.PresetPanel.Controls.Add(this.RemovePresetButton);
+            this.PresetPanel.Controls.Add(this.DeletePresetButton);
             this.PresetPanel.Controls.Add(this.AddPresetButton);
             this.PresetPanel.Controls.Add(this.label3);
             this.PresetPanel.Controls.Add(this.PresetComboBox);
@@ -392,14 +392,15 @@
             this.PresetPanel.Size = new System.Drawing.Size(423, 33);
             this.PresetPanel.TabIndex = 20;
             // 
-            // RemovePresetButton
+            // DeletePresetButton
             // 
-            this.RemovePresetButton.Location = new System.Drawing.Point(320, 5);
-            this.RemovePresetButton.Name = "RemovePresetButton";
-            this.RemovePresetButton.Size = new System.Drawing.Size(94, 23);
-            this.RemovePresetButton.TabIndex = 22;
-            this.RemovePresetButton.Text = "Remove preset";
-            this.RemovePresetButton.UseVisualStyleBackColor = true;
+            this.DeletePresetButton.Location = new System.Drawing.Point(320, 5);
+            this.DeletePresetButton.Name = "DeletePresetButton";
+            this.DeletePresetButton.Size = new System.Drawing.Size(94, 23);
+            this.DeletePresetButton.TabIndex = 22;
+            this.DeletePresetButton.Text = "Delete preset";
+            this.DeletePresetButton.UseVisualStyleBackColor = true;
+            this.DeletePresetButton.Click += new System.EventHandler(this.DeletePresetButton_Click);
             // 
             // AddPresetButton
             // 
@@ -489,7 +490,7 @@
         private System.Windows.Forms.ToolStripMenuItem actionButtonToolStripMenuItem;
         private System.Windows.Forms.ComboBox PresetComboBox;
         private System.Windows.Forms.Panel PresetPanel;
-        private System.Windows.Forms.Button RemovePresetButton;
+        private System.Windows.Forms.Button DeletePresetButton;
         private System.Windows.Forms.Button AddPresetButton;
         private System.Windows.Forms.Label label3;
     }
