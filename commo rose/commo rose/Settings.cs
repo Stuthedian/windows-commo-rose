@@ -241,9 +241,11 @@ namespace commo_rose
         {
             if (currentButton != null && currentButton.mouseClicked)
             {
-                Point lower_right_corner = new Point(currentButton.Location.X + currentButton.Width + e.X, 
-                    currentButton.Location.Y + currentButton.Height + e.Y);
-                if (!panel1.Bounds.Contains(lower_right_corner))
+                var a = currentButton.resizer.Top + e.Y;
+                var b = currentButton.resizer.Left + e.X;
+                Point lower_right_corner = new Point(currentButton.Location.X + b,
+                    currentButton.Location.Y + a);
+                if (!panel1.Bounds.Contains(this.PointToClient(panel1.PointToScreen(lower_right_corner))))
                     return;
                 currentButton.Height = currentButton.resizer.Top + e.Y;
                 currentButton.Width = currentButton.resizer.Left + e.X;
