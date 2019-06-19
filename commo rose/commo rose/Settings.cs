@@ -160,8 +160,6 @@ namespace commo_rose
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
             apply_counter = 0;
-            //TransparencyKey = Color.FromArgb(255, 0, 255, 1);
-            //panel1.BackColor = TransparencyKey;
         }
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -169,6 +167,7 @@ namespace commo_rose
             current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
             main.current_preset = current_preset;
             panel1.Controls.Clear();
+            panel1.Controls.Add(CursorpictureBox);
             foreach (CustomButton button in current_preset.buttons_array)
             {
                 panel1.Controls.Add(button.Clone());

@@ -17,6 +17,7 @@ namespace commo_rose
         {
             InitializeComponent();
             this.settings = settings;
+            textBox1.Text = "";
         }
 
         private void Okbutton_Click(object sender, EventArgs e)
