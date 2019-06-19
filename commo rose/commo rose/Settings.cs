@@ -157,8 +157,8 @@ namespace commo_rose
             previousbuttons = new List<CustomButton>();
             previousbuttons.Add(currentButton);
             apply_counter = 0;
-            TransparencyKey = Color.FromArgb(255, 0, 255, 1);
-            panel1.BackColor = TransparencyKey;
+            //TransparencyKey = Color.FromArgb(255, 0, 255, 1);
+            //panel1.BackColor = TransparencyKey;
         }
 
         protected override CreateParams CreateParams
@@ -365,12 +365,12 @@ namespace commo_rose
                 target_button = new CustomButton();
                 current_preset.buttons_array.Add(target_button);
                 target_button.Parent = main;
-                Saver.save_button_settings(customButton, true);
+                Saver.save_button_settings(current_preset.name, customButton, true);
             }
             else if (a.Length == 1)
             {
                 target_button = a[0];
-                Saver.save_button_settings(customButton, false);
+                Saver.save_button_settings(current_preset.name, customButton, false);
             }
             else throw new Exception("Identity problem");
             CustomButton.OverWrite(target_button, customButton);
@@ -740,7 +740,7 @@ namespace commo_rose
                 if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete this button?", "Warning",
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
                 {
-                    Saver.delete_button(currentButton);
+                    Saver.delete_button(current_preset.name, currentButton);
                     a[0].Parent = null;
                     current_preset.buttons_array.Remove(a[0]);
                     delete_current_button_from_panel();

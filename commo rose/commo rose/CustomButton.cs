@@ -146,6 +146,7 @@ namespace commo_rose
             {
                 switch (action_type)
                 {
+                    case Action_type.Nothing:break;
                     case Action_type.Send:
                     case Action_type.Run:
                     case Action_type.RunAsAdmin:

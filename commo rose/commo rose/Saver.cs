@@ -11,7 +11,7 @@ namespace commo_rose
     static class Saver
     {
         private static XmlDocument doc;
-        private static XmlNode CustomButtons;
+        private static XmlNode preset_node;
         private static readonly string path_to_settings_filename = 
             Path.Combine(Application.StartupPath, ".settings.xml");
 
@@ -149,7 +149,7 @@ namespace commo_rose
                 main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
             Preset preset;
-            XmlNode preset_node = doc.DocumentElement.SelectSingleNode("Presets");
+            preset_node = doc.DocumentElement.SelectSingleNode("Presets");
             foreach (XmlNode item in preset_node.ChildNodes)
             {
                 preset = new Preset();
@@ -217,7 +217,7 @@ namespace commo_rose
             
         }
         
-        public static void save_button_settings(CustomButton button, bool is_added)
+        public static void save_button_settings(string preset_name, CustomButton button, bool is_added)
         {
             if(is_added)
             {
@@ -281,13 +281,13 @@ namespace commo_rose
                     list_of_actions.AppendChild(action_node);
                 }
                 node.AppendChild(list_of_actions);
-                CustomButtons.AppendChild(node);
+                preset_node.SelectSingleNode(preset_name).AppendChild(node);
             }
             else
             {
                 XmlNode node, list_of_actions;
                 XmlElement action_node, modifiers_node, ordinary_node, process_node;
-                node = CustomButtons.SelectSingleNode(button.Name);
+                node = preset_node.SelectSingleNode(preset_name).SelectSingleNode(button.Name);
                 node.Attributes[button.Name + ".Location.X"].Value = button.Location.X.ToString();
                 node.Attributes[button.Name + ".Location.Y"].Value = button.Location.Y.ToString();
                 node.Attributes[button.Name + ".Text"].Value = button.Text;
@@ -349,9 +349,10 @@ namespace commo_rose
             doc.Save(path_to_settings_filename);
         }
 
-        public static void delete_button(CustomButton button)
+        public static void delete_button(string preset_name, CustomButton button)
         {
-            CustomButtons.RemoveChild(CustomButtons.SelectSingleNode(button.Name));
+            XmlNode preset = preset_node.SelectSingleNode(preset_name);
+            preset.RemoveChild(preset.SelectSingleNode(button.Name));
             doc.Save(path_to_settings_filename);
         }
 
