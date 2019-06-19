@@ -888,7 +888,7 @@ namespace commo_rose
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            if(DialogResult.OK == presetName.ShowDialog())
+            if(DialogResult.OK == presetName.ShowDialog(""))
             {
                 Preset preset = new Preset();
                 preset.name = presetName.textBox1.Text.Trim();
@@ -905,14 +905,42 @@ namespace commo_rose
         {
             if (current_preset.name != "Desktop")
             {
-                Saver.delete_preset(current_preset.name);
-                presets_array.Remove(current_preset);
-                main.presets_array.Remove(current_preset);
-                PresetComboBox.Items.Remove(current_preset.name);
-                PresetComboBox.SelectedItem = "Desktop";
+                if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete [" + current_preset.name 
+                    +"] preset?", "Warning",
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
+                {
+                    Saver.delete_preset(current_preset.name);
+                    presets_array.Remove(current_preset);
+                    main.presets_array.Remove(current_preset);
+                    PresetComboBox.Items.Remove(current_preset.name);
+                    PresetComboBox.SelectedItem = "Desktop";
+                }
             }
             else
-                MessageBox.Show("Desktop preset can't be deleted");
+                MessageBox.Show("Desktop preset can't be deleted", "Error!");
+        }
+
+        private void RenamePresetButton_Click(object sender, EventArgs e)
+        {
+            if (current_preset.name != "Desktop")
+            {
+                if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
+                {
+                    string newName = presetName.textBox1.Text.Trim();
+                    Saver.save_update_preset(current_preset.name, newName);
+                    //PresetComboBox.Items.Remove(current_preset.name);
+                    //PresetComboBox.Items.Add(newName);
+                    //PresetComboBox.SelectedItem = newName;
+                    PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
+                    PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
+                    PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
+                    presets_array.Find(x => x.name == current_preset.name).name = newName;
+                    current_preset.name = newName;
+                    //main.current_preset.name = current_preset.name;
+                }
+            }
+            else
+                MessageBox.Show("Desktop preset can't be renamed", "Error!");
         }
     }
 }

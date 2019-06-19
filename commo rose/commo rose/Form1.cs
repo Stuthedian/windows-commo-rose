@@ -35,7 +35,7 @@ namespace commo_rose
             get { return _current_preset; }
             set
             {
-                if(_current_preset.buttons_array != null)
+                if(_current_preset != null)
                 {
                     foreach (CustomButton button in _current_preset.buttons_array)
                     {
@@ -162,7 +162,7 @@ namespace commo_rose
         }
     }
 
-    public struct Preset
+    public class Preset
     {
         public string name;
         public List<CustomButton> buttons_array;

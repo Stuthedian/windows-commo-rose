@@ -364,6 +364,13 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
+        public static void save_update_preset(string old_preset_name, string new_preset_name)
+        {
+            XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + old_preset_name + "']");
+            preset.Attributes["Name"].Value = new_preset_name;
+            doc.Save(path_to_settings_file);
+        }
+
         public static void delete_preset(string preset_name)
         {
             XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");

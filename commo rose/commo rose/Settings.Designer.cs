@@ -66,6 +66,7 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.RenamePresetButton = new System.Windows.Forms.Button();
             this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
@@ -377,18 +378,19 @@
             // 
             // PresetPanel
             // 
+            this.PresetPanel.Controls.Add(this.RenamePresetButton);
             this.PresetPanel.Controls.Add(this.DeletePresetButton);
             this.PresetPanel.Controls.Add(this.AddPresetButton);
             this.PresetPanel.Controls.Add(this.label3);
             this.PresetPanel.Controls.Add(this.PresetComboBox);
             this.PresetPanel.Location = new System.Drawing.Point(0, 27);
             this.PresetPanel.Name = "PresetPanel";
-            this.PresetPanel.Size = new System.Drawing.Size(423, 33);
+            this.PresetPanel.Size = new System.Drawing.Size(522, 33);
             this.PresetPanel.TabIndex = 20;
             // 
             // DeletePresetButton
             // 
-            this.DeletePresetButton.Location = new System.Drawing.Point(320, 5);
+            this.DeletePresetButton.Location = new System.Drawing.Point(420, 5);
             this.DeletePresetButton.Name = "DeletePresetButton";
             this.DeletePresetButton.Size = new System.Drawing.Size(94, 23);
             this.DeletePresetButton.TabIndex = 22;
@@ -414,6 +416,16 @@
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
+            // 
+            // RenamePresetButton
+            // 
+            this.RenamePresetButton.Location = new System.Drawing.Point(320, 5);
+            this.RenamePresetButton.Name = "RenamePresetButton";
+            this.RenamePresetButton.Size = new System.Drawing.Size(94, 23);
+            this.RenamePresetButton.TabIndex = 23;
+            this.RenamePresetButton.Text = "Rename preset";
+            this.RenamePresetButton.UseVisualStyleBackColor = true;
+            this.RenamePresetButton.Click += new System.EventHandler(this.RenamePresetButton_Click);
             // 
             // ButtonParametersBox
             // 
@@ -495,5 +507,6 @@
         private System.Windows.Forms.Button DeletePresetButton;
         private System.Windows.Forms.Button AddPresetButton;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button RenamePresetButton;
     }
 }
