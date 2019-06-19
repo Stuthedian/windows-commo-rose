@@ -162,34 +162,6 @@ namespace commo_rose
             apply_counter = 0;
         }
 
-        private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
-            main.current_preset = current_preset;
-            panel1.Controls.Clear();
-            panel1.Controls.Add(CursorpictureBox);
-            foreach (CustomButton button in current_preset.buttons_array)
-            {
-                panel1.Controls.Add(button.Clone());
-                CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
-                b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
-                b.MouseDown += Button_MouseDown;
-                b.MouseMove += Button_MouseMove;
-                b.resizer.MouseDown += resizer_MouseDown;
-                b.resizer.MouseMove += resizer_MouseMove;
-                b.resizer.MouseUp += resizer_MouseUp;
-                b.resizer.Cursor = Cursors.SizeNWSE;
-                b.resizer.BringToFront();
-                b.BringToFront();
-            }
-            currentButton = null;
-            previousbuttons = new List<CustomButton>();
-            previousbuttons.Add(currentButton);
-            update_ApplyCancelpanel(false);
-            update_ApplyAllCancelAllpanel(false);
-            apply_counter = 0;
-        }
-
         protected override CreateParams CreateParams
         {
             get
@@ -301,27 +273,6 @@ namespace commo_rose
             }
         }
 
-        private void Cancelbutton_Click(object sender, EventArgs e)
-        {
-            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
-            if (a.Length == 0)
-            {
-                delete_current_button_from_panel();
-            }
-            else if (a.Length == 1)
-            {
-                CustomButton target_button = a[0];
-                CustomButton.OverWrite(currentButton, target_button);
-                currentButton.property_watcher = false;
-                disable_editpanel_events();
-                ButtonTextBox.Text = currentButton.Text;
-                ButtonParametersBox.Text = currentButton.Parameters;
-                Action_typeBox.SelectedItem = currentButton.action_type.ToString();
-                enable_editpanel_events();
-            }
-            else throw new Exception("Identity problem");
-        }
-
         private void Applybutton_Click(object sender, EventArgs e)
         {
             string error_message = apply_changes_to_button(currentButton);
@@ -345,6 +296,27 @@ namespace commo_rose
             }
             if(error_message != "")
                 MessageBox.Show(error_message, "Error occured");
+        }
+
+        private void Cancelbutton_Click(object sender, EventArgs e)
+        {
+            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
+            if (a.Length == 0)
+            {
+                delete_current_button_from_panel();
+            }
+            else if (a.Length == 1)
+            {
+                CustomButton target_button = a[0];
+                CustomButton.OverWrite(currentButton, target_button);
+                currentButton.property_watcher = false;
+                disable_editpanel_events();
+                ButtonTextBox.Text = currentButton.Text;
+                ButtonParametersBox.Text = currentButton.Parameters;
+                Action_typeBox.SelectedItem = currentButton.action_type.ToString();
+                enable_editpanel_events();
+            }
+            else throw new Exception("Identity problem");
         }
 
         private void CancelAll_Click(object sender, EventArgs e)
@@ -480,6 +452,26 @@ namespace commo_rose
             ApplyAllbutton.Enabled = CancelAllbutton.Enabled = flag;
             if (!flag)
                 update_ApplyCancelpanel(false);
+        }
+
+        private string parse_button_command(CustomButton customButton)
+        {
+            switch (customButton.action_type)
+            {
+                case Action_type.Send:
+                    return parse_Send(customButton, customButton.Parameters);
+                case Action_type.Run:
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Normal);
+                case Action_type.RunAsAdmin:
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Admin);
+                case Action_type.RunSilent:
+                    return parse_Run(customButton, customButton.Parameters, Process_type.Silent);
+                case Action_type.Generic:
+                    return parse_generic(customButton, customButton.Parameters);
+                case Action_type.Nothing:
+                    return "";
+                default: return "Error";
+            }
         }
 
         private string parse_Send(CustomButton customButton, string input_text)
@@ -675,26 +667,6 @@ namespace commo_rose
                 default: break;
             }
             return VirtualKeyCode.NONAME;
-        }
-
-        private string parse_button_command(CustomButton customButton)
-        {
-            switch (customButton.action_type)
-            {
-                case Action_type.Send:
-                    return parse_Send(customButton, customButton.Parameters);
-                case Action_type.Run:
-                    return parse_Run(customButton, customButton.Parameters, Process_type.Normal);
-                case Action_type.RunAsAdmin:
-                    return parse_Run(customButton, customButton.Parameters, Process_type.Admin);
-                case Action_type.RunSilent:
-                    return parse_Run(customButton, customButton.Parameters, Process_type.Silent);
-                case Action_type.Generic:
-                    return parse_generic(customButton, customButton.Parameters);
-                case Action_type.Nothing:
-                    return "";
-                default: return "Error";
-            }
         }
 
         private void BackColorpanel_Click(object sender, EventArgs e)
@@ -911,7 +883,6 @@ namespace commo_rose
                 {
                     Saver.delete_preset(current_preset.name);
                     presets_array.Remove(current_preset);
-                    main.presets_array.Remove(current_preset);
                     PresetComboBox.Items.Remove(current_preset.name);
                     PresetComboBox.SelectedItem = "Desktop";
                 }
@@ -928,19 +899,43 @@ namespace commo_rose
                 {
                     string newName = presetName.textBox1.Text.Trim();
                     Saver.save_update_preset(current_preset.name, newName);
-                    //PresetComboBox.Items.Remove(current_preset.name);
-                    //PresetComboBox.Items.Add(newName);
-                    //PresetComboBox.SelectedItem = newName;
                     PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
                     PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
                     PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
                     presets_array.Find(x => x.name == current_preset.name).name = newName;
                     current_preset.name = newName;
-                    //main.current_preset.name = current_preset.name;
                 }
             }
             else
                 MessageBox.Show("Desktop preset can't be renamed", "Error!");
+        }
+
+        private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
+            main.current_preset = current_preset;
+            panel1.Controls.Clear();
+            panel1.Controls.Add(CursorpictureBox);
+            foreach (CustomButton button in current_preset.buttons_array)
+            {
+                panel1.Controls.Add(button.Clone());
+                CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
+                b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
+                b.MouseDown += Button_MouseDown;
+                b.MouseMove += Button_MouseMove;
+                b.resizer.MouseDown += resizer_MouseDown;
+                b.resizer.MouseMove += resizer_MouseMove;
+                b.resizer.MouseUp += resizer_MouseUp;
+                b.resizer.Cursor = Cursors.SizeNWSE;
+                b.resizer.BringToFront();
+                b.BringToFront();
+            }
+            currentButton = null;
+            previousbuttons = new List<CustomButton>();
+            previousbuttons.Add(currentButton);
+            update_ApplyCancelpanel(false);
+            update_ApplyAllCancelAllpanel(false);
+            apply_counter = 0;
         }
     }
 }
