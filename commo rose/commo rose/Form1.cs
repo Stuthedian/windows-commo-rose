@@ -17,7 +17,11 @@ namespace commo_rose
     {
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
         public const string app_name = "Commo rose";
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int WS_EX_COMPOSITED = 0x02000000;
@@ -39,13 +43,15 @@ namespace commo_rose
                 {
                     foreach (CustomButton button in _current_preset.buttons_array)
                     {
-                        button.Parent = null;
+                        //button.Parent = null;
+                        button.Visible = false;
                     }
                 }
                 _current_preset = value;
                 foreach (CustomButton button in current_preset.buttons_array)
                 {
-                    button.Parent = this;
+                    //button.Parent = this;
+                    button.Visible = true;
                 }
             }
         }
@@ -134,8 +140,34 @@ namespace commo_rose
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
-
-            //check_button_bounds();
+            uint process_id;
+            GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            if ("chrome" == System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName)
+            {
+                foreach (var item in presets_array)
+                {
+                    if (item.name == "Chrome")
+                    {
+                        current_preset = item;
+                        break;
+                    }
+                }
+                //current_preset = presets_array.Find(x => x.name == "Chrome");
+            }
+            else
+            {
+                foreach (var item in presets_array)
+                {
+                    if (item.name == "Desktop")
+                    {
+                        current_preset = item;
+                        break;
+                    }
+                }
+                //current_preset = presets_array.Find(x => x.name == "Desktop");
+            }
+            ////check_button_bounds();
+            //System.Threading.Thread.Sleep(1000);
             Opacity = 1.0;
         }
 
