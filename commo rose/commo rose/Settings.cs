@@ -369,7 +369,8 @@ namespace commo_rose
             {
                 target_button = new CustomButton();
                 current_preset.buttons_array.Add(target_button);
-                target_button.Parent = main;
+                if(current_preset == main.current_preset)
+                    target_button.Parent = main;
                 Saver.save_button_settings(current_preset.name, customButton, true);
             }
             else if (a.Length == 1)
@@ -917,7 +918,7 @@ namespace commo_rose
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
-            //main.current_preset = current_preset;
+            main.current_preset = current_preset;
             panel1.Controls.Clear();
             panel1.Controls.Add(CursorpictureBox);
             foreach (CustomButton button in current_preset.buttons_array)

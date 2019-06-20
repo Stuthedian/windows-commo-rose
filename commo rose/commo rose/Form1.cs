@@ -33,6 +33,7 @@ namespace commo_rose
         
         public IntPtr form_handle;
 
+        private bool auto_switch;
         private Preset _current_preset;
         public Preset current_preset
         {
@@ -67,6 +68,7 @@ namespace commo_rose
             ShowInTaskbar = false;
             form_handle = this.Handle;
             presets_array = new List<Preset>();
+            auto_switch = true;
 
             notifyIcon1.Text = app_name;
             notifyIcon1.Icon = SystemIcons.Application;
@@ -99,14 +101,7 @@ namespace commo_rose
         {
 
         }
-
-        private void ExitMenuItem_Click(object sender, EventArgs e)
-        {
-            if (mouseOrKeyboardHook != null)
-                mouseOrKeyboardHook.ClearHook();
-            this.Close();
-        }
-            
+       
         private void activate_selected_button()
         {
             foreach (CustomButton button in current_preset.buttons_array)
@@ -126,23 +121,26 @@ namespace commo_rose
             center.Y -= Height / 2;
             Location = center;
 
-            uint process_id;
-            GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
-            string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
-            bool process_matched = false;
-
-            foreach (Preset preset in presets_array)
+            if(auto_switch)
             {
-                if(preset.processes.Contains(foreground_process_name))
-                {
-                    current_preset = preset;
-                    process_matched = true;
-                    break;
-                }
-            }
-            if (!process_matched)
-                current_preset = presets_array.Find(x => x.name == "Desktop");
+                uint process_id;
+                GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+                string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+                bool process_matched = false;
 
+                foreach (Preset preset in presets_array)
+                {
+                    if (preset.processes.Contains(foreground_process_name))
+                    {
+                        current_preset = preset;
+                        process_matched = true;
+                        break;
+                    }
+                }
+                if (!process_matched)
+                    current_preset = presets_array.Find(x => x.name == "Desktop");
+            }
+            
             Opacity = 1.0;
         }
 
@@ -157,6 +155,20 @@ namespace commo_rose
             Application.Exit();
         }
 
+        private void AutoSwitchMenuItem_Click(object sender, EventArgs e)
+        {
+            if(auto_switch == true)
+            {
+                auto_switch = false;
+                contextMenuStrip1.Items["AutoSwitchMenuItem"].Text = "Enable preset auto-switch";
+            }
+            else
+            {
+                auto_switch = true;
+                contextMenuStrip1.Items["AutoSwitchMenuItem"].Text = "Disable preset auto-switch";
+            }
+        }
+
         private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
             if(!settings.Visible)
@@ -167,6 +179,14 @@ namespace commo_rose
                 settings.Activate();
             }
         }
+
+        private void ExitMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mouseOrKeyboardHook != null)
+                mouseOrKeyboardHook.ClearHook();
+            this.Close();
+        }
+
     }
 
     public class Preset

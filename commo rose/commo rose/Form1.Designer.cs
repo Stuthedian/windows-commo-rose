@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AutoSwitchMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
@@ -44,22 +45,30 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AutoSwitchMenuItem,
             this.SettingsMenuItem,
             this.ExitMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(214, 70);
+            // 
+            // AutoSwitchMenuItem
+            // 
+            this.AutoSwitchMenuItem.Name = "AutoSwitchMenuItem";
+            this.AutoSwitchMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.AutoSwitchMenuItem.Text = "Disable preset auto-switch";
+            this.AutoSwitchMenuItem.Click += new System.EventHandler(this.AutoSwitchMenuItem_Click);
             // 
             // SettingsMenuItem
             // 
             this.SettingsMenuItem.Name = "SettingsMenuItem";
-            this.SettingsMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.SettingsMenuItem.Size = new System.Drawing.Size(213, 22);
             this.SettingsMenuItem.Text = "Settings";
             this.SettingsMenuItem.Click += new System.EventHandler(this.SettingsMenuItem_Click);
             // 
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.ExitMenuItem.Size = new System.Drawing.Size(213, 22);
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -82,6 +91,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ExitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SettingsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AutoSwitchMenuItem;
     }
 }
 
