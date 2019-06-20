@@ -390,6 +390,13 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
+        public static void save_add_process(string preset_name, string process_name)
+        {
+            XmlNode processes_node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Processes");
+            processes_node.AppendChild(doc.CreateElement(process_name));
+            doc.Save(path_to_settings_file);
+        }
+
         public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
         {
             XmlNode node;

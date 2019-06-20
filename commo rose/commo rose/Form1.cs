@@ -125,16 +125,24 @@ namespace commo_rose
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
-            //uint process_id;
-            //GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
-            //if ("chrome" == System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName)
-            //{
-            //    current_preset = presets_array.Find(x => x.name == "Chrome");
-            //}
-            //else
-            //{
-            //    current_preset = presets_array.Find(x => x.name == "Desktop");
-            //}
+
+            uint process_id;
+            GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+            bool process_matched = false;
+
+            foreach (Preset preset in presets_array)
+            {
+                if(preset.processes.Contains(foreground_process_name))
+                {
+                    current_preset = preset;
+                    process_matched = true;
+                    break;
+                }
+            }
+            if (!process_matched)
+                current_preset = presets_array.Find(x => x.name == "Desktop");
+
             Opacity = 1.0;
         }
 

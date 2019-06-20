@@ -945,7 +945,7 @@ namespace commo_rose
         private void BindButton_Click(object sender, EventArgs e)
         {
             if(current_preset.name != "Desktop")
-                bindProcess.ShowDialog();
+                bindProcess.ShowDialog(current_preset);
             else
                 MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
         }
