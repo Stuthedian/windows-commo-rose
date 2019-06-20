@@ -902,7 +902,7 @@ namespace commo_rose
                 if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
                 {
                     string newName = presetName.textBox1.Text.Trim();
-                    Saver.save_update_preset(current_preset.name, newName);
+                    Saver.update_preset_name(current_preset.name, newName);
                     PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
                     PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
                     PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
@@ -917,7 +917,7 @@ namespace commo_rose
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
-            main.current_preset = current_preset;
+            //main.current_preset = current_preset;
             panel1.Controls.Clear();
             panel1.Controls.Add(CursorpictureBox);
             foreach (CustomButton button in current_preset.buttons_array)

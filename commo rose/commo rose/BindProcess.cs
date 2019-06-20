@@ -12,36 +12,60 @@ namespace commo_rose
 {
     public partial class BindProcess : Form
     {
+        private string old_process_name;
         private Preset current_preset;
         public BindProcess()
         {
             InitializeComponent();
-            
-        }
-
-        private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            //Saver.save_add_process(current_preset_name, e.Row.Cells[0].Value.ToString());
         }
 
         public DialogResult ShowDialog(Preset preset)
         {
-            dataGridView1.CellValueChanged -= dataGridView1_CellValueChanged;
+            dataGridView1.CellBeginEdit -= DataGridView1_CellBeginEdit;
+            dataGridView1.CellEndEdit -= DataGridView1_CellEndEdit;
+            dataGridView1.UserDeletingRow -= DataGridView1_UserDeletingRow;
             current_preset = preset;
             dataGridView1.Rows.Clear();
-            foreach (var item in current_preset.processes)
+            foreach (string item in current_preset.processes)
             {
                 dataGridView1.Rows.Add(item);
             }
-            dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
+            dataGridView1.CellBeginEdit += DataGridView1_CellBeginEdit;
+            dataGridView1.CellEndEdit += DataGridView1_CellEndEdit;
+            dataGridView1.UserDeletingRow += DataGridView1_UserDeletingRow;
             return ShowDialog();
         }
 
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void DataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            string process_name = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
-            Saver.save_add_process(current_preset.name, process_name);
-            current_preset.processes.Add(process_name);
+            string name = e.Row.Cells[0].Value.ToString();
+            Saver.delete_process_name(current_preset.name, name);
+            current_preset.processes.Remove(name);
+        }
+
+        private void DataGridView1_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            object name = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            if (name == null)
+                return;
+            if(old_process_name == "")
+            {
+                Saver.save_add_process(current_preset.name, name.ToString());
+                current_preset.processes.Add(name.ToString());
+            }
+            else if(old_process_name != name.ToString())
+            {
+                Saver.update_process_name(current_preset.name, old_process_name, name.ToString());
+                int i = current_preset.processes.IndexOf(old_process_name);
+                current_preset.processes.Insert(i, name.ToString());
+                current_preset.processes.Remove(old_process_name);
+            }
+        }
+
+        private void DataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            object name = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            old_process_name = name == null ? "" : name.ToString();
         }
     }
 }

@@ -162,7 +162,7 @@ namespace commo_rose
                 XmlNode processes_node = preset_node_child.SelectSingleNode("Processes");
                 foreach (XmlNode processes_node_child in processes_node.ChildNodes)
                 {
-                    preset.processes.Add(processes_node_child.Name);
+                    preset.processes.Add(processes_node_child.Attributes["Name"].Value);
                 }
                 CustomButton customButton;
                 XmlNode buttons_node = preset_node_child.SelectSingleNode("Buttons");
@@ -376,7 +376,7 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
-        public static void save_update_preset(string old_preset_name, string new_preset_name)
+        public static void update_preset_name(string old_preset_name, string new_preset_name)
         {
             XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + old_preset_name + "']");
             preset.Attributes["Name"].Value = new_preset_name;
@@ -393,7 +393,25 @@ namespace commo_rose
         public static void save_add_process(string preset_name, string process_name)
         {
             XmlNode processes_node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Processes");
-            processes_node.AppendChild(doc.CreateElement(process_name));
+            XmlElement process_node = doc.CreateElement("Process");
+            process_node.SetAttribute("Name", process_name);
+            processes_node.AppendChild(process_node);
+            doc.Save(path_to_settings_file);
+        }
+
+        public static void update_process_name(string preset_name, string old_process_name, string new_process_name)
+        {
+            XmlNode processes_node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Processes");
+            XmlNode process_node = processes_node.SelectSingleNode("Process[@Name='" + old_process_name + "']");
+            process_node.Attributes["Name"].Value = new_process_name;
+            doc.Save(path_to_settings_file);
+        }
+
+        public static void delete_process_name(string preset_name, string process_name)
+        {
+            XmlNode processes_node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Processes");
+            XmlNode process_node = processes_node.SelectSingleNode("Process[@Name='" + process_name + "']");
+            processes_node.RemoveChild(process_node);
             doc.Save(path_to_settings_file);
         }
 
