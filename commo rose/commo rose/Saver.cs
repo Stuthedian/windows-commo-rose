@@ -20,18 +20,23 @@ namespace commo_rose
             XmlWriter writer = XmlWriter.Create(path_to_settings_file);
             writer.WriteStartDocument();
             writer.WriteStartElement("Settings");
-            writer.WriteAttributeString("global_backcolor", Color.White.ToArgb().ToString());
-            writer.WriteAttributeString("global_textcolor", Color.Black.ToArgb().ToString());
-            writer.WriteAttributeString("global_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
-            writer.WriteStartElement("Hook_target");
-            writer.WriteString(Hook_target.Keyboard.ToString());
-            writer.WriteEndElement();
-            writer.WriteStartElement("Hook_key");
-            writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
-            writer.WriteEndElement();
+            //writer.WriteAttributeString("global_backcolor", Color.White.ToArgb().ToString());
+            //writer.WriteAttributeString("global_textcolor", Color.Black.ToArgb().ToString());
+            //writer.WriteAttributeString("global_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
+            //writer.WriteStartElement("Hook_target");
+            //writer.WriteString(Hook_target.Keyboard.ToString());
+            //writer.WriteEndElement();
+            //writer.WriteStartElement("Hook_key");
+            //writer.WriteString(VirtualKeyCode.NUMPAD0.ToString());
+            //writer.WriteEndElement();
+            writer.WriteAttributeString("Hook_target", Hook_target.Keyboard.ToString());
+            writer.WriteAttributeString("Hook_key", VirtualKeyCode.NUMPAD0.ToString());
             writer.WriteStartElement("Presets");
             writer.WriteStartElement("Preset");
             writer.WriteAttributeString("Name", "Desktop");
+            writer.WriteAttributeString("default_backcolor", Color.White.ToArgb().ToString());
+            writer.WriteAttributeString("default_textcolor", Color.Black.ToArgb().ToString());
+            writer.WriteAttributeString("default_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
             writer.WriteStartElement("Processes");
             writer.WriteEndElement();
             writer.WriteStartElement("Buttons");
@@ -137,20 +142,25 @@ namespace commo_rose
             Point point = new Point();
 
             node = doc.DocumentElement;
-            main.global_backcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_backcolor"].Value));
-            main.global_textcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_textcolor"].Value));
-            main.global_font = (Font)new FontConverter().ConvertFromString(node.Attributes["global_font"].Value);
-            node = doc.DocumentElement.SelectSingleNode("Hook_target");
-            main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText));
-            node = doc.DocumentElement.SelectSingleNode("Hook_key");
-            if(main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
+            //main.global_backcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_backcolor"].Value));
+            //main.global_textcolor = Color.FromArgb(Convert.ToInt32(node.Attributes["global_textcolor"].Value));
+            //main.global_font = (Font)new FontConverter().ConvertFromString(node.Attributes["global_font"].Value);
+            //node = doc.DocumentElement.SelectSingleNode("Hook_target");
+            //main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.InnerText));
+            //node = doc.DocumentElement.SelectSingleNode("Hook_key");
+            main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.Attributes["Hook_target"].Value));
+            string key = node.Attributes["Hook_key"].Value;
+
+            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
             {
-                main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
+                //main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), key);
                 main.mouseOrKeyboardHook.action_button_mouse = MouseButtons.XButton1;
             }
             else if(main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
             {
-                main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
+                //main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), node.InnerText);
+                main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), key);
                 main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
             }
             Preset preset;
@@ -159,6 +169,10 @@ namespace commo_rose
             {
                 preset = new Preset();
                 preset.name = preset_node_child.Attributes["Name"].Value;
+                preset.default_backcolor = Color.FromArgb(Convert.ToInt32(preset_node_child.Attributes["default_backcolor"].Value));
+                preset.default_textcolor = Color.FromArgb(Convert.ToInt32(preset_node_child.Attributes["default_textcolor"].Value));
+                preset.default_font = (Font)new FontConverter().ConvertFromString(preset_node_child.Attributes["default_font"].Value);
+
                 XmlNode processes_node = preset_node_child.SelectSingleNode("Processes");
                 foreach (XmlNode processes_node_child in processes_node.ChildNodes)
                 {

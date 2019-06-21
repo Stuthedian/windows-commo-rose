@@ -24,7 +24,6 @@ namespace commo_rose
 
         public const string app_name = "Commo rose";
         private const int WS_EX_TOPMOST = 0x00000008;
-        private const int WS_EX_COMPOSITED = 0x02000000;
         private const int SW_SHOWNOACTIVATE = 4;
 
         public MouseOrKeyboardHook mouseOrKeyboardHook;
@@ -55,9 +54,9 @@ namespace commo_rose
             }
         }
         public List<Preset> presets_array;
-        public Color global_backcolor;
-        public Color global_textcolor;
-        public Font global_font;
+        public Color default_backcolor;
+        public Color default_textcolor;
+        public Font default_font;
 
         public Form1()
         {
@@ -92,7 +91,6 @@ namespace commo_rose
             {
                 CreateParams cp = base.CreateParams;
                 cp.ExStyle |= WS_EX_TOPMOST;
-                cp.ExStyle |= WS_EX_COMPOSITED;
                 return cp;
             }
         }
@@ -194,6 +192,10 @@ namespace commo_rose
         public string name;
         public List<CustomButton> buttons_array;
         public List<string> processes;
+
+        public Color default_backcolor;
+        public Color default_textcolor;
+        public Font default_font;
 
         public Preset()
         {

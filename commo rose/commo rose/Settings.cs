@@ -789,14 +789,14 @@ namespace commo_rose
 
         private void globalBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = main.global_backcolor;
+            ColorPicker.Color = main.default_backcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                main.global_backcolor = check_color_is_transparency_key(ColorPicker.Color);
-                Saver.save_global_backcolor(main.global_backcolor);
+                main.default_backcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_global_backcolor(main.default_backcolor);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
-                    button.BackColor = main.global_backcolor;
+                    button.BackColor = main.default_backcolor;
                     button.property_watcher = true;
                 }
             }
@@ -804,14 +804,14 @@ namespace commo_rose
 
         private void globalTextcolorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = main.global_textcolor;
+            ColorPicker.Color = main.default_textcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                main.global_textcolor = check_color_is_transparency_key(ColorPicker.Color);
-                Saver.save_global_textcolor(main.global_textcolor);
+                main.default_textcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_global_textcolor(main.default_textcolor);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
-                    button.ForeColor = main.global_textcolor;
+                    button.ForeColor = main.default_textcolor;
                     button.property_watcher = true;
                 }
             }
@@ -819,12 +819,12 @@ namespace commo_rose
 
         private void globalFontToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FontPicker.Font = main.global_font;
+            FontPicker.Font = main.default_font;
             FontPicker.ShowApply = false;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
-                main.global_font = FontPicker.Font;
-                Saver.save_global_font(main.global_font);
+                main.default_font = FontPicker.Font;
+                Saver.save_global_font(main.default_font);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
                     button.Font = FontPicker.Font;
