@@ -417,17 +417,15 @@ namespace commo_rose
 
         public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
         {
-            XmlNode node;
-            node = doc.DocumentElement.SelectSingleNode("Hook_target");
-            node.InnerText = target.ToString();
-            node = doc.DocumentElement.SelectSingleNode("Hook_key");
+            XmlElement node = doc.DocumentElement;
+            node.Attributes["Hook_target"].Value = target.ToString();
             if (target == Hook_target.Keyboard)
             {
-                node.InnerText = vk.ToString();
+                node.Attributes["Hook_key"].Value = vk.ToString();
             }
             else if (target == Hook_target.Mouse)
             {
-                node.InnerText = mbutton.ToString();
+                node.Attributes["Hook_key"].Value = mbutton.ToString();
             }
             doc.Save(path_to_settings_file);
         }
