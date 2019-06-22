@@ -93,8 +93,12 @@ namespace commo_rose
             presetName = new PresetName(this);
             bindProcess = new BindProcess();
             this.main = main;
-            current_preset = main.current_preset;
             presets_array = main.presets_array;
+            current_preset = presets_array.Where(x => x.name == "Desktop").ToArray()[0];
+            RenamePresetButton.Enabled = false;
+            DeletePresetButton.Enabled = false;
+            BindPresetButton.Enabled = false;
+            
             foreach (var item in presets_array)
             {
                 PresetComboBox.Items.Add(item.name);
@@ -925,6 +929,20 @@ namespace commo_rose
         {
             current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
             main.current_preset = current_preset;
+
+            if(current_preset.name == "Desktop")
+            {
+                RenamePresetButton.Enabled = false;
+                DeletePresetButton.Enabled = false;
+                BindPresetButton.Enabled = false;
+            }
+            else
+            {
+                RenamePresetButton.Enabled = true;
+                DeletePresetButton.Enabled = true;
+                BindPresetButton.Enabled = true;
+            }
+
             panel1.Controls.Clear();
             panel1.Controls.Add(CursorpictureBox);
             foreach (CustomButton button in current_preset.buttons_array)

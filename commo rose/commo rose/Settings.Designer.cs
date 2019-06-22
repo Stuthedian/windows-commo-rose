@@ -64,12 +64,12 @@
             this.defaultFontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.PresetComboBox = new System.Windows.Forms.ComboBox();
             this.PresetPanel = new System.Windows.Forms.Panel();
-            this.BindButton = new System.Windows.Forms.Button();
+            this.CopyPresetButton = new System.Windows.Forms.Button();
+            this.BindPresetButton = new System.Windows.Forms.Button();
             this.RenamePresetButton = new System.Windows.Forms.Button();
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.CopyPresetButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -300,9 +300,6 @@
             // 
             // menuStrip
             // 
-            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.optionsToolStripMenuItem,
-            this.setToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(722, 24);
@@ -389,7 +386,7 @@
             // PresetPanel
             // 
             this.PresetPanel.Controls.Add(this.CopyPresetButton);
-            this.PresetPanel.Controls.Add(this.BindButton);
+            this.PresetPanel.Controls.Add(this.BindPresetButton);
             this.PresetPanel.Controls.Add(this.RenamePresetButton);
             this.PresetPanel.Controls.Add(this.DeletePresetButton);
             this.PresetPanel.Controls.Add(this.AddPresetButton);
@@ -400,19 +397,29 @@
             this.PresetPanel.Size = new System.Drawing.Size(716, 33);
             this.PresetPanel.TabIndex = 20;
             // 
-            // BindButton
+            // CopyPresetButton
             // 
-            this.BindButton.Location = new System.Drawing.Point(604, 5);
-            this.BindButton.Name = "BindButton";
-            this.BindButton.Size = new System.Drawing.Size(110, 23);
-            this.BindButton.TabIndex = 24;
-            this.BindButton.Text = "Bind to a process";
-            this.BindButton.UseVisualStyleBackColor = true;
-            this.BindButton.Click += new System.EventHandler(this.BindButton_Click);
+            this.CopyPresetButton.Location = new System.Drawing.Point(316, 5);
+            this.CopyPresetButton.Name = "CopyPresetButton";
+            this.CopyPresetButton.Size = new System.Drawing.Size(94, 23);
+            this.CopyPresetButton.TabIndex = 25;
+            this.CopyPresetButton.Text = "Copy preset";
+            this.CopyPresetButton.UseVisualStyleBackColor = true;
+            this.CopyPresetButton.Click += new System.EventHandler(this.CopyPresetButton_Click);
+            // 
+            // BindPresetButton
+            // 
+            this.BindPresetButton.Location = new System.Drawing.Point(604, 5);
+            this.BindPresetButton.Name = "BindPresetButton";
+            this.BindPresetButton.Size = new System.Drawing.Size(110, 23);
+            this.BindPresetButton.TabIndex = 24;
+            this.BindPresetButton.Text = "Bind to a process";
+            this.BindPresetButton.UseVisualStyleBackColor = true;
+            this.BindPresetButton.Click += new System.EventHandler(this.BindButton_Click);
             // 
             // RenamePresetButton
             // 
-            this.RenamePresetButton.Location = new System.Drawing.Point(316, 5);
+            this.RenamePresetButton.Location = new System.Drawing.Point(412, 5);
             this.RenamePresetButton.Name = "RenamePresetButton";
             this.RenamePresetButton.Size = new System.Drawing.Size(94, 23);
             this.RenamePresetButton.TabIndex = 23;
@@ -448,16 +455,6 @@
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
-            // 
-            // CopyPresetButton
-            // 
-            this.CopyPresetButton.Location = new System.Drawing.Point(412, 5);
-            this.CopyPresetButton.Name = "CopyPresetButton";
-            this.CopyPresetButton.Size = new System.Drawing.Size(94, 23);
-            this.CopyPresetButton.TabIndex = 25;
-            this.CopyPresetButton.Text = "Copy preset";
-            this.CopyPresetButton.UseVisualStyleBackColor = true;
-            this.CopyPresetButton.Click += new System.EventHandler(this.CopyPresetButton_Click);
             // 
             // Settings
             // 
@@ -532,7 +529,7 @@
         private System.Windows.Forms.Button AddPresetButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button RenamePresetButton;
-        private System.Windows.Forms.Button BindButton;
+        private System.Windows.Forms.Button BindPresetButton;
         private System.Windows.Forms.Button CopyPresetButton;
     }
 }

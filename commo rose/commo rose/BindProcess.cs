@@ -19,11 +19,13 @@ namespace commo_rose
 
         MouseOrKeyboardHook mouse_hook;
 
+        private Cursor hand_cursor;
         private string old_process_name;
         private Preset current_preset;
         public BindProcess()
         {
             InitializeComponent();
+            hand_cursor = new Cursor(Properties.Resources.HandCursor.GetHicon());
         }
 
         public DialogResult ShowDialog(Preset preset)
@@ -88,11 +90,10 @@ namespace commo_rose
 
         private void get_window_handle()
         {
-            label1.BackColor = Color.Yellow;
             if (mouse_hook != null)
                 mouse_hook.ClearHook();
             Cursor = Cursors.Default;
-
+            
             IntPtr handle = WindowFromPoint(MousePosition);
             uint process_id;
             GetWindowThreadProcessId(handle, out process_id);
@@ -103,15 +104,6 @@ namespace commo_rose
             dataGridView1.Rows.Add(process_name);
             Saver.save_add_process(current_preset.name, process_name.ToString());
             current_preset.processes.Add(process_name.ToString());
-        }
-
-        private void FindWindowButton_MouseDown(object sender, MouseEventArgs e)
-        {
-            label1.BackColor = Color.Red;
-            Cursor = Cursors.Hand;
-            mouse_hook = new MouseOrKeyboardHook(() => { }, get_window_handle, true);
-            mouse_hook.action_button_mouse = MouseButtons.Left;
-            mouse_hook.set_hook_target(Hook_target.Mouse);
         }
 
         private bool process_already_in_table(string process_name, int ignore_index = -1)
@@ -132,6 +124,14 @@ namespace commo_rose
                 }
             }
             return in_table;
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            Cursor = hand_cursor;
+            mouse_hook = new MouseOrKeyboardHook(() => { }, get_window_handle, true);
+            mouse_hook.action_button_mouse = MouseButtons.Left;
+            mouse_hook.set_hook_target(Hook_target.Mouse);
         }
     }
 }
