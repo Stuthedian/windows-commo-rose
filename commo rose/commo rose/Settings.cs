@@ -721,6 +721,9 @@ namespace commo_rose
             panel1.Controls.Add(b);
             b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
             b.Text = "button";
+            b.BackColor = current_preset.default_backcolor;
+            b.ForeColor = current_preset.default_textcolor;
+            b.Font = current_preset.default_font;
             b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
             b.MouseDown += Button_MouseDown;
             b.MouseMove += Button_MouseMove;
@@ -787,44 +790,44 @@ namespace commo_rose
             }
         }
 
-        private void globalBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void defaultBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = main.default_backcolor;
+            ColorPicker.Color = current_preset.default_backcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                main.default_backcolor = check_color_is_transparency_key(ColorPicker.Color);
-                Saver.save_global_backcolor(main.default_backcolor);
+                current_preset.default_backcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_preset_default_backcolor(current_preset.name, current_preset.default_backcolor);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
-                    button.BackColor = main.default_backcolor;
+                    button.BackColor = current_preset.default_backcolor;
                     button.property_watcher = true;
                 }
             }
         }
 
-        private void globalTextcolorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void defaultTextcolorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ColorPicker.Color = main.default_textcolor;
+            ColorPicker.Color = current_preset.default_textcolor;
             if (DialogResult.OK == ColorPicker.ShowDialog())
             {
-                main.default_textcolor = check_color_is_transparency_key(ColorPicker.Color);
-                Saver.save_global_textcolor(main.default_textcolor);
+                current_preset.default_textcolor = check_color_is_transparency_key(ColorPicker.Color);
+                Saver.save_preset_default_textcolor(current_preset.name, current_preset.default_textcolor);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
-                    button.ForeColor = main.default_textcolor;
+                    button.ForeColor = current_preset.default_textcolor;
                     button.property_watcher = true;
                 }
             }
         }
 
-        private void globalFontToolStripMenuItem_Click(object sender, EventArgs e)
+        private void defaultFontToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FontPicker.Font = main.default_font;
+            FontPicker.Font = current_preset.default_font;
             FontPicker.ShowApply = false;
             if (DialogResult.OK == FontPicker.ShowDialog())
             {
-                main.default_font = FontPicker.Font;
-                Saver.save_global_font(main.default_font);
+                current_preset.default_font = FontPicker.Font;
+                Saver.save_preset_default_font(current_preset.name, current_preset.default_font);
                 foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
                 {
                     button.Font = FontPicker.Font;
@@ -870,6 +873,9 @@ namespace commo_rose
                 Preset preset = new Preset();
                 preset.name = presetName.textBox1.Text.Trim();
                 preset.buttons_array = new List<CustomButton>();
+                preset.default_backcolor = Color.White;
+                preset.default_textcolor = Color.Black;
+                preset.default_font = new Font("Consolas", 14.25F, FontStyle.Regular);
                 presets_array.Add(preset);
                 PresetComboBox.Items.Add(preset.name);
                 PresetComboBox.SelectedItem = preset.name;

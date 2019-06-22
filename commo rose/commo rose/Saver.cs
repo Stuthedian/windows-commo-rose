@@ -384,6 +384,9 @@ namespace commo_rose
         {
             XmlElement preset = doc.CreateElement("Preset");
             preset.SetAttribute("Name", preset_name);
+            preset.SetAttribute("default_backcolor", Color.White.ToArgb().ToString());
+            preset.SetAttribute("default_textcolor", Color.Black.ToArgb().ToString());
+            preset.SetAttribute("default_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
             preset.AppendChild(doc.CreateElement("Processes"));
             preset.AppendChild(doc.CreateElement("Buttons"));
             preset_node.AppendChild(preset);
@@ -446,24 +449,24 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
-        public static void save_global_backcolor(Color color)
+        public static void save_preset_default_backcolor(string preset_name, Color color)
         {
-            XmlNode node = doc.DocumentElement;
-            node.Attributes["global_backcolor"].Value = color.ToArgb().ToString();
+            XmlNode node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+            node.Attributes["default_backcolor"].Value = color.ToArgb().ToString();
             doc.Save(path_to_settings_file);
         }
 
-        public static void save_global_textcolor(Color color)
+        public static void save_preset_default_textcolor(string preset_name, Color color)
         {
-            XmlNode node = doc.DocumentElement;
-            node.Attributes["global_textcolor"].Value = color.ToArgb().ToString();
+            XmlNode node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+            node.Attributes["default_textcolor"].Value = color.ToArgb().ToString();
             doc.Save(path_to_settings_file);
         }
 
-        public static void save_global_font(Font font)
+        public static void save_preset_default_font(string preset_name, Font font)
         {
-            XmlNode node = doc.DocumentElement;
-            node.Attributes["global_font"].Value = new FontConverter().ConvertToString(font);
+            XmlNode node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']");
+            node.Attributes["default_font"].Value = new FontConverter().ConvertToString(font);
             doc.Save(path_to_settings_file);
         }
     }

@@ -54,9 +54,9 @@ namespace commo_rose
             }
         }
         public List<Preset> presets_array;
-        public Color default_backcolor;
-        public Color default_textcolor;
-        public Font default_font;
+        //public Color default_backcolor;
+        //public Color default_textcolor;
+        //public Font default_font;
 
         public Form1()
         {
