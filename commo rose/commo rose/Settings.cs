@@ -956,5 +956,22 @@ namespace commo_rose
             else
                 MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
         }
+
+        private void CopyPresetButton_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK == presetName.ShowDialog(""))
+            {
+                Preset preset = current_preset.Clone();
+                preset.name = presetName.textBox1.Text.Trim();
+                presets_array.Add(preset);
+                PresetComboBox.Items.Add(preset.name);
+                PresetComboBox.SelectedItem = preset.name;
+                Saver.save_new_preset(preset.name);
+                foreach (var item in preset.buttons_array)
+                {
+                    Saver.save_button_settings(preset.name, item, true);
+                }
+            }
+        }
     }
 }

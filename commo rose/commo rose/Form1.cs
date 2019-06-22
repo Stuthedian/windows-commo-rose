@@ -54,10 +54,7 @@ namespace commo_rose
             }
         }
         public List<Preset> presets_array;
-        //public Color default_backcolor;
-        //public Color default_textcolor;
-        //public Font default_font;
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -201,6 +198,20 @@ namespace commo_rose
         {
             buttons_array = new List<CustomButton>();
             processes = new List<string>();
+        }
+
+        public Preset Clone()
+        {
+            Preset result_preset = new Preset();
+            result_preset.default_backcolor = this.default_backcolor;
+            result_preset.default_textcolor = this.default_textcolor;
+            result_preset.default_font = this.default_font;
+            foreach (var item in this.buttons_array)
+            {
+                result_preset.buttons_array.Add(item.Clone());
+            }
+
+            return result_preset;
         }
     }
 }

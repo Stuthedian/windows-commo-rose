@@ -69,6 +69,7 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.CopyPresetButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -358,21 +359,21 @@
             // defaultBackcolorToolStripMenuItem
             // 
             this.defaultBackcolorToolStripMenuItem.Name = "defaultBackcolorToolStripMenuItem";
-            this.defaultBackcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.defaultBackcolorToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.defaultBackcolorToolStripMenuItem.Text = "Default backcolor";
             this.defaultBackcolorToolStripMenuItem.Click += new System.EventHandler(this.defaultBackcolorToolStripMenuItem_Click);
             // 
             // defaultTextcolorToolStripMenuItem
             // 
             this.defaultTextcolorToolStripMenuItem.Name = "defaultTextcolorToolStripMenuItem";
-            this.defaultTextcolorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.defaultTextcolorToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.defaultTextcolorToolStripMenuItem.Text = "Default textcolor";
             this.defaultTextcolorToolStripMenuItem.Click += new System.EventHandler(this.defaultTextcolorToolStripMenuItem_Click);
             // 
             // defaultFontToolStripMenuItem
             // 
             this.defaultFontToolStripMenuItem.Name = "defaultFontToolStripMenuItem";
-            this.defaultFontToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.defaultFontToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.defaultFontToolStripMenuItem.Text = "Default font";
             this.defaultFontToolStripMenuItem.Click += new System.EventHandler(this.defaultFontToolStripMenuItem_Click);
             // 
@@ -387,6 +388,7 @@
             // 
             // PresetPanel
             // 
+            this.PresetPanel.Controls.Add(this.CopyPresetButton);
             this.PresetPanel.Controls.Add(this.BindButton);
             this.PresetPanel.Controls.Add(this.RenamePresetButton);
             this.PresetPanel.Controls.Add(this.DeletePresetButton);
@@ -395,12 +397,12 @@
             this.PresetPanel.Controls.Add(this.PresetComboBox);
             this.PresetPanel.Location = new System.Drawing.Point(0, 27);
             this.PresetPanel.Name = "PresetPanel";
-            this.PresetPanel.Size = new System.Drawing.Size(646, 33);
+            this.PresetPanel.Size = new System.Drawing.Size(716, 33);
             this.PresetPanel.TabIndex = 20;
             // 
             // BindButton
             // 
-            this.BindButton.Location = new System.Drawing.Point(529, 5);
+            this.BindButton.Location = new System.Drawing.Point(604, 5);
             this.BindButton.Name = "BindButton";
             this.BindButton.Size = new System.Drawing.Size(110, 23);
             this.BindButton.TabIndex = 24;
@@ -410,7 +412,7 @@
             // 
             // RenamePresetButton
             // 
-            this.RenamePresetButton.Location = new System.Drawing.Point(323, 5);
+            this.RenamePresetButton.Location = new System.Drawing.Point(316, 5);
             this.RenamePresetButton.Name = "RenamePresetButton";
             this.RenamePresetButton.Size = new System.Drawing.Size(94, 23);
             this.RenamePresetButton.TabIndex = 23;
@@ -420,7 +422,7 @@
             // 
             // DeletePresetButton
             // 
-            this.DeletePresetButton.Location = new System.Drawing.Point(426, 5);
+            this.DeletePresetButton.Location = new System.Drawing.Point(508, 5);
             this.DeletePresetButton.Name = "DeletePresetButton";
             this.DeletePresetButton.Size = new System.Drawing.Size(94, 23);
             this.DeletePresetButton.TabIndex = 22;
@@ -446,6 +448,16 @@
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
+            // 
+            // CopyPresetButton
+            // 
+            this.CopyPresetButton.Location = new System.Drawing.Point(412, 5);
+            this.CopyPresetButton.Name = "CopyPresetButton";
+            this.CopyPresetButton.Size = new System.Drawing.Size(94, 23);
+            this.CopyPresetButton.TabIndex = 25;
+            this.CopyPresetButton.Text = "Copy preset";
+            this.CopyPresetButton.UseVisualStyleBackColor = true;
+            this.CopyPresetButton.Click += new System.EventHandler(this.CopyPresetButton_Click);
             // 
             // Settings
             // 
@@ -521,5 +533,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button RenamePresetButton;
         private System.Windows.Forms.Button BindButton;
+        private System.Windows.Forms.Button CopyPresetButton;
     }
 }
