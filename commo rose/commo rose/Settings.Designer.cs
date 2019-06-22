@@ -299,7 +299,10 @@
             this.FontPicker.Apply += new System.EventHandler(this.FontPicker_Apply);
             // 
             // menuStrip
-            // 
+            //
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem,
+            this.setToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(722, 24);
