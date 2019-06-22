@@ -163,10 +163,11 @@ namespace commo_rose
      
     public class MouseOrKeyboardHook
     {
-        private form_action on_form_show;
-        private form_action on_form_hide;
+        private action on_key_down;
+        private action on_key_up;
 
         private bool key_hook_handled;
+        private bool pass_message;
         private IntPtr _hGlobalLlHook;
         private HookProc mouse_proc;
         private HookProc keyboard_proc;
@@ -175,13 +176,14 @@ namespace commo_rose
         public MouseButtons action_button_mouse { get; set; }
         public VirtualKeyCode action_button_keyboard { get; set; }
 
-        public MouseOrKeyboardHook(form_action show, form_action hide)
+        public MouseOrKeyboardHook(action down, action up, bool pass)
         {
-            on_form_show = show;
-            on_form_hide = hide;
+            on_key_down = down;
+            on_key_up = up;
             key_hook_handled = false;
             mouse_proc = LowLevelMouseProc;
             keyboard_proc = LowLevelKeyboardProc;
+            pass_message = pass;
         }
 
         public void set_hook_target(Hook_target target)
@@ -235,9 +237,9 @@ namespace commo_rose
                         if (key_hook_handled == false)
                         {
                             key_hook_handled = true;
-                            on_form_show();
+                            on_key_down();
                         }
-                        return 1;
+                        return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                     }
                 }
                 else if (wmMouse == KeyboardMessage.WM_KEYUP || wmMouse == KeyboardMessage.WM_SYSKEYUP)
@@ -245,8 +247,8 @@ namespace commo_rose
                     if (a.vkCode == (int)action_button_keyboard)
                     {
                         key_hook_handled = false;
-                        on_form_hide();
-                        return 1;
+                        on_key_up();
+                        return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) :1;
                     }
                 }
             }
@@ -263,36 +265,36 @@ namespace commo_rose
                 if (wmMouse == mouse_button_to_message_down(action_button_mouse))
                 {
 
-                    if (wmMouse != MouseMessage.WM_MBUTTONDOWN)
+                    if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
                     {
                         int id = mouse_xbutton_to_id(action_button_mouse);
                         if (xbutton_id == id)
                         {
-                            on_form_show();
-                            return 1;
+                            on_key_down();
+                            return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                         }
                     }
                     else
                     {
-                        on_form_show();
-                        return 1;
+                        on_key_down();
+                        return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                     }
                 }
                 if (wmMouse == mouse_button_to_message_up(action_button_mouse))
                 {
-                    if (wmMouse != MouseMessage.WM_MBUTTONUP)
+                    if (wmMouse == MouseMessage.WM_XBUTTONUP)
                     {
                         int id = mouse_xbutton_to_id(action_button_mouse);
                         if (xbutton_id == id)
                         {
-                            on_form_hide();
-                            return 1;
+                            on_key_up();
+                            return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                         }
                     }
                     else
                     {
-                        on_form_hide();
-                        return 1;
+                        on_key_up();
+                        return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                     }
                 }
             }
@@ -305,6 +307,8 @@ namespace commo_rose
                 return MouseMessage.WM_MBUTTONDOWN;
             else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
                 return MouseMessage.WM_XBUTTONDOWN;
+            else if (button == MouseButtons.Left)
+                return MouseMessage.WM_LBUTTONDOWN;
             else throw new NotImplementedException();
         }
 
@@ -314,6 +318,8 @@ namespace commo_rose
                 return MouseMessage.WM_MBUTTONUP;
             else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
                 return MouseMessage.WM_XBUTTONUP;
+            else if (button == MouseButtons.Left)
+                return MouseMessage.WM_LBUTTONUP;
             else throw new NotImplementedException();
         }
 
@@ -331,5 +337,5 @@ namespace commo_rose
        
     public enum Hook_target { Mouse, Keyboard }
 
-    public delegate void form_action();
+    public delegate void action();
 }

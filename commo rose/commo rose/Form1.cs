@@ -71,7 +71,7 @@ namespace commo_rose
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
             Opacity = 0.0;
-            mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide);
+            mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide, false);
             Saver.load_settings(this);
             settings = new Settings(this);
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);

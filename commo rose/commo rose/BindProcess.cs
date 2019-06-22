@@ -12,6 +12,13 @@ namespace commo_rose
 {
     public partial class BindProcess : Form
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern IntPtr WindowFromPoint(System.Drawing.Point p);
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        MouseOrKeyboardHook mouse_hook;
+
         private string old_process_name;
         private Preset current_preset;
         public BindProcess()
@@ -66,6 +73,40 @@ namespace commo_rose
         {
             object name = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
             old_process_name = name == null ? "" : name.ToString();
+        }
+
+        private void get_window_handle()
+        {
+            label1.BackColor = Color.Yellow;
+            if (mouse_hook != null)
+                mouse_hook.ClearHook();
+            Cursor = Cursors.Default;
+
+            IntPtr handle = WindowFromPoint(MousePosition);
+            uint process_id;
+            GetWindowThreadProcessId(handle, out process_id);
+            string process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+            foreach (DataGridViewRow item in dataGridView1.Rows)
+            {
+                if(item.Cells[0].Value != null)
+                {
+                    if(item.Cells[0].Value.ToString() == process_name)
+                    {
+                        MessageBox.Show("Process already bound!", "Error");
+                        return;
+                    }
+                }
+            }
+            dataGridView1.Rows.Add(process_name);
+        }
+
+        private void FindWindowButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            label1.BackColor = Color.Red;
+            Cursor = Cursors.Hand;
+            mouse_hook = new MouseOrKeyboardHook(() => { }, get_window_handle, true);
+            mouse_hook.action_button_mouse = MouseButtons.Left;
+            mouse_hook.set_hook_target(Hook_target.Mouse);
         }
     }
 }
