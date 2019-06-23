@@ -1,6 +1,6 @@
 ﻿namespace commo_rose
 {
-    partial class ActionButtonForm
+    partial class ActionButtonDialog
     {
         /// <summary>
         /// Required designer variable.

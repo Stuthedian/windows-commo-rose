@@ -20,9 +20,9 @@ namespace commo_rose
         private const int WS_EX_COMPOSITED = 0x02000000;
 
         private Form1 main;
-        private ActionButtonForm actionButtonForm;
-        private PresetName presetName;
-        private BindProcess bindProcess;
+        private ActionButtonDialog actionButtonForm;
+        private PresetNameDialog presetName;
+        private BindProcessDialog bindProcess;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
@@ -89,9 +89,9 @@ namespace commo_rose
         public Settings(Form1 main)
         {
             InitializeComponent();
-            actionButtonForm = new ActionButtonForm(main);
-            presetName = new PresetName(this);
-            bindProcess = new BindProcess();
+            actionButtonForm = new ActionButtonDialog(main);
+            presetName = new PresetNameDialog(this);
+            bindProcess = new BindProcessDialog();
             this.main = main;
             presets_array = main.presets_array;
             current_preset = presets_array.Where(x => x.name == "Desktop").ToArray()[0];

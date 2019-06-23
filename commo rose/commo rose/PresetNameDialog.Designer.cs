@@ -1,6 +1,6 @@
 ﻿namespace commo_rose
 {
-    partial class PresetName
+    partial class PresetNameDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -62,6 +62,7 @@
             // 
             // Cancelbutton
             // 
+            this.Cancelbutton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancelbutton.Location = new System.Drawing.Point(111, 51);
             this.Cancelbutton.Name = "Cancelbutton";
             this.Cancelbutton.Size = new System.Drawing.Size(75, 23);
@@ -84,7 +85,7 @@
             this.MaximizeBox = false;
             this.Name = "PresetName";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Preset name";
+            this.Text = "Preset";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -11,7 +11,7 @@ using WindowsInput.Native;
 
 namespace commo_rose
 {
-    public partial class ActionButtonForm : Form
+    public partial class ActionButtonDialog : Form
     {
         [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "MapVirtualKey", 
             ExactSpelling = false, CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
@@ -20,7 +20,7 @@ namespace commo_rose
         private Form1 main;
         private bool ignore_message;
         private int LShift, RShift, Ctrl, Alt;
-        public ActionButtonForm(Form1 main)
+        public ActionButtonDialog(Form1 main)
         {
             InitializeComponent();
             this.main = main;

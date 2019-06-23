@@ -52,17 +52,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionButtonForm.cs">
+    <Compile Include="ActionButtonDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ActionButtonForm.Designer.cs">
-      <DependentUpon>ActionButtonForm.cs</DependentUpon>
+    <Compile Include="ActionButtonDialog.Designer.cs">
+      <DependentUpon>ActionButtonDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="BindProcess.cs">
+    <Compile Include="BindProcessDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BindProcess.Designer.cs">
-      <DependentUpon>BindProcess.cs</DependentUpon>
+    <Compile Include="BindProcessDialog.Designer.cs">
+      <DependentUpon>BindProcessDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
@@ -80,11 +80,11 @@
       <DependentUpon>CueTextbox.cs</DependentUpon>
     </Compile>
     <Compile Include="MouseOrKeyboardHook.cs" />
-    <Compile Include="PresetName.cs">
+    <Compile Include="PresetNameDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PresetName.Designer.cs">
-      <DependentUpon>PresetName.cs</DependentUpon>
+    <Compile Include="PresetNameDialog.Designer.cs">
+      <DependentUpon>PresetNameDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,17 +96,17 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="VirtualDesktop.cs" />
-    <EmbeddedResource Include="ActionButtonForm.resx">
-      <DependentUpon>ActionButtonForm.cs</DependentUpon>
+    <EmbeddedResource Include="ActionButtonDialog.resx">
+      <DependentUpon>ActionButtonDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BindProcess.resx">
-      <DependentUpon>BindProcess.cs</DependentUpon>
+    <EmbeddedResource Include="BindProcessDialog.resx">
+      <DependentUpon>BindProcessDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PresetName.resx">
-      <DependentUpon>PresetName.cs</DependentUpon>
+    <EmbeddedResource Include="PresetNameDialog.resx">
+      <DependentUpon>PresetNameDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

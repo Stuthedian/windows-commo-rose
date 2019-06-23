@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace commo_rose
 {
-    public partial class PresetName : Form
+    public partial class PresetNameDialog : Form
     {
         Settings settings;
         string oldName;
-        public PresetName(Settings settings)
+        public PresetNameDialog(Settings settings)
         {
             InitializeComponent();
             this.settings = settings; 

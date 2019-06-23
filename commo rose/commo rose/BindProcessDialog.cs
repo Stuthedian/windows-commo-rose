@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace commo_rose
 {
-    public partial class BindProcess : Form
+    public partial class BindProcessDialog : Form
     {
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern IntPtr WindowFromPoint(System.Drawing.Point p);
@@ -22,7 +22,7 @@ namespace commo_rose
         private Cursor hand_cursor;
         private string old_process_name;
         private Preset current_preset;
-        public BindProcess()
+        public BindProcessDialog()
         {
             InitializeComponent();
             hand_cursor = new Cursor(Properties.Resources.HandCursor.GetHicon());
