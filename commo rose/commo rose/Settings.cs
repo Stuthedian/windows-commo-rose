@@ -727,7 +727,7 @@ namespace commo_rose
             CustomButton b = new CustomButton();
             panel1.Controls.Add(b);
             //b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
-            b.Id = current_preset.get_new_id();
+            b.Id = get_new_id();
             b.Text = "button";
             b.BackColor = current_preset.default_backcolor;
             b.ForeColor = current_preset.default_textcolor;
@@ -799,6 +799,31 @@ namespace commo_rose
                     i--;
                 }
             }
+        }
+
+        public int get_new_id()
+        {
+            var buttons_array = panel1.Controls.OfType<CustomButton>().ToList();
+            if (buttons_array.Count == 0)
+                return 0;
+
+            buttons_array.Sort((x, y) =>
+            {
+                int id = x.Id;
+                return id.CompareTo(y.Id);
+            });
+
+            if (buttons_array[0].Id != 0)
+                return 0;
+
+            for (int i = 0; i < buttons_array.Count - 1; i++)
+            {
+                if (buttons_array[i].Id == buttons_array[i + 1].Id)
+                    throw new Exception("Identity problem");
+                if (buttons_array[i].Id != buttons_array[i + 1].Id + 1)
+                    return buttons_array[i].Id + 1;
+            }
+            return buttons_array.Last().Id + 1;
         }
 
         private void defaultBackcolorToolStripMenuItem_Click(object sender, EventArgs e)

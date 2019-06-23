@@ -366,7 +366,7 @@ namespace commo_rose
         public static void delete_button(string preset_name, CustomButton button)
         {
             XmlNode preset = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Buttons");
-            preset.RemoveChild(preset.SelectSingleNode(button.Name));
+            preset.RemoveChild(preset.SelectSingleNode("Button[@Id = '" + button.Id.ToString() + "']"));
             doc.Save(path_to_settings_file);
         }
 
