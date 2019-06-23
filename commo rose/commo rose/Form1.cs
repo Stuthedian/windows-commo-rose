@@ -213,5 +213,26 @@ namespace commo_rose
 
             return result_preset;
         }
+
+        public int get_new_id()
+        {
+            if (buttons_array.Count == 0)
+                return 0;
+
+            buttons_array.Sort((x, y) =>
+            {
+                int id = x.Id;
+                return id.CompareTo(y.Id);
+            });
+
+            for (int i = 0; i < buttons_array.Count-1; i++)
+            {
+                if (buttons_array[i].Id == buttons_array[i + 1].Id)
+                    throw new Exception("Identity problem");
+                if (buttons_array[i].Id != buttons_array[i + 1].Id + 1)
+                    return buttons_array[i].Id + 1;
+            }
+            return buttons_array.Last().Id+1;
+        }
     }
 }

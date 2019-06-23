@@ -45,6 +45,8 @@ namespace commo_rose
         public event EventHandler action_typeChanged;
         public event EventHandler<PropertyWatcherEventArgs> PropertyWatcherChanged;
 
+        public int Id { get; set; }
+
         public CustomButton() : base()
         {
             property_watcher = false;
@@ -53,7 +55,8 @@ namespace commo_rose
             Font = new Font("Consolas", 14.25F, FontStyle.Regular);
             Location = new Point(0, 0);
             TabStop = false;
-
+            Id = -1;
+            
             mouseClicked = false;
             resizer = new PictureBox();
             resizer.Parent = this;
@@ -133,7 +136,8 @@ namespace commo_rose
             destination.Font = (Font)source.Font.Clone();
             destination.Width = source.Width;
             destination.Height = source.Height;
-            destination.Name = source.Name;
+            //destination.Name = source.Name;
+            destination.Id = source.Id;
             destination.Text = source.Text;
             destination.Location = source.Location;
             destination.action_type = source.action_type;

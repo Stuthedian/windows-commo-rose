@@ -308,7 +308,8 @@ namespace commo_rose
 
         private void Cancelbutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
+            //CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
+            CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == currentButton.Id).ToArray();
             if (a.Length == 0)
             {
                 delete_current_button_from_panel();
@@ -334,7 +335,8 @@ namespace commo_rose
             {
                 if (button.property_watcher)
                 {
-                    CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == button.Name).ToArray();
+                    //CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == button.Name).ToArray();
+                    CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == button.Id).ToArray();
                     if (a.Length == 0)
                     {
                         delete_button_from_panel(button);
@@ -367,7 +369,8 @@ namespace commo_rose
                 return error_message;
             }
             CustomButton target_button;
-            var a = current_preset.buttons_array.Where(x => x.Name == customButton.Name).ToArray();
+            //var a = current_preset.buttons_array.Where(x => x.Name == customButton.Name).ToArray();
+            var a = current_preset.buttons_array.Where(x => x.Id == customButton.Id).ToArray();
 
             if (a.Length == 0)
             {
@@ -723,7 +726,8 @@ namespace commo_rose
         {
             CustomButton b = new CustomButton();
             panel1.Controls.Add(b);
-            b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
+            //b.Name = "customButton" + (panel1.Controls.OfType<CustomButton>().Count() + 1).ToString();
+            b.Id = current_preset.get_new_id();
             b.Text = "button";
             b.BackColor = current_preset.default_backcolor;
             b.ForeColor = current_preset.default_textcolor;
@@ -743,8 +747,9 @@ namespace commo_rose
 
         private void Deletebutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
-            if(a.Length == 0)
+            //CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
+            CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == currentButton.Id).ToArray();
+            if (a.Length == 0)
             {
                 delete_current_button_from_panel();
             }
@@ -771,7 +776,8 @@ namespace commo_rose
             panel1.Controls.Remove(currentButton);
             for (int i = 1; i < previousbuttons.Count; i++)
             {
-                if (previousbuttons[i].Name == currentButton.Name)
+                //if (previousbuttons[i].Name == currentButton.Name)
+                if (previousbuttons[i].Id == currentButton.Id)
                 {
                     previousbuttons.RemoveAt(i);
                     i--;
@@ -786,7 +792,8 @@ namespace commo_rose
             panel1.Controls.Remove(button);
             for (int i = 1; i < previousbuttons.Count; i++)
             {
-                if (previousbuttons[i].Name == button.Name)
+                //if (previousbuttons[i].Name == currentButton.Name)
+                if (previousbuttons[i].Id == currentButton.Id)
                 {
                     previousbuttons.RemoveAt(i);
                     i--;
