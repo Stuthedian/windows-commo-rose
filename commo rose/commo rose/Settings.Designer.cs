@@ -43,6 +43,7 @@
             this.ApplyCancelpanel = new System.Windows.Forms.Panel();
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
+            this.Copybutton = new System.Windows.Forms.Button();
             this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
@@ -70,7 +71,6 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.Copybutton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -223,6 +223,16 @@
             this.Editpanel.Name = "Editpanel";
             this.Editpanel.Size = new System.Drawing.Size(296, 122);
             this.Editpanel.TabIndex = 8;
+            // 
+            // Copybutton
+            // 
+            this.Copybutton.Location = new System.Drawing.Point(6, 93);
+            this.Copybutton.Name = "Copybutton";
+            this.Copybutton.Size = new System.Drawing.Size(96, 23);
+            this.Copybutton.TabIndex = 21;
+            this.Copybutton.Text = "Copy button";
+            this.Copybutton.UseVisualStyleBackColor = true;
+            this.Copybutton.Click += new System.EventHandler(this.Copybutton_Click);
             // 
             // ButtonParametersBox
             // 
@@ -461,16 +471,6 @@
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
             // 
-            // Copybutton
-            // 
-            this.Copybutton.Location = new System.Drawing.Point(6, 93);
-            this.Copybutton.Name = "Copybutton";
-            this.Copybutton.Size = new System.Drawing.Size(96, 23);
-            this.Copybutton.TabIndex = 21;
-            this.Copybutton.Text = "Copy button";
-            this.Copybutton.UseVisualStyleBackColor = true;
-            this.Copybutton.Click += new System.EventHandler(this.Copybutton_Click);
-            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -504,8 +504,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox ButtonTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -547,5 +545,6 @@
         private System.Windows.Forms.Button BindPresetButton;
         private System.Windows.Forms.Button CopyPresetButton;
         private System.Windows.Forms.Button Copybutton;
+        private System.Windows.Forms.Panel panel1;
     }
 }

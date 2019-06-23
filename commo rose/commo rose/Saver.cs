@@ -37,7 +37,6 @@ namespace commo_rose
             buttons = new List<CustomButton>();
             buttons.Add(new CustomButton());
             customButton = buttons[buttons.Count - 1];
-            //customButton.Name = "customButton" + buttons.Count.ToString();
             customButton.Id = 0;
             customButton.Location = new Point(33, 37);
             customButton.Text = "Ctrl+C";
@@ -48,7 +47,6 @@ namespace commo_rose
 
             buttons.Add(new CustomButton());
             customButton = buttons[buttons.Count - 1];
-            //customButton.Name = "customButton" + (buttons.Count + 1).ToString();
             customButton.Id = 1;
             customButton.Location = new Point(318, 37);
             customButton.Text = "Ctrl+V";
@@ -59,7 +57,6 @@ namespace commo_rose
 
             buttons.Add(new CustomButton());
             customButton = buttons[buttons.Count - 1];
-            //customButton.Name = "customButton" + (buttons.Count + 1).ToString();
             customButton.Id = 2;
             customButton.Location = new Point(165, 158);
             customButton.Text = "Ctrl+A";
@@ -69,7 +66,6 @@ namespace commo_rose
                 (new List<VirtualKeyCode>() { VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A }));
             foreach (CustomButton button in buttons)
             {
-                //writer.WriteStartElement(button.Name);
                 writer.WriteStartElement("Button");
                 writer.WriteAttributeString("Id", button.Id.ToString());
                 writer.WriteAttributeString("Location.X", button.Location.X.ToString());
@@ -171,7 +167,6 @@ namespace commo_rose
                 foreach (XmlNode buttons_node_child in buttons_node.ChildNodes)
                 {
                     customButton = new CustomButton();
-                    //customButton.Name = buttons_node_child.LocalName;
                     customButton.Id = int.Parse(buttons_node_child.Attributes["Id"].Value);
                     point.X = int.Parse(buttons_node_child.Attributes["Location.X"].Value);
                     point.Y = int.Parse(buttons_node_child.Attributes["Location.Y"].Value);
