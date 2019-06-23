@@ -23,10 +23,11 @@ namespace commo_rose
         private ActionButtonDialog actionButtonForm;
         private PresetNameDialog presetName;
         private BindProcessDialog bindProcess;
+        private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
-        private CustomButton currentButton
+        public CustomButton currentButton
         {
             get { return _currentButton; }
             set
@@ -79,7 +80,7 @@ namespace commo_rose
             }
         }
 
-        private Preset current_preset;
+        public Preset current_preset;
         public List<Preset> presets_array;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
@@ -92,6 +93,7 @@ namespace commo_rose
             actionButtonForm = new ActionButtonDialog(main);
             presetName = new PresetNameDialog(this);
             bindProcess = new BindProcessDialog();
+            copyButtonDialog = new CopyButtonDialog(this);
             this.main = main;
             presets_array = main.presets_array;
             current_preset = presets_array.Where(x => x.name == "Desktop").ToArray()[0];
@@ -741,6 +743,11 @@ namespace commo_rose
             currentButton.property_watcher = true;
         }
 
+        private void Copybutton_Click(object sender, EventArgs e)
+        {
+            copyButtonDialog.ShowDialog();
+        }
+
         private void Deletebutton_Click(object sender, EventArgs e)
         {
             CustomButton[] a = current_preset.buttons_array.Where(x => x.Name == currentButton.Name).ToArray();
@@ -991,5 +998,7 @@ namespace commo_rose
                 }
             }
         }
+
+        
     }
 }

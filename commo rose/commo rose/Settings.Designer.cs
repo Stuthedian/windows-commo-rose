@@ -70,6 +70,7 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.Copybutton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -206,6 +207,7 @@
             // 
             // Editpanel
             // 
+            this.Editpanel.Controls.Add(this.Copybutton);
             this.Editpanel.Controls.Add(this.ButtonParametersBox);
             this.Editpanel.Controls.Add(this.Deletebutton);
             this.Editpanel.Controls.Add(this.Fontbutton);
@@ -232,7 +234,7 @@
             // 
             // Deletebutton
             // 
-            this.Deletebutton.Location = new System.Drawing.Point(6, 91);
+            this.Deletebutton.Location = new System.Drawing.Point(114, 93);
             this.Deletebutton.Name = "Deletebutton";
             this.Deletebutton.Size = new System.Drawing.Size(96, 23);
             this.Deletebutton.TabIndex = 19;
@@ -459,6 +461,16 @@
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
             // 
+            // Copybutton
+            // 
+            this.Copybutton.Location = new System.Drawing.Point(6, 93);
+            this.Copybutton.Name = "Copybutton";
+            this.Copybutton.Size = new System.Drawing.Size(96, 23);
+            this.Copybutton.TabIndex = 21;
+            this.Copybutton.Text = "Copy button";
+            this.Copybutton.UseVisualStyleBackColor = true;
+            this.Copybutton.Click += new System.EventHandler(this.Copybutton_Click);
+            // 
             // Settings
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -534,5 +546,6 @@
         private System.Windows.Forms.Button RenamePresetButton;
         private System.Windows.Forms.Button BindPresetButton;
         private System.Windows.Forms.Button CopyPresetButton;
+        private System.Windows.Forms.Button Copybutton;
     }
 }

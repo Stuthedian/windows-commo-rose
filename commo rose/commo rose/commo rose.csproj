@@ -64,6 +64,12 @@
     <Compile Include="BindProcessDialog.Designer.cs">
       <DependentUpon>BindProcessDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="CopyButtonDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CopyButtonDialog.Designer.cs">
+      <DependentUpon>CopyButtonDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BindProcessDialog.resx">
       <DependentUpon>BindProcessDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CopyButtonDialog.resx">
+      <DependentUpon>CopyButtonDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
