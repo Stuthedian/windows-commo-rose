@@ -803,7 +803,7 @@ namespace commo_rose
 
         public int get_new_id()
         {
-            var buttons_array = panel1.Controls.OfType<CustomButton>().ToList();
+            var buttons_array = panel1.Controls.OfType<CustomButton>().Where(x=> x.Id != -1).ToList();
             if (buttons_array.Count == 0)
                 return 0;
 
@@ -820,7 +820,7 @@ namespace commo_rose
             {
                 if (buttons_array[i].Id == buttons_array[i + 1].Id)
                     throw new Exception("Identity problem");
-                if (buttons_array[i].Id != buttons_array[i + 1].Id + 1)
+                if ((buttons_array[i].Id + 1) != buttons_array[i + 1].Id)
                     return buttons_array[i].Id + 1;
             }
             return buttons_array.Last().Id + 1;
