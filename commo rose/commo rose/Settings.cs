@@ -782,6 +782,8 @@ namespace commo_rose
         {
             currentButton.property_watcher = false;
             panel1.Controls.Remove(currentButton);
+            //previousbuttons.RemoveAll()
+            throw new Exception();
             for (int i = 1; i < previousbuttons.Count; i++)
             {
                 if (previousbuttons[i].Id == currentButton.Id)
@@ -795,6 +797,7 @@ namespace commo_rose
 
         private void delete_button_from_panel(CustomButton button)
         {
+            throw new Exception();
             button.property_watcher = false;
             panel1.Controls.Remove(button);
             for (int i = 1; i < previousbuttons.Count; i++)
@@ -989,7 +992,11 @@ namespace commo_rose
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //search for this and replace with .Single()
             current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
+
+            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).Single();
+            throw new Exception();
             main.current_preset = current_preset;
 
             if(current_preset.name == "Desktop")
@@ -1012,7 +1019,7 @@ namespace commo_rose
                 add_button_to_panel(button.Clone());
             }
             currentButton = null;
-            previousbuttons = new List<CustomButton>();
+            previousbuttons = new List<CustomButton>();//clear existing instead of creating new one?
             previousbuttons.Add(currentButton);
             update_ApplyCancelpanel(false);
             update_ApplyAllCancelAllpanel(false);

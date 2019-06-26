@@ -38,8 +38,7 @@ namespace commo_rose
         private void OKButton_Click(object sender, EventArgs e)
         {
             Preset preset = settings.presets_array.Where(x => x.name == comboBox1.SelectedItem.ToString()).ToArray()[0];
-            preset.buttons_array.Add(settings.currentButton.Clone());
-            CustomButton button = preset.buttons_array.Last();
+            CustomButton button = settings.currentButton.Clone();
             button.Location = new Point(0, 0);
             if (!PreservebackcolorcheckBox.Checked)
                 button.BackColor = preset.default_backcolor;
@@ -54,6 +53,7 @@ namespace commo_rose
             }
             else
                 button.Id = settings.get_new_id(preset);
+            preset.buttons_array.Add(button);
             Saver.save_button_settings(preset.name, button, true);
 
             this.Close();

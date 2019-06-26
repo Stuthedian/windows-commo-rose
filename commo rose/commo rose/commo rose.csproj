@@ -38,6 +38,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,24 +55,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionButtonDialog.cs">
+    <None Include="ActionButtonDialog.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ActionButtonDialog.Designer.cs">
+    </None>
+    <None Include="ActionButtonDialog.Designer.cs">
       <DependentUpon>ActionButtonDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BindProcessDialog.cs">
+    </None>
+    <None Include="BindProcessDialog.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BindProcessDialog.Designer.cs">
+    </None>
+    <None Include="BindProcessDialog.Designer.cs">
       <DependentUpon>BindProcessDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CopyButtonDialog.cs">
+    </None>
+    <None Include="CopyButtonDialog.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CopyButtonDialog.Designer.cs">
+    </None>
+    <None Include="CopyButtonDialog.Designer.cs">
       <DependentUpon>CopyButtonDialog.cs</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -86,21 +89,21 @@
       <DependentUpon>CueTextbox.cs</DependentUpon>
     </Compile>
     <Compile Include="MouseOrKeyboardHook.cs" />
-    <Compile Include="PresetNameDialog.cs">
+    <None Include="PresetNameDialog.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PresetNameDialog.Designer.cs">
+    </None>
+    <None Include="PresetNameDialog.Designer.cs">
       <DependentUpon>PresetNameDialog.cs</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Saver.cs" />
-    <Compile Include="Settings.cs">
+    <None Include="Settings.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Settings.Designer.cs">
+    </None>
+    <None Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="VirtualDesktop.cs" />
     <EmbeddedResource Include="ActionButtonDialog.resx">
       <DependentUpon>ActionButtonDialog.cs</DependentUpon>

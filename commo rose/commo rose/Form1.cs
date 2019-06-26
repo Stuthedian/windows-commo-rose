@@ -26,9 +26,9 @@ namespace commo_rose
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int SW_SHOWNOACTIVATE = 4;
 
-        public MouseOrKeyboardHook mouseOrKeyboardHook;
+        //public MouseOrKeyboardHook mouseOrKeyboardHook;
         
-        private Settings settings;
+        //private Settings settings;
         
         public IntPtr form_handle;
 
@@ -71,9 +71,9 @@ namespace commo_rose
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
             Opacity = 0.0;
-            mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide, false);
-            Saver.load_settings(this);
-            settings = new Settings(this);
+            //mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide, false);
+            //Saver.load_settings(this);
+            //settings = new Settings(this);
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);
 
             if(Environment.OSVersion.Version.Major == 10)
@@ -109,14 +109,14 @@ namespace commo_rose
             }
         }
 
-        private void on_form_show()
+        public void on_form_show()
         {
             Point center = MousePosition;
             center.X -= Width / 2;
             center.Y -= Height / 2;
             Location = center;
 
-            if(auto_switch)
+            if(auto_switch)//move to settings ?
             {
                 uint process_id;
                 GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
@@ -139,16 +139,16 @@ namespace commo_rose
             Opacity = 1.0;
         }
 
-        private void on_form_hide()
+        public void on_form_hide()
         {
             Opacity = 0.0;
             activate_selected_button();
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
-        }
+        //private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        //{
+        //    Application.Exit();
+        //}
 
         private void AutoSwitchMenuItem_Click(object sender, EventArgs e)
         {
@@ -164,22 +164,22 @@ namespace commo_rose
             }
         }
 
-        private void SettingsMenuItem_Click(object sender, EventArgs e)
+        private void SettingsMenuItem_Click(object sender, EventArgs e)//outsource to settings form?
         {
-            if(!settings.Visible)
-                settings.Show();
-            else
-            {
-                settings.WindowState = FormWindowState.Normal;
-                settings.Activate();
-            }
+            throw new Exception();
+            //if (!settings.Visible)
+            //    settings.Show();
+            //else
+            //{
+            //    settings.WindowState = FormWindowState.Normal;
+            //    settings.Activate();
+            //}
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            if (mouseOrKeyboardHook != null)
-                mouseOrKeyboardHook.ClearHook();
-            this.Close();
+            //this.Close();
+            Program.Close();
         }
 
     }
@@ -205,7 +205,7 @@ namespace commo_rose
             Preset result_preset = new Preset();
             result_preset.default_backcolor = this.default_backcolor;
             result_preset.default_textcolor = this.default_textcolor;
-            result_preset.default_font = this.default_font;
+            result_preset.default_font = this.default_font;//Clone?
             foreach (var item in this.buttons_array)
             {
                 result_preset.buttons_array.Add(item.Clone());
