@@ -15,23 +15,27 @@ namespace commo_rose
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        public const string app_name = "Commo rose";
+
         private static MouseOrKeyboardHook mouseOrKeyboardHook;
         private static List<Preset> presets;
-        private static Preset desktop_preset;
+        public static Preset desktop_preset { get; private set; }
+
+        private static ButtonsForm buttons_form;
+        private static Settings settings;
 
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ButtonsForm buttons_form = new ButtonsForm();
+            buttons_form = new ButtonsForm();
 
             Hook_target target;
             VirtualKeyCode virtualKey;
             (presets, target, virtualKey) = Saver.load_settings();
-
             desktop_preset = presets.Where(x => x.name == "Desktop").Single();
-            buttons_form.current_preset = desktop_preset;
+            settings = new Settings(presets);
 
             mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, buttons_form.on_form_show, buttons_form.on_form_hide, false);
 
@@ -53,6 +57,17 @@ namespace commo_rose
             }
 
             return desktop_preset;
+        }
+
+        public static void show_settings_window()
+        {
+            if (!settings.Visible)
+                settings.Show();
+            else
+            {
+                settings.WindowState = FormWindowState.Normal;
+                settings.Activate();
+            }
         }
 
 

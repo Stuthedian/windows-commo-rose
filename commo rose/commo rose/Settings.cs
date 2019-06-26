@@ -19,15 +19,14 @@ namespace commo_rose
     {
         private const int WS_EX_COMPOSITED = 0x02000000;
 
-        private Form1 main;
-        private ActionButtonDialog actionButtonForm;
-        private PresetNameDialog presetName;
-        private BindProcessDialog bindProcess;
-        private CopyButtonDialog copyButtonDialog;
+        //private ActionButtonDialog actionButtonForm;
+        //private PresetNameDialog presetName;
+        //private BindProcessDialog bindProcess;
+        //private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
-        public CustomButton currentButton
+        private CustomButton currentButton
         {
             get { return _currentButton; }
             set
@@ -80,41 +79,41 @@ namespace commo_rose
             }
         }
 
-        public Preset current_preset;
-        public List<Preset> presets_array;
+        private Preset current_preset;
+        private List<Preset> presets;
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
 
         private int apply_counter;
 
-        public Settings(Form1 main)
+        public Settings(List<Preset> presets)
         {
             InitializeComponent();
-            actionButtonForm = new ActionButtonDialog(main);
-            presetName = new PresetNameDialog(this);
-            bindProcess = new BindProcessDialog();
-            copyButtonDialog = new CopyButtonDialog(this);
-            this.main = main;
-            presets_array = main.presets_array;
-            current_preset = presets_array.Where(x => x.name == "Desktop").ToArray()[0];
+            //actionButtonForm = new ActionButtonDialog(main);
+            //presetName = new PresetNameDialog(this);
+            //bindProcess = new BindProcessDialog();
+            //copyButtonDialog = new CopyButtonDialog(this);
+            this.presets = presets;
+            current_preset = Program.desktop_preset;
             RenamePresetButton.Enabled = false;
             DeletePresetButton.Enabled = false;
             BindPresetButton.Enabled = false;
             
-            foreach (var item in presets_array)
+            foreach (var item in presets)
             {
                 PresetComboBox.Items.Add(item.name);
             }
+
             PresetComboBox.SelectedItem = current_preset.name;
             PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
-            panel1.Width = main.Width;
-            panel1.Height = main.Height;
+            //Panel.Width = main.Width;
+            //Panel.Height = main.Height;
             Editpanel.Enabled = false;
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
             Point point = new Point(0, 0);
-            point.X += panel1.Width /2;
-            point.Y += panel1.Height /2;
+            point.X += Panel.Width /2;
+            point.Y += Panel.Height /2;
             CursorpictureBox.Location = point;
             
             mouse_buttons = new object[] {
@@ -135,7 +134,7 @@ namespace commo_rose
                 VirtualKeyCode.NUMPAD9.ToString() };
             RegistryKey subkey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            object value = subkey.GetValue(Form1.app_name);
+            object value = subkey.GetValue(Program.app_name);
             if (value != null && value.ToString() == Application.ExecutablePath)
                 yesToolStripMenuItem.Checked = true;
             else
@@ -149,19 +148,20 @@ namespace commo_rose
                 Action_typeBox.Items.Add(item);
             }
             
-            foreach (CustomButton button in main.current_preset.buttons_array)
+            foreach (CustomButton button in current_preset.buttons)
             {
-                panel1.Controls.Add(button.Clone());
-                CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
-                b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
-                b.MouseDown += Button_MouseDown;
-                b.MouseMove += Button_MouseMove;
-                b.resizer.MouseDown += resizer_MouseDown;
-                b.resizer.MouseMove += resizer_MouseMove;
-                b.resizer.MouseUp += resizer_MouseUp;
-                b.resizer.Cursor = Cursors.SizeNWSE;
-                b.resizer.BringToFront();
-                b.BringToFront();
+                //Panel.Controls.Add(button.Clone());
+                //CustomButton b = (CustomButton)Panel.Controls[Panel.Controls.Count - 1];
+                //b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
+                //b.MouseDown += Button_MouseDown;
+                //b.MouseMove += Button_MouseMove;
+                //b.resizer.MouseDown += resizer_MouseDown;
+                //b.resizer.MouseMove += resizer_MouseMove;
+                //b.resizer.MouseUp += resizer_MouseUp;
+                //b.resizer.Cursor = Cursors.SizeNWSE;
+                //b.resizer.BringToFront();
+                //b.BringToFront();
+                add_button_to_panel(button.Clone());
             }
 
             currentButton = null;
@@ -191,13 +191,14 @@ namespace commo_rose
 
         private Color check_color_is_transparency_key(Color color)
         {
-            if(color.G == main.TransparencyKey.G)
-            {
-                if((color.R == 0 || color.R == 1) && (color.B == 0 || color.B == 1))
-                {
-                    color = Color.FromArgb(255, 2, 255, 1);
-                }
-            }
+            throw new Exception();
+            //if(color.G == main.TransparencyKey.G)
+            //{
+            //    if((color.R == 0 || color.R == 1) && (color.B == 0 || color.B == 1))
+            //    {
+            //        color = Color.FromArgb(255, 2, 255, 1);
+            //    }
+            //}
             return color;
         }
 
@@ -253,7 +254,7 @@ namespace commo_rose
                 var b = currentButton.resizer.Left + e.X;
                 Point lower_right_corner = new Point(currentButton.Location.X + b,
                     currentButton.Location.Y + a);
-                if (!panel1.Bounds.Contains(this.PointToClient(panel1.PointToScreen(lower_right_corner))))
+                if (!Panel.Bounds.Contains(this.PointToClient(Panel.PointToScreen(lower_right_corner))))
                     return;
                 currentButton.Height = currentButton.resizer.Top + e.Y;
                 currentButton.Width = currentButton.resizer.Left + e.X;
@@ -277,7 +278,7 @@ namespace commo_rose
                 Rectangle test_rect = currentButton.Bounds;
                 test_rect.X += e.X - MouseDownLocation.X;
                 test_rect.Y += e.Y - MouseDownLocation.Y;
-                if (!panel1.Bounds.Contains(this.RectangleToClient(panel1.RectangleToScreen(test_rect))))
+                if (!Panel.Bounds.Contains(this.RectangleToClient(Panel.RectangleToScreen(test_rect))))
                     return;
                 currentButton.Location = test_rect.Location;
             }
@@ -294,7 +295,7 @@ namespace commo_rose
         {
             string error_message = "";
             string temp;
-            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
+            CustomButton[] panel_buttons = Panel.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
                 if (button.property_watcher)
@@ -310,7 +311,7 @@ namespace commo_rose
 
         private void Cancelbutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == currentButton.Id).ToArray();
+            CustomButton[] a = current_preset.buttons.Where(x => x.Id == currentButton.Id).ToArray();
             if (a.Length == 0)
             {
                 delete_current_button_from_panel();
@@ -331,12 +332,12 @@ namespace commo_rose
 
         private void CancelAll_Click(object sender, EventArgs e)
         {
-            CustomButton[] panel_buttons = panel1.Controls.OfType<CustomButton>().ToArray();
+            CustomButton[] panel_buttons = Panel.Controls.OfType<CustomButton>().ToArray();
             foreach (CustomButton button in panel_buttons)
             {
                 if (button.property_watcher)
                 {
-                    CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == button.Id).ToArray();
+                    CustomButton[] a = current_preset.buttons.Where(x => x.Id == button.Id).ToArray();
                     if (a.Length == 0)
                     {
                         delete_button_from_panel(button);
@@ -369,14 +370,15 @@ namespace commo_rose
                 return error_message;
             }
             CustomButton target_button;
-            var a = current_preset.buttons_array.Where(x => x.Id == customButton.Id).ToArray();
+            var a = current_preset.buttons.Where(x => x.Id == customButton.Id).ToArray();
 
             if (a.Length == 0)
             {
                 target_button = new CustomButton();
-                current_preset.buttons_array.Add(target_button);
-                if(current_preset == main.current_preset)
-                    target_button.Parent = main;
+                current_preset.buttons.Add(target_button);
+                throw new Exception();
+                //if(current_preset == main.current_preset)
+                //    target_button.Parent = main;
                 Saver.save_button_settings(current_preset.name, customButton, true);
             }
             else if (a.Length == 1)
@@ -736,8 +738,8 @@ namespace commo_rose
 
         public void add_button_to_panel(CustomButton button)
         {
-            panel1.Controls.Add(button);
-            CustomButton b = (CustomButton)panel1.Controls[panel1.Controls.Count - 1];
+            Panel.Controls.Add(button);
+            CustomButton b = (CustomButton)Panel.Controls[Panel.Controls.Count - 1];
             b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
             b.MouseDown += Button_MouseDown;
             b.MouseMove += Button_MouseMove;
@@ -751,12 +753,12 @@ namespace commo_rose
 
         private void Copybutton_Click(object sender, EventArgs e)
         {
-            copyButtonDialog.ShowDialog();
+            //copyButtonDialog.ShowDialog();
         }
 
         private void Deletebutton_Click(object sender, EventArgs e)
         {
-            CustomButton[] a = current_preset.buttons_array.Where(x => x.Id == currentButton.Id).ToArray();
+            CustomButton[] a = current_preset.buttons.Where(x => x.Id == currentButton.Id).ToArray();
             if (a.Length == 0)
             {
                 delete_current_button_from_panel();
@@ -768,7 +770,7 @@ namespace commo_rose
                 {
                     Saver.delete_button(current_preset.name, currentButton);
                     a[0].Parent = null;
-                    current_preset.buttons_array.Remove(a[0]);
+                    current_preset.buttons.Remove(a[0]);
                     delete_current_button_from_panel();
                 }
             }
@@ -781,7 +783,7 @@ namespace commo_rose
         private void delete_current_button_from_panel()
         {
             currentButton.property_watcher = false;
-            panel1.Controls.Remove(currentButton);
+            Panel.Controls.Remove(currentButton);
             //previousbuttons.RemoveAll()
             throw new Exception();
             for (int i = 1; i < previousbuttons.Count; i++)
@@ -799,7 +801,7 @@ namespace commo_rose
         {
             throw new Exception();
             button.property_watcher = false;
-            panel1.Controls.Remove(button);
+            Panel.Controls.Remove(button);
             for (int i = 1; i < previousbuttons.Count; i++)
             {
                 if (previousbuttons[i].Id == currentButton.Id)
@@ -812,7 +814,7 @@ namespace commo_rose
 
         public int get_new_id()
         {
-            var buttons_array = panel1.Controls.OfType<CustomButton>().Where(x=> x.Id != -1).ToList();
+            var buttons_array = Panel.Controls.OfType<CustomButton>().Where(x=> x.Id != -1).ToList();
             if (buttons_array.Count == 0)
                 return 0;
 
@@ -837,26 +839,26 @@ namespace commo_rose
 
         public int get_new_id(Preset preset)
         {
-            if (preset.buttons_array.Count == 0)
+            if (preset.buttons.Count == 0)
                 return 0;
 
-            preset.buttons_array.Sort((x, y) =>
+            preset.buttons.Sort((x, y) =>
             {
                 int id = x.Id;
                 return id.CompareTo(y.Id);
             });
 
-            if (preset.buttons_array[0].Id != 0)
+            if (preset.buttons[0].Id != 0)
                 return 0;
 
-            for (int i = 0; i < preset.buttons_array.Count - 1; i++)
+            for (int i = 0; i < preset.buttons.Count - 1; i++)
             {
-                if (preset.buttons_array[i].Id == preset.buttons_array[i + 1].Id)
+                if (preset.buttons[i].Id == preset.buttons[i + 1].Id)
                     throw new Exception("Identity problem");
-                if ((preset.buttons_array[i].Id + 1) != preset.buttons_array[i + 1].Id)
-                    return preset.buttons_array[i].Id + 1;
+                if ((preset.buttons[i].Id + 1) != preset.buttons[i + 1].Id)
+                    return preset.buttons[i].Id + 1;
             }
-            return preset.buttons_array.Last().Id + 1;
+            return preset.buttons.Last().Id + 1;
         }
 
         private void defaultBackcolorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -866,7 +868,7 @@ namespace commo_rose
             {
                 current_preset.default_backcolor = check_color_is_transparency_key(ColorPicker.Color);
                 Saver.save_preset_default_backcolor(current_preset.name, current_preset.default_backcolor);
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                foreach (CustomButton button in Panel.Controls.OfType<CustomButton>())
                 {
                     button.BackColor = current_preset.default_backcolor;
                     button.property_watcher = true;
@@ -881,7 +883,7 @@ namespace commo_rose
             {
                 current_preset.default_textcolor = check_color_is_transparency_key(ColorPicker.Color);
                 Saver.save_preset_default_textcolor(current_preset.name, current_preset.default_textcolor);
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                foreach (CustomButton button in Panel.Controls.OfType<CustomButton>())
                 {
                     button.ForeColor = current_preset.default_textcolor;
                     button.property_watcher = true;
@@ -897,7 +899,7 @@ namespace commo_rose
             {
                 current_preset.default_font = FontPicker.Font;
                 Saver.save_preset_default_font(current_preset.name, current_preset.default_font);
-                foreach (CustomButton button in panel1.Controls.OfType<CustomButton>())
+                foreach (CustomButton button in Panel.Controls.OfType<CustomButton>())
                 {
                     button.Font = FontPicker.Font;
                     button.property_watcher = true;
@@ -916,11 +918,11 @@ namespace commo_rose
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                 if (yesToolStripMenuItem.Checked)
                 {
-                    rk.SetValue(Form1.app_name, Application.ExecutablePath);
+                    rk.SetValue(Program.app_name, Application.ExecutablePath);
                 }
                 else
                 {
-                    rk.DeleteValue(Form1.app_name, false);
+                    rk.DeleteValue(Program.app_name, false);
                 }
                 rk.Close();
             }
@@ -932,24 +934,24 @@ namespace commo_rose
 
         private void actionButtonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            actionButtonForm.ShowDialog();
+            //actionButtonForm.ShowDialog();
         }
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            if(DialogResult.OK == presetName.ShowDialog(""))
-            {
-                Preset preset = new Preset();
-                preset.name = presetName.textBox1.Text.Trim();
-                preset.buttons_array = new List<CustomButton>();
-                preset.default_backcolor = Color.White;
-                preset.default_textcolor = Color.Black;
-                preset.default_font = new Font("Consolas", 14.25F, FontStyle.Regular);
-                presets_array.Add(preset);
-                PresetComboBox.Items.Add(preset.name);
-                PresetComboBox.SelectedItem = preset.name;
-                Saver.save_new_preset(preset.name);
-            }
+            //if(DialogResult.OK == presetName.ShowDialog(""))
+            //{
+            //    Preset preset = new Preset();
+            //    preset.name = presetName.textBox1.Text.Trim();
+            //    preset.buttons_array = new List<CustomButton>();
+            //    preset.default_backcolor = Color.White;
+            //    preset.default_textcolor = Color.Black;
+            //    preset.default_font = new Font("Consolas", 14.25F, FontStyle.Regular);
+            //    presets_array.Add(preset);
+            //    PresetComboBox.Items.Add(preset.name);
+            //    PresetComboBox.SelectedItem = preset.name;
+            //    Saver.save_new_preset(preset.name);
+            //}
             
         }
 
@@ -962,7 +964,7 @@ namespace commo_rose
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
                 {
                     Saver.delete_preset(current_preset.name);
-                    presets_array.Remove(current_preset);
+                    presets.Remove(current_preset);
                     PresetComboBox.Items.Remove(current_preset.name);
                     PresetComboBox.SelectedItem = "Desktop";
                 }
@@ -973,31 +975,29 @@ namespace commo_rose
 
         private void RenamePresetButton_Click(object sender, EventArgs e)
         {
-            if (current_preset.name != "Desktop")
-            {
-                if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
-                {
-                    string newName = presetName.textBox1.Text.Trim();
-                    Saver.update_preset_name(current_preset.name, newName);
-                    PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
-                    PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
-                    PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
-                    presets_array.Find(x => x.name == current_preset.name).name = newName;
-                    current_preset.name = newName;
-                }
-            }
-            else
-                MessageBox.Show("Desktop preset can't be renamed", "Error!");
+            //if (current_preset.name != "Desktop")
+            //{
+            //    if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
+            //    {
+            //        string newName = presetName.textBox1.Text.Trim();
+            //        Saver.update_preset_name(current_preset.name, newName);
+            //        PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
+            //        PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
+            //        PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
+            //        presets_array.Find(x => x.name == current_preset.name).name = newName;
+            //        current_preset.name = newName;
+            //    }
+            //}
+            //else
+            //    MessageBox.Show("Desktop preset can't be renamed", "Error!");
         }
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //search for this and replace with .Single()
-            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).ToArray()[0];
-
-            current_preset = presets_array.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).Single();
+            current_preset = presets.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).Single();
             throw new Exception();
-            main.current_preset = current_preset;
+            //main.current_preset = current_preset;
 
             if(current_preset.name == "Desktop")
             {
@@ -1012,9 +1012,9 @@ namespace commo_rose
                 BindPresetButton.Enabled = true;
             }
 
-            panel1.Controls.Clear();
-            panel1.Controls.Add(CursorpictureBox);
-            foreach (CustomButton button in current_preset.buttons_array)
+            Panel.Controls.Clear();
+            Panel.Controls.Add(CursorpictureBox);
+            foreach (CustomButton button in current_preset.buttons)
             {
                 add_button_to_panel(button.Clone());
             }
@@ -1028,27 +1028,27 @@ namespace commo_rose
 
         private void BindButton_Click(object sender, EventArgs e)
         {
-            if(current_preset.name != "Desktop")
-                bindProcess.ShowDialog(current_preset);
-            else
-                MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
+            //if(current_preset.name != "Desktop")
+            //    bindProcess.ShowDialog(current_preset);
+            //else
+            //    MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
         }
 
         private void CopyPresetButton_Click(object sender, EventArgs e)
         {
-            if (DialogResult.OK == presetName.ShowDialog(""))
-            {
-                Preset preset = current_preset.Clone();
-                preset.name = presetName.textBox1.Text.Trim();
-                presets_array.Add(preset);
-                PresetComboBox.Items.Add(preset.name);
-                PresetComboBox.SelectedItem = preset.name;
-                Saver.save_new_preset(preset.name);
-                foreach (var item in preset.buttons_array)
-                {
-                    Saver.save_button_settings(preset.name, item, true);
-                }
-            }
+            //if (DialogResult.OK == presetName.ShowDialog(""))
+            //{
+            //    Preset preset = current_preset.Clone();
+            //    preset.name = presetName.textBox1.Text.Trim();
+            //    presets_array.Add(preset);
+            //    PresetComboBox.Items.Add(preset.name);
+            //    PresetComboBox.SelectedItem = preset.name;
+            //    Saver.save_new_preset(preset.name);
+            //    foreach (var item in preset.buttons_array)
+            //    {
+            //        Saver.save_button_settings(preset.name, item, true);
+            //    }
+            //}
         }
 
         

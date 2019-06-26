@@ -98,12 +98,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Saver.cs" />
-    <None Include="Settings.cs">
+    <Compile Include="Settings.cs">
       <SubType>Form</SubType>
-    </None>
-    <None Include="Settings.Designer.cs">
+    </Compile>
+    <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
-    </None>
+    </Compile>
     <Compile Include="VirtualDesktop.cs" />
     <EmbeddedResource Include="ActionButtonDialog.resx">
       <DependentUpon>ActionButtonDialog.cs</DependentUpon>

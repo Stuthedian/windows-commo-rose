@@ -19,7 +19,6 @@ namespace commo_rose
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         
 
-        public const string app_name = "Commo rose";
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int SW_SHOWNOACTIVATE = 4;
 
@@ -27,7 +26,7 @@ namespace commo_rose
 
         private bool auto_switch;
         private Preset _current_preset;
-        public Preset current_preset
+        private Preset current_preset
         {
             get { return _current_preset; }
             set
@@ -59,7 +58,7 @@ namespace commo_rose
             form_handle = this.Handle;
             auto_switch = true;
 
-            notifyIcon1.Text = app_name;
+            notifyIcon1.Text = Program.app_name;
             notifyIcon1.Icon = SystemIcons.Application;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
@@ -80,11 +79,6 @@ namespace commo_rose
                 cp.ExStyle |= WS_EX_TOPMOST;
                 return cp;
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
        
         private void activate_selected_button()
@@ -132,16 +126,9 @@ namespace commo_rose
             }
         }
 
-        private void SettingsMenuItem_Click(object sender, EventArgs e)//outsource to settings form?
+        private void SettingsMenuItem_Click(object sender, EventArgs e)
         {
-            throw new Exception();
-            //if (!settings.Visible)
-            //    settings.Show();
-            //else
-            //{
-            //    settings.WindowState = FormWindowState.Normal;
-            //    settings.Activate();
-            //}
+            Program.show_settings_window();
         }
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
@@ -173,7 +160,7 @@ namespace commo_rose
             Preset result_preset = new Preset();
             result_preset.default_backcolor = this.default_backcolor;
             result_preset.default_textcolor = this.default_textcolor;
-            result_preset.default_font = this.default_font;//Clone?
+            result_preset.default_font = (Font)this.default_font.Clone();
             foreach (var item in this.buttons)
             {
                 result_preset.buttons.Add(item.Clone());
