@@ -11,19 +11,23 @@ namespace commo_rose
     {
         private static MouseOrKeyboardHook mouseOrKeyboardHook;
         private static List<Preset> presets;
+        private static Preset desktop_preset;
 
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 form = new Form1();
+            ButtonsForm buttons_form = new ButtonsForm();
 
             Hook_target target;
             VirtualKeyCode virtualKey;
             (presets, target, virtualKey) = Saver.load_settings();
 
-            mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, form.on_form_show, form.on_form_hide, false);
+            desktop_preset = presets.Where(x => x.name == "Desktop").Single();
+            buttons_form.current_preset = desktop_preset;
+
+            mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, buttons_form.on_form_show, buttons_form.on_form_hide, false);
 
             Application.Run();
         }

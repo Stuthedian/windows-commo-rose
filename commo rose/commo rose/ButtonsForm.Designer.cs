@@ -1,6 +1,6 @@
 ﻿namespace commo_rose
 {
-    partial class Form1
+    partial class ButtonsForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.

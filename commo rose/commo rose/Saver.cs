@@ -309,7 +309,7 @@ namespace commo_rose
                             customButton.actions.Add(customButton_Process);
                         }
                     }
-                    preset.buttons_array.Add(customButton);
+                    preset.buttons.Add(customButton);
                 }
                 presets.Add(preset);
             }

@@ -198,9 +198,7 @@ namespace commo_rose
                 }
             }
         }
-        //public MouseButtons action_button_mouse { get; set; }
         private VirtualKeyCode action_button{ get; set; }
-        //private VirtualKeyCode action_button_keyboard { get; set; }
 
         public MouseOrKeyboardHook(Hook_target target, VirtualKeyCode action_button, action down, action up, bool pass)
         {

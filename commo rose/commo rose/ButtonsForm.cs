@@ -13,7 +13,7 @@ using System.IO;
 
 namespace commo_rose
 {
-    public partial class Form1 : Form
+    public partial class ButtonsForm : Form
     {
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -26,11 +26,7 @@ namespace commo_rose
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int SW_SHOWNOACTIVATE = 4;
 
-        //public MouseOrKeyboardHook mouseOrKeyboardHook;
-        
-        //private Settings settings;
-        
-        public IntPtr form_handle;
+        private IntPtr form_handle;
 
         private bool auto_switch;
         private Preset _current_preset;
@@ -41,21 +37,20 @@ namespace commo_rose
             {
                 if(_current_preset != null)
                 {
-                    foreach (CustomButton button in _current_preset.buttons_array)
+                    foreach (CustomButton button in _current_preset.buttons)
                     {
                         button.Parent = null;
                     }
                 }
                 _current_preset = value;
-                foreach (CustomButton button in current_preset.buttons_array)
+                foreach (CustomButton button in current_preset.buttons)
                 {
                     button.Parent = this;
                 }
             }
         }
-        public List<Preset> presets_array;
         
-        public Form1()
+        public ButtonsForm()
         {
             InitializeComponent();
             BackColor = Color.Lime;
@@ -63,7 +58,6 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
             form_handle = this.Handle;
-            presets_array = new List<Preset>();
             auto_switch = true;
 
             notifyIcon1.Text = app_name;
@@ -71,9 +65,6 @@ namespace commo_rose
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
             Opacity = 0.0;
-            //mouseOrKeyboardHook = new MouseOrKeyboardHook(on_form_show, on_form_hide, false);
-            //Saver.load_settings(this);
-            //settings = new Settings(this);
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);
 
             if(Environment.OSVersion.Version.Major == 10)
@@ -99,7 +90,7 @@ namespace commo_rose
        
         private void activate_selected_button()
         {
-            foreach (CustomButton button in current_preset.buttons_array)
+            foreach (CustomButton button in current_preset.buttons)
             {
                 if (button.Selected)
                 {
@@ -116,25 +107,25 @@ namespace commo_rose
             center.Y -= Height / 2;
             Location = center;
 
-            if(auto_switch)//move to settings ?
-            {
-                uint process_id;
-                GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
-                string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
-                bool process_matched = false;
+            //if(auto_switch)//move to settings ?
+            //{
+            //    uint process_id;
+            //    GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            //    string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+            //    bool process_matched = false;
 
-                foreach (Preset preset in presets_array)
-                {
-                    if (preset.processes.Contains(foreground_process_name))
-                    {
-                        current_preset = preset;
-                        process_matched = true;
-                        break;
-                    }
-                }
-                if (!process_matched)
-                    current_preset = presets_array.Find(x => x.name == "Desktop");
-            }
+            //    foreach (Preset preset in presets_array)
+            //    {
+            //        if (preset.processes.Contains(foreground_process_name))
+            //        {
+            //            current_preset = preset;
+            //            process_matched = true;
+            //            break;
+            //        }
+            //    }
+            //    if (!process_matched)
+            //        current_preset = presets_array.Find(x => x.name == "Desktop");
+            //}
             
             Opacity = 1.0;
         }
@@ -144,11 +135,6 @@ namespace commo_rose
             Opacity = 0.0;
             activate_selected_button();
         }
-
-        //private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        //{
-        //    Application.Exit();
-        //}
 
         private void AutoSwitchMenuItem_Click(object sender, EventArgs e)
         {
@@ -187,7 +173,7 @@ namespace commo_rose
     public class Preset
     {
         public string name;
-        public List<CustomButton> buttons_array;
+        public List<CustomButton> buttons;
         public List<string> processes;
 
         public Color default_backcolor;
@@ -196,7 +182,7 @@ namespace commo_rose
 
         public Preset()
         {
-            buttons_array = new List<CustomButton>();
+            buttons = new List<CustomButton>();
             processes = new List<string>();
         }
 
@@ -206,9 +192,9 @@ namespace commo_rose
             result_preset.default_backcolor = this.default_backcolor;
             result_preset.default_textcolor = this.default_textcolor;
             result_preset.default_font = this.default_font;//Clone?
-            foreach (var item in this.buttons_array)
+            foreach (var item in this.buttons)
             {
-                result_preset.buttons_array.Add(item.Clone());
+                result_preset.buttons.Add(item.Clone());
             }
 
             return result_preset;
