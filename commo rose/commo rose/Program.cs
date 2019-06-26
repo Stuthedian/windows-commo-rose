@@ -4,11 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsInput.Native;
+using System.Runtime.InteropServices;
 
 namespace commo_rose
 {
     static class Program
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
         private static MouseOrKeyboardHook mouseOrKeyboardHook;
         private static List<Preset> presets;
         private static Preset desktop_preset;
@@ -31,6 +37,24 @@ namespace commo_rose
 
             Application.Run();
         }
+
+        public static Preset get_preset()
+        {
+            uint process_id;
+            GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+
+            foreach (Preset preset in presets)
+            {
+                if (preset.processes.Contains(foreground_process_name))
+                {
+                    return preset;
+                }
+            }
+
+            return desktop_preset;
+        }
+
 
         public static void Close()
         {

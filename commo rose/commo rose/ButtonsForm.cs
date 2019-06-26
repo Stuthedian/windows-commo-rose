@@ -17,10 +17,7 @@ namespace commo_rose
     {
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        
 
         public const string app_name = "Commo rose";
         private const int WS_EX_TOPMOST = 0x00000008;
@@ -53,10 +50,12 @@ namespace commo_rose
         public ButtonsForm()
         {
             InitializeComponent();
+
             BackColor = Color.Lime;
             TransparencyKey = Color.Lime;
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
+
             form_handle = this.Handle;
             auto_switch = true;
 
@@ -107,26 +106,9 @@ namespace commo_rose
             center.Y -= Height / 2;
             Location = center;
 
-            //if(auto_switch)//move to settings ?
-            //{
-            //    uint process_id;
-            //    GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
-            //    string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
-            //    bool process_matched = false;
+            if (auto_switch)
+                current_preset = Program.get_preset();
 
-            //    foreach (Preset preset in presets_array)
-            //    {
-            //        if (preset.processes.Contains(foreground_process_name))
-            //        {
-            //            current_preset = preset;
-            //            process_matched = true;
-            //            break;
-            //        }
-            //    }
-            //    if (!process_matched)
-            //        current_preset = presets_array.Find(x => x.name == "Desktop");
-            //}
-            
             Opacity = 1.0;
         }
 
