@@ -19,7 +19,8 @@ namespace commo_rose
     {
         private const int WS_EX_COMPOSITED = 0x02000000;
 
-        //private ActionButtonDialog actionButtonForm;
+        private ButtonsForm buttons_form;
+        private ActionButtonDialog actionButtonForm;
         //private PresetNameDialog presetName;
         //private BindProcessDialog bindProcess;
         //private CopyButtonDialog copyButtonDialog;
@@ -82,18 +83,14 @@ namespace commo_rose
 
         private Preset current_preset;
         private List<Preset> presets;
-
-        private object[] mouse_buttons;
-        private object[] keyboard_buttons;
-
+        
         private int apply_counter;
 
-        private ButtonsForm buttons_form;
 
-        public Settings(List<Preset> presets, ButtonsForm buttons_form)
+        public Settings(List<Preset> presets, ButtonsForm buttons_form, MouseOrKeyboardHook hook)
         {
             InitializeComponent();
-            //actionButtonForm = new ActionButtonDialog(main);
+            actionButtonForm = new ActionButtonDialog(hook);
             //presetName = new PresetNameDialog(this);
             //bindProcess = new BindProcessDialog();
             //copyButtonDialog = new CopyButtonDialog(this);
@@ -123,22 +120,6 @@ namespace commo_rose
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
             
-            mouse_buttons = new object[] {
-            MouseButtons.Middle.ToString(),
-            MouseButtons.XButton1.ToString(),
-            MouseButtons.XButton2.ToString() };
-            keyboard_buttons = new object[]{
-                VirtualKeyCode.SCROLL.ToString(),
-                VirtualKeyCode.NUMPAD0.ToString(),
-                VirtualKeyCode.NUMPAD1.ToString(),
-                VirtualKeyCode.NUMPAD2.ToString(),
-                VirtualKeyCode.NUMPAD3.ToString(),
-                VirtualKeyCode.NUMPAD4.ToString(),
-                VirtualKeyCode.NUMPAD5.ToString(),
-                VirtualKeyCode.NUMPAD6.ToString(),
-                VirtualKeyCode.NUMPAD7.ToString(),
-                VirtualKeyCode.NUMPAD8.ToString(),
-                VirtualKeyCode.NUMPAD9.ToString() };
             RegistryKey subkey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
             object value = subkey.GetValue(Program.app_name);
@@ -915,7 +896,7 @@ namespace commo_rose
 
         private void actionButtonToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //actionButtonForm.ShowDialog();
+            actionButtonForm.ShowDialog();
         }
 
         private void AddPresetButton_Click(object sender, EventArgs e)

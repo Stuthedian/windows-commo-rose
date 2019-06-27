@@ -511,20 +511,14 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }//rename to delete_process
 
-        public static void save_hook(Hook_target target, MouseButtons mbutton, VirtualKeyCode vk)
+        public static void save_hook(Hook_target target, VirtualKeyCode vk)
         {
             XmlElement node = doc.DocumentElement;
             node.Attributes["Hook_target"].Value = target.ToString();
-            if (target == Hook_target.Keyboard)
-            {
-                node.Attributes["Hook_key"].Value = vk.ToString();
-            }
-            else if (target == Hook_target.Mouse)
-            {
-                node.Attributes["Hook_key"].Value = mbutton.ToString();
-            }
+            node.Attributes["Hook_key"].Value = vk.ToString();
+
             doc.Save(path_to_settings_file);
-        }//rewrite?
+        }
 
         public static void save_preset_default_backcolor(string preset_name, Color color)
         {

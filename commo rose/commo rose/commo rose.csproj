@@ -55,12 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ActionButtonDialog.cs">
+    <Compile Include="ActionButtonDialog.cs">
       <SubType>Form</SubType>
-    </None>
-    <None Include="ActionButtonDialog.Designer.cs">
+    </Compile>
+    <Compile Include="ActionButtonDialog.Designer.cs">
       <DependentUpon>ActionButtonDialog.cs</DependentUpon>
-    </None>
+    </Compile>
     <None Include="BindProcessDialog.cs">
       <SubType>Form</SubType>
     </None>

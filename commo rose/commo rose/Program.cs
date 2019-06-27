@@ -35,9 +35,9 @@ namespace commo_rose
             VirtualKeyCode virtualKey;
             (presets, target, virtualKey) = Saver.load_settings();
             desktop_preset = presets.Where(x => x.name == "Desktop").Single();
-            settings = new Settings(presets, buttons_form);
 
             mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, buttons_form.on_form_show, buttons_form.on_form_hide, false);
+            settings = new Settings(presets, buttons_form, mouseOrKeyboardHook);
 
             Application.Run();
         }

@@ -198,7 +198,8 @@ namespace commo_rose
                 }
             }
         }
-        private VirtualKeyCode action_button{ get; set; }
+        public VirtualKeyCode action_button_mouse { get; set; }
+        public VirtualKeyCode action_button_keyboard { get; set; }
 
         public MouseOrKeyboardHook(Hook_target target, VirtualKeyCode action_button, action down, action up, bool pass)
         {
@@ -208,7 +209,16 @@ namespace commo_rose
             mouse_proc = LowLevelMouseProc;
             keyboard_proc = LowLevelKeyboardProc;
             pass_message = pass;
-            this.action_button = action_button;
+            if (target == Hook_target.Keyboard)
+            {
+                action_button_keyboard = action_button;
+                action_button_mouse = VirtualKeyCode.MBUTTON;
+            }
+            else if (target == Hook_target.Mouse)
+            {
+                action_button_mouse = action_button;
+                action_button_keyboard = VirtualKeyCode.NUMPAD0;
+            }
 
             hook_target = target;
         }
@@ -237,7 +247,7 @@ namespace commo_rose
                 KeyboardMessage wmMouse = (KeyboardMessage)wParam;
                 if (wmMouse == KeyboardMessage.WM_KEYDOWN || wmMouse == KeyboardMessage.WM_SYSKEYDOWN)
                 {
-                    if (a.vkCode == (int)action_button)
+                    if (a.vkCode == (int)action_button_keyboard)
                     {
                         if (key_hook_handled == false)
                         {
@@ -249,7 +259,7 @@ namespace commo_rose
                 }
                 else if (wmMouse == KeyboardMessage.WM_KEYUP || wmMouse == KeyboardMessage.WM_SYSKEYUP)
                 {
-                    if (a.vkCode == (int)action_button)
+                    if (a.vkCode == (int)action_button_keyboard)
                     {
                         key_hook_handled = false;
                         on_key_up();
@@ -267,12 +277,12 @@ namespace commo_rose
                 MSLLHOOKSTRUCT a = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
                 int xbutton_id = a.mouseData >> 16;
                 MouseMessage wmMouse = (MouseMessage)wParam;
-                if (wmMouse == mouse_button_to_message_down(action_button))
+                if (wmMouse == mouse_button_to_message_down(action_button_mouse))
                 {
 
                     if (wmMouse == MouseMessage.WM_XBUTTONDOWN)
                     {
-                        int id = mouse_xbutton_to_id(action_button);
+                        int id = mouse_xbutton_to_id(action_button_mouse);
                         if (xbutton_id == id)
                         {
                             on_key_down();
@@ -285,11 +295,11 @@ namespace commo_rose
                         return pass_message ? NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam) : 1;
                     }
                 }
-                if (wmMouse == mouse_button_to_message_up(action_button))
+                if (wmMouse == mouse_button_to_message_up(action_button_mouse))
                 {
                     if (wmMouse == MouseMessage.WM_XBUTTONUP)
                     {
-                        int id = mouse_xbutton_to_id(action_button);
+                        int id = mouse_xbutton_to_id(action_button_mouse);
                         if (xbutton_id == id)
                         {
                             on_key_up();
