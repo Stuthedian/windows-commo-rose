@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using System.Xml;
-using System.IO;
+
 
 namespace commo_rose
 {
@@ -26,10 +20,10 @@ namespace commo_rose
 
         private bool auto_switch;
         private Preset _current_preset;
-        private Preset current_preset
+        public Preset current_preset
         {
             get { return _current_preset; }
-            set
+            private set
             {
                 if(_current_preset != null)
                 {
@@ -110,6 +104,18 @@ namespace commo_rose
         {
             Opacity = 0.0;
             activate_selected_button();
+        }
+
+        public void change_preset_if_auto_switch_disabled(Preset preset)
+        {
+            if (!auto_switch)
+                current_preset = preset;
+        }
+
+        public void add_button_if_auto_switch_disabled(CustomButton customButton)
+        {
+            if(!auto_switch)
+                customButton.Parent = this;
         }
 
         private void AutoSwitchMenuItem_Click(object sender, EventArgs e)

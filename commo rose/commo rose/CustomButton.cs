@@ -173,7 +173,7 @@ namespace commo_rose
                         thread.IsBackground = true;
                         thread.Start();
                         break;
-                    default:throw new NotImplementedException(); break;
+                    default:throw new NotImplementedException();
                 }
             }
             catch (Win32Exception e)

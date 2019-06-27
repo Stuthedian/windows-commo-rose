@@ -24,6 +24,7 @@ namespace commo_rose
         //private BindProcessDialog bindProcess;
         //private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
+
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
         private CustomButton currentButton
@@ -81,12 +82,15 @@ namespace commo_rose
 
         private Preset current_preset;
         private List<Preset> presets;
+
         private object[] mouse_buttons;
         private object[] keyboard_buttons;
 
         private int apply_counter;
 
-        public Settings(List<Preset> presets)
+        private ButtonsForm buttons_form;
+
+        public Settings(List<Preset> presets, ButtonsForm buttons_form)
         {
             InitializeComponent();
             //actionButtonForm = new ActionButtonDialog(main);
@@ -94,6 +98,7 @@ namespace commo_rose
             //bindProcess = new BindProcessDialog();
             //copyButtonDialog = new CopyButtonDialog(this);
             this.presets = presets;
+            this.buttons_form = buttons_form;
             current_preset = Program.desktop_preset;
             RenamePresetButton.Enabled = false;
             DeletePresetButton.Enabled = false;
@@ -106,15 +111,17 @@ namespace commo_rose
 
             PresetComboBox.SelectedItem = current_preset.name;
             PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
-            //Panel.Width = main.Width;
-            //Panel.Height = main.Height;
-            Editpanel.Enabled = false;
-            update_ApplyAllCancelAllpanel(false);
-            update_ApplyCancelpanel(false);
+
+            Panel.Width = buttons_form.Width;
+            Panel.Height = buttons_form.Height;
             Point point = new Point(0, 0);
             point.X += Panel.Width /2;
             point.Y += Panel.Height /2;
             CursorpictureBox.Location = point;
+
+            Editpanel.Enabled = false;
+            update_ApplyAllCancelAllpanel(false);
+            update_ApplyCancelpanel(false);
             
             mouse_buttons = new object[] {
             MouseButtons.Middle.ToString(),
@@ -150,17 +157,6 @@ namespace commo_rose
             
             foreach (CustomButton button in current_preset.buttons)
             {
-                //Panel.Controls.Add(button.Clone());
-                //CustomButton b = (CustomButton)Panel.Controls[Panel.Controls.Count - 1];
-                //b.PropertyWatcherChanged += Button_PropertyWatcherChanged;
-                //b.MouseDown += Button_MouseDown;
-                //b.MouseMove += Button_MouseMove;
-                //b.resizer.MouseDown += resizer_MouseDown;
-                //b.resizer.MouseMove += resizer_MouseMove;
-                //b.resizer.MouseUp += resizer_MouseUp;
-                //b.resizer.Cursor = Cursors.SizeNWSE;
-                //b.resizer.BringToFront();
-                //b.BringToFront();
                 add_button_to_panel(button.Clone());
             }
 
@@ -191,14 +187,13 @@ namespace commo_rose
 
         private Color check_color_is_transparency_key(Color color)
         {
-            throw new Exception();
-            //if(color.G == main.TransparencyKey.G)
-            //{
-            //    if((color.R == 0 || color.R == 1) && (color.B == 0 || color.B == 1))
-            //    {
-            //        color = Color.FromArgb(255, 2, 255, 1);
-            //    }
-            //}
+            if (color.G == buttons_form.TransparencyKey.G)
+            {
+                if ((color.R == 0 || color.R == 1) && (color.B == 0 || color.B == 1))
+                {
+                    color = Color.FromArgb(255, 2, 255, 1);
+                }
+            }
             return color;
         }
 
@@ -376,9 +371,10 @@ namespace commo_rose
             {
                 target_button = new CustomButton();
                 current_preset.buttons.Add(target_button);
-                throw new Exception();
-                //if(current_preset == main.current_preset)
-                //    target_button.Parent = main;
+
+                if (current_preset == buttons_form.current_preset)
+                    buttons_form.add_button_if_auto_switch_disabled(target_button);
+
                 Saver.save_button_settings(current_preset.name, customButton, true);
             }
             else if (a.Length == 1)
@@ -387,6 +383,7 @@ namespace commo_rose
                 Saver.save_button_settings(current_preset.name, customButton, false);
             }
             else throw new Exception("Identity problem");
+
             CustomButton.OverWrite(target_button, customButton);
             customButton.property_watcher = false;
             return "";
@@ -425,7 +422,7 @@ namespace commo_rose
                 case Action_type.Generic:
                     ButtonParametersBox.Cue = "send(Ctrl+V) run(cmd) send(win+e)";
                     break;
-                default:throw new NotImplementedException(); break;
+                default:throw new NotImplementedException();
             }
         }
 
@@ -581,7 +578,7 @@ namespace commo_rose
                             if (error_message != "")
                                 return error_message;
                             break;
-                        default: throw new NotImplementedException(); break;
+                        default: throw new NotImplementedException();
                     }
                 }
                 return error_message;
@@ -784,32 +781,16 @@ namespace commo_rose
         {
             currentButton.property_watcher = false;
             Panel.Controls.Remove(currentButton);
-            //previousbuttons.RemoveAll()
-            throw new Exception();
-            for (int i = 1; i < previousbuttons.Count; i++)
-            {
-                if (previousbuttons[i].Id == currentButton.Id)
-                {
-                    previousbuttons.RemoveAt(i);
-                    i--;
-                }
-            }
+            previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == currentButton.Id);
+
             currentButton = previousbuttons.Last();
         }
 
         private void delete_button_from_panel(CustomButton button)
         {
-            throw new Exception();
             button.property_watcher = false;
             Panel.Controls.Remove(button);
-            for (int i = 1; i < previousbuttons.Count; i++)
-            {
-                if (previousbuttons[i].Id == currentButton.Id)
-                {
-                    previousbuttons.RemoveAt(i);
-                    i--;
-                }
-            }
+            previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == button.Id);
         }
 
         public int get_new_id()
@@ -994,12 +975,10 @@ namespace commo_rose
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //search for this and replace with .Single()
             current_preset = presets.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).Single();
-            throw new Exception();
-            //main.current_preset = current_preset;
+            buttons_form.change_preset_if_auto_switch_disabled(current_preset);
 
-            if(current_preset.name == "Desktop")
+            if(current_preset == Program.desktop_preset)
             {
                 RenamePresetButton.Enabled = false;
                 DeletePresetButton.Enabled = false;
@@ -1019,7 +998,7 @@ namespace commo_rose
                 add_button_to_panel(button.Clone());
             }
             currentButton = null;
-            previousbuttons = new List<CustomButton>();//clear existing instead of creating new one?
+            previousbuttons.Clear();
             previousbuttons.Add(currentButton);
             update_ApplyCancelpanel(false);
             update_ApplyAllCancelAllpanel(false);
