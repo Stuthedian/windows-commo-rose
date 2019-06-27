@@ -22,7 +22,7 @@ namespace commo_rose
         private ButtonsForm buttons_form;
         private ActionButtonDialog actionButtonForm;
         private PresetNameDialog presetName;
-        //private BindProcessDialog bindProcess;
+        private BindProcessDialog bindProcess;
         //private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
 
@@ -92,7 +92,7 @@ namespace commo_rose
             InitializeComponent();
             actionButtonForm = new ActionButtonDialog(hook);
             presetName = new PresetNameDialog(presets);
-            //bindProcess = new BindProcessDialog();
+            bindProcess = new BindProcessDialog();
             //copyButtonDialog = new CopyButtonDialog(this);
             this.presets = presets;
             this.buttons_form = buttons_form;
@@ -988,10 +988,10 @@ namespace commo_rose
 
         private void BindButton_Click(object sender, EventArgs e)
         {
-            //if(current_preset.name != "Desktop")
-            //    bindProcess.ShowDialog(current_preset);
-            //else
-            //    MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
+            if (current_preset.name != "Desktop")
+                bindProcess.ShowDialog(current_preset);
+            else
+                MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
         }
 
         private void CopyPresetButton_Click(object sender, EventArgs e)
