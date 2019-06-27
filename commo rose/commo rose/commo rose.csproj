@@ -67,12 +67,12 @@
     <Compile Include="BindProcessDialog.Designer.cs">
       <DependentUpon>BindProcessDialog.cs</DependentUpon>
     </Compile>
-    <None Include="CopyButtonDialog.cs">
+    <Compile Include="CopyButtonDialog.cs">
       <SubType>Form</SubType>
-    </None>
-    <None Include="CopyButtonDialog.Designer.cs">
+    </Compile>
+    <Compile Include="CopyButtonDialog.Designer.cs">
       <DependentUpon>CopyButtonDialog.cs</DependentUpon>
-    </None>
+    </Compile>
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>

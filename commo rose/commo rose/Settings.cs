@@ -23,15 +23,15 @@ namespace commo_rose
         private ActionButtonDialog actionButtonForm;
         private PresetNameDialog presetName;
         private BindProcessDialog bindProcess;
-        //private CopyButtonDialog copyButtonDialog;
+        private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
 
         private List<CustomButton> previousbuttons;
         private CustomButton _currentButton;
-        private CustomButton currentButton
+        public CustomButton currentButton
         {
             get { return _currentButton; }
-            set
+            private set
             {
                 if(_currentButton != null)
                 {
@@ -81,8 +81,8 @@ namespace commo_rose
             }
         }
 
-        private Preset current_preset;
-        private List<Preset> presets;
+        public Preset current_preset;
+        public List<Preset> presets;
         
         private int apply_counter;
 
@@ -93,7 +93,7 @@ namespace commo_rose
             actionButtonForm = new ActionButtonDialog(hook);
             presetName = new PresetNameDialog(presets);
             bindProcess = new BindProcessDialog();
-            //copyButtonDialog = new CopyButtonDialog(this);
+            copyButtonDialog = new CopyButtonDialog(this, buttons_form);
             this.presets = presets;
             this.buttons_form = buttons_form;
             current_preset = Program.desktop_preset;
@@ -731,7 +731,7 @@ namespace commo_rose
 
         private void Copybutton_Click(object sender, EventArgs e)
         {
-            //copyButtonDialog.ShowDialog();
+            copyButtonDialog.ShowDialog();
         }
 
         private void Deletebutton_Click(object sender, EventArgs e)
