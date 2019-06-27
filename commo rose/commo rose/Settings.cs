@@ -21,7 +21,7 @@ namespace commo_rose
 
         private ButtonsForm buttons_form;
         private ActionButtonDialog actionButtonForm;
-        //private PresetNameDialog presetName;
+        private PresetNameDialog presetName;
         //private BindProcessDialog bindProcess;
         //private CopyButtonDialog copyButtonDialog;
         private Point MouseDownLocation;
@@ -91,7 +91,7 @@ namespace commo_rose
         {
             InitializeComponent();
             actionButtonForm = new ActionButtonDialog(hook);
-            //presetName = new PresetNameDialog(this);
+            presetName = new PresetNameDialog(presets);
             //bindProcess = new BindProcessDialog();
             //copyButtonDialog = new CopyButtonDialog(this);
             this.presets = presets;
@@ -901,20 +901,20 @@ namespace commo_rose
 
         private void AddPresetButton_Click(object sender, EventArgs e)
         {
-            //if(DialogResult.OK == presetName.ShowDialog(""))
-            //{
-            //    Preset preset = new Preset();
-            //    preset.name = presetName.textBox1.Text.Trim();
-            //    preset.buttons_array = new List<CustomButton>();
-            //    preset.default_backcolor = Color.White;
-            //    preset.default_textcolor = Color.Black;
-            //    preset.default_font = new Font("Consolas", 14.25F, FontStyle.Regular);
-            //    presets_array.Add(preset);
-            //    PresetComboBox.Items.Add(preset.name);
-            //    PresetComboBox.SelectedItem = preset.name;
-            //    Saver.save_new_preset(preset.name);
-            //}
-            
+            if (DialogResult.OK == presetName.ShowDialog(""))
+            {
+                Preset preset = new Preset();
+                preset.name = presetName.textBox1.Text.Trim();
+                preset.buttons = new List<CustomButton>();
+                preset.default_backcolor = Color.White;
+                preset.default_textcolor = Color.Black;
+                preset.default_font = new Font("Consolas", 14.25F, FontStyle.Regular);
+                presets.Add(preset);
+                PresetComboBox.Items.Add(preset.name);
+                PresetComboBox.SelectedItem = preset.name;
+                Saver.save_new_preset(preset.name);
+            }
+
         }
 
         private void DeletePresetButton_Click(object sender, EventArgs e)
@@ -937,21 +937,21 @@ namespace commo_rose
 
         private void RenamePresetButton_Click(object sender, EventArgs e)
         {
-            //if (current_preset.name != "Desktop")
-            //{
-            //    if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
-            //    {
-            //        string newName = presetName.textBox1.Text.Trim();
-            //        Saver.update_preset_name(current_preset.name, newName);
-            //        PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
-            //        PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
-            //        PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
-            //        presets_array.Find(x => x.name == current_preset.name).name = newName;
-            //        current_preset.name = newName;
-            //    }
-            //}
-            //else
-            //    MessageBox.Show("Desktop preset can't be renamed", "Error!");
+            if (current_preset.name != "Desktop")
+            {
+                if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
+                {
+                    string newName = presetName.textBox1.Text.Trim();
+                    Saver.update_preset_name(current_preset.name, newName);
+                    PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
+                    PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
+                    PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
+                    presets.Find(x => x.name == current_preset.name).name = newName;
+                    current_preset.name = newName;
+                }
+            }
+            else
+                MessageBox.Show("Desktop preset can't be renamed", "Error!");
         }
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -996,19 +996,19 @@ namespace commo_rose
 
         private void CopyPresetButton_Click(object sender, EventArgs e)
         {
-            //if (DialogResult.OK == presetName.ShowDialog(""))
-            //{
-            //    Preset preset = current_preset.Clone();
-            //    preset.name = presetName.textBox1.Text.Trim();
-            //    presets_array.Add(preset);
-            //    PresetComboBox.Items.Add(preset.name);
-            //    PresetComboBox.SelectedItem = preset.name;
-            //    Saver.save_new_preset(preset.name);
-            //    foreach (var item in preset.buttons_array)
-            //    {
-            //        Saver.save_button_settings(preset.name, item, true);
-            //    }
-            //}
+            if (DialogResult.OK == presetName.ShowDialog(""))
+            {
+                Preset preset = current_preset.Clone();
+                preset.name = presetName.textBox1.Text.Trim();
+                presets.Add(preset);
+                PresetComboBox.Items.Add(preset.name);
+                PresetComboBox.SelectedItem = preset.name;
+                Saver.save_new_preset(preset.name);
+                foreach (var item in preset.buttons)
+                {
+                    Saver.save_button_settings(preset.name, item, true);
+                }
+            }
         }
 
         
