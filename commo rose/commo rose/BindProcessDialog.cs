@@ -48,7 +48,7 @@ namespace commo_rose
         private void DataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             string name = e.Row.Cells[0].Value.ToString();
-            Saver.delete_process_name(current_preset.name, name);
+            Saver.delete_process(current_preset.name, name);
             current_preset.processes.Remove(name);
         }
 

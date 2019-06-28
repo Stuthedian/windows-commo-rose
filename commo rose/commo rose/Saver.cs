@@ -122,107 +122,6 @@ namespace commo_rose
             writer.Close();
         }
 
-        //public static void load_settings(Form1 main)
-        //{
-        //    if (!File.Exists(path_to_settings_file))
-        //    {
-        //        create_new_settings_file();
-        //    }
-        //    doc = new XmlDocument();
-        //    doc.Load(path_to_settings_file);
-        //    XmlNode node, list_of_actions, modifiers_node, ordinary_node, process_node;
-        //    Point point = new Point();
-
-        //    node = doc.DocumentElement;
-        //    main.mouseOrKeyboardHook.set_hook_target((Hook_target)Enum.Parse(typeof(Hook_target), node.Attributes["Hook_target"].Value));
-        //    string key = node.Attributes["Hook_key"].Value;
-
-        //    if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
-        //    {
-        //        main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), key);
-        //        main.mouseOrKeyboardHook.action_button_mouse = MouseButtons.XButton1;
-        //    }
-        //    else if(main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
-        //    {
-        //        main.mouseOrKeyboardHook.action_button_mouse = (MouseButtons)Enum.Parse(typeof(MouseButtons), key);
-        //        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.NUMPAD0;
-        //    }
-        //    Preset preset;
-        //    preset_node = doc.DocumentElement.SelectSingleNode("Presets");
-        //    foreach (XmlNode preset_node_child in preset_node.ChildNodes)
-        //    {
-        //        preset = new Preset();
-        //        preset.name = preset_node_child.Attributes["Name"].Value;
-        //        preset.default_backcolor = Color.FromArgb(Convert.ToInt32(preset_node_child.Attributes["default_backcolor"].Value));
-        //        preset.default_textcolor = Color.FromArgb(Convert.ToInt32(preset_node_child.Attributes["default_textcolor"].Value));
-        //        preset.default_font = (Font)new FontConverter().ConvertFromString(preset_node_child.Attributes["default_font"].Value);
-
-        //        XmlNode processes_node = preset_node_child.SelectSingleNode("Processes");
-        //        foreach (XmlNode processes_node_child in processes_node.ChildNodes)
-        //        {
-        //            preset.processes.Add(processes_node_child.Attributes["Name"].Value);
-        //        }
-        //        CustomButton customButton;
-        //        XmlNode buttons_node = preset_node_child.SelectSingleNode("Buttons");
-        //        foreach (XmlNode buttons_node_child in buttons_node.ChildNodes)
-        //        {
-        //            customButton = new CustomButton();
-        //            customButton.Id = int.Parse(buttons_node_child.Attributes["Id"].Value);
-        //            point.X = int.Parse(buttons_node_child.Attributes["Location.X"].Value);
-        //            point.Y = int.Parse(buttons_node_child.Attributes["Location.Y"].Value);
-        //            customButton.Location = point;
-        //            customButton.Text = buttons_node_child.Attributes["Text"].Value;
-        //            customButton.action_type =
-        //                (Action_type)Enum.Parse(typeof(Action_type), buttons_node_child.Attributes["action_type"].Value);
-        //            customButton.Parameters = buttons_node_child.Attributes["Parameters"].Value;
-        //            customButton.BackColor = Color.FromArgb(Convert.ToInt32(buttons_node_child.Attributes["BackColor"].Value));
-        //            customButton.ForeColor = Color.FromArgb(Convert.ToInt32(buttons_node_child.Attributes["ForeColor"].Value));
-        //            customButton.Width = int.Parse(buttons_node_child.Attributes["Width"].Value);
-        //            customButton.Height = int.Parse(buttons_node_child.Attributes["Height"].Value);
-        //            customButton.Font = (Font)new FontConverter().ConvertFromString(buttons_node_child.Attributes["Font"].Value);
-
-        //            list_of_actions = buttons_node_child.SelectSingleNode("List_of_Actions");
-        //            foreach (XmlNode action_node in list_of_actions.ChildNodes)
-        //            {
-        //                if (action_node.Attributes["IAction_type"].Value == "CustomButton_Send")
-        //                {
-        //                    CustomButton_Send customButton_Send;
-        //                    modifiers_node = action_node.SelectSingleNode("modifier_keys");
-        //                    string[] a = modifiers_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        //                    List<VirtualKeyCode> v = new List<VirtualKeyCode>();
-        //                    foreach (var item_ in a)
-        //                    {
-        //                        v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
-        //                    }
-
-        //                    ordinary_node = action_node.SelectSingleNode("ordinary_keys");
-        //                    a = ordinary_node.InnerText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        //                    foreach (var item_ in a)
-        //                    {
-        //                        v.Add((VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), item_));
-        //                    }
-        //                    customButton_Send = new CustomButton_Send(v);
-        //                    customButton.actions.Add(customButton_Send);
-        //                }
-        //                else if (action_node.Attributes["IAction_type"].Value == "CustomButton_Process")
-        //                {
-        //                    CustomButton_Process customButton_Process;
-        //                    process_node = action_node.SelectSingleNode("process");
-        //                    customButton_Process = new CustomButton_Process(
-        //                        (Process_type)Enum.Parse(typeof(Process_type), process_node.Attributes["process_type"].Value),
-        //                        process_node.Attributes["process.StartInfo.FileName"].Value,
-        //                        process_node.Attributes["process.StartInfo.Arguments"].Value);
-        //                    customButton.actions.Add(customButton_Process);
-        //                }
-        //            }
-        //            preset.buttons_array.Add(customButton);
-        //        }
-        //        main.presets_array.Add(preset);
-        //    }
-        //    main.current_preset = main.presets_array.Find(x => x.name == "Desktop");
-            
-        //}
-
         public static (List<Preset>, Hook_target, VirtualKeyCode) load_settings()
         {
             if (!File.Exists(path_to_settings_file))
@@ -459,7 +358,7 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
-        public static void save_new_preset(string preset_name)
+        public static void save_add_preset(string preset_name)
         {
             XmlElement preset = doc.CreateElement("Preset");
             preset.SetAttribute("Name", preset_name);
@@ -503,13 +402,13 @@ namespace commo_rose
             doc.Save(path_to_settings_file);
         }
 
-        public static void delete_process_name(string preset_name, string process_name)
+        public static void delete_process(string preset_name, string process_name)
         {
             XmlNode processes_node = preset_node.SelectSingleNode("Preset[@Name='" + preset_name + "']").SelectSingleNode("Processes");
             XmlNode process_node = processes_node.SelectSingleNode("Process[@Name='" + process_name + "']");
             processes_node.RemoveChild(process_node);
             doc.Save(path_to_settings_file);
-        }//rename to delete_process
+        }
 
         public static void save_hook(Hook_target target, VirtualKeyCode vk)
         {

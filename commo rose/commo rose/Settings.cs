@@ -912,7 +912,7 @@ namespace commo_rose
                 presets.Add(preset);
                 PresetComboBox.Items.Add(preset.name);
                 PresetComboBox.SelectedItem = preset.name;
-                Saver.save_new_preset(preset.name);
+                Saver.save_add_preset(preset.name);
             }
 
         }
@@ -1003,7 +1003,7 @@ namespace commo_rose
                 presets.Add(preset);
                 PresetComboBox.Items.Add(preset.name);
                 PresetComboBox.SelectedItem = preset.name;
-                Saver.save_new_preset(preset.name);
+                Saver.save_add_preset(preset.name);
                 foreach (var item in preset.buttons)
                 {
                     Saver.save_button_settings(preset.name, item, true);
