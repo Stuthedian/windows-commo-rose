@@ -67,7 +67,8 @@ namespace commo_rose
             auto_switch = true;
 
             notifyIcon1.Text = app_name;
-            notifyIcon1.Icon = SystemIcons.Application;
+            //notifyIcon1.Icon = SystemIcons.Application;
+            notifyIcon1.Icon = Properties.Resources.icon;
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
 
             Opacity = 0.0;
