@@ -12,122 +12,15 @@ namespace commo_rose
     {
         private static XmlDocument doc;
         private static XmlNode preset_node;
-        private static readonly string path_to_settings_file = 
-            Path.Combine(Application.StartupPath, ".settings.xml");
-
-        private static void create_new_settings_file()
-        {
-            XmlWriter writer = XmlWriter.Create(path_to_settings_file);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Settings");
-            writer.WriteAttributeString("Hook_target", Hook_target.Keyboard.ToString());
-            writer.WriteAttributeString("Hook_key", VirtualKeyCode.NUMPAD0.ToString());
-            writer.WriteStartElement("Presets");
-            writer.WriteStartElement("Preset");
-            writer.WriteAttributeString("Name", "Desktop");
-            writer.WriteAttributeString("default_backcolor", Color.White.ToArgb().ToString());
-            writer.WriteAttributeString("default_textcolor", Color.Black.ToArgb().ToString());
-            writer.WriteAttributeString("default_font", new FontConverter().ConvertToString(new Font("Consolas", 14.25F, FontStyle.Regular)));
-            writer.WriteStartElement("Processes");
-            writer.WriteEndElement();
-            writer.WriteStartElement("Buttons");
-            writer.WriteString("\n");
-            CustomButton customButton;
-            List<CustomButton> buttons;
-            buttons = new List<CustomButton>();
-            buttons.Add(new CustomButton());
-            customButton = buttons[buttons.Count - 1];
-            customButton.Id = 0;
-            customButton.Location = new Point(33, 37);
-            customButton.Text = "Ctrl+C";
-            customButton.Parameters = "Ctrl+C";
-            customButton.action_type = Action_type.Send;
-            customButton.actions.Add(new CustomButton_Send
-                (new List<VirtualKeyCode>() { VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C }));
-
-            buttons.Add(new CustomButton());
-            customButton = buttons[buttons.Count - 1];
-            customButton.Id = 1;
-            customButton.Location = new Point(318, 37);
-            customButton.Text = "Ctrl+V";
-            customButton.Parameters = "Ctrl+V";
-            customButton.action_type = Action_type.Send;
-            customButton.actions.Add(new CustomButton_Send
-                (new List<VirtualKeyCode>() { VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V }));
-
-            buttons.Add(new CustomButton());
-            customButton = buttons[buttons.Count - 1];
-            customButton.Id = 2;
-            customButton.Location = new Point(165, 158);
-            customButton.Text = "Ctrl+A";
-            customButton.Parameters = "Ctrl+A";
-            customButton.action_type = Action_type.Send;
-            customButton.actions.Add(new CustomButton_Send
-                (new List<VirtualKeyCode>() { VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A }));
-            foreach (CustomButton button in buttons)
-            {
-                writer.WriteStartElement("Button");
-                writer.WriteAttributeString("Id", button.Id.ToString());
-                writer.WriteAttributeString("Location.X", button.Location.X.ToString());
-                writer.WriteAttributeString("Location.Y", button.Location.Y.ToString());
-                writer.WriteAttributeString("Text", button.Text);
-                writer.WriteAttributeString("action_type", button.action_type.ToString());
-                writer.WriteAttributeString("Parameters", button.Parameters);
-                writer.WriteAttributeString("BackColor", button.BackColor.ToArgb().ToString());
-                writer.WriteAttributeString("ForeColor", button.ForeColor.ToArgb().ToString());
-                writer.WriteAttributeString("Width", "92");
-                writer.WriteAttributeString("Height", "31");
-                writer.WriteAttributeString("Font", new FontConverter().ConvertToString(button.Font));
-               
-                writer.WriteString("\n");
-                writer.WriteStartElement("List_of_Actions");
-                for(int i = 0; i < button.actions.Count; i++)
-                {
-                    writer.WriteString("\n");
-                    writer.WriteStartElement("Action" + i.ToString());
-                    var action = button.actions[i];
-                    if(action is CustomButton_Send)
-                    {
-                        writer.WriteAttributeString("IAction_type", "CustomButton_Send");
-                        writer.WriteString("\n");
-                        writer.WriteStartElement("modifier_keys");
-                        foreach (var item in ((CustomButton_Send)action).modifier_keys)
-                        {
-                            writer.WriteString(item.ToString() + ' ');
-                        }
-                        writer.WriteEndElement();
-
-                        writer.WriteString("\n");
-                        writer.WriteStartElement("ordinary_keys");
-                        foreach (var item in ((CustomButton_Send)action).ordinary_keys)
-                        {
-                            writer.WriteString(item.ToString() + ' ');
-                        }
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                }
-                writer.WriteEndElement();
-                
-
-                writer.WriteEndElement();
-                writer.WriteString("\n");
-            }
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            writer.Close();
-        }
-
+        private static readonly string path_to_settings_file = Path.Combine(Application.StartupPath, ".settings.xml");
+        
         public static (List<Preset>, Hook_target, VirtualKeyCode) load_settings()
         {
             if (!File.Exists(path_to_settings_file))
             {
-                create_new_settings_file();
+                File.WriteAllText(path_to_settings_file, Properties.Resources._settings);
             }
+
             doc = new XmlDocument();
             doc.Load(path_to_settings_file);
             XmlNode node, list_of_actions, modifiers_node, ordinary_node, process_node;

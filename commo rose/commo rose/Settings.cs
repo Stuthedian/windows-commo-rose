@@ -760,6 +760,7 @@ namespace commo_rose
 
         private void delete_current_button_from_panel()
         {
+            throw new Exception();
             currentButton.property_watcher = false;
             Panel.Controls.Remove(currentButton);
             previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == currentButton.Id);
@@ -769,6 +770,7 @@ namespace commo_rose
 
         private void delete_button_from_panel(CustomButton button)
         {
+            throw new Exception();
             button.property_watcher = false;
             Panel.Controls.Remove(button);
             previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == button.Id);
