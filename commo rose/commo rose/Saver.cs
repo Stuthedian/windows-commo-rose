@@ -23,10 +23,8 @@ namespace commo_rose
 
             doc = new XmlDocument();
             doc.Load(path_to_settings_file);
-            XmlNode node, list_of_actions;
-            Point point = new Point();
 
-            node = doc.DocumentElement;
+            XmlNode node = doc.DocumentElement;
 
             Hook_target target = (Hook_target)Enum.Parse(typeof(Hook_target), node.Attributes["Hook_target"].Value);
             string key = node.Attributes["Hook_key"].Value;
