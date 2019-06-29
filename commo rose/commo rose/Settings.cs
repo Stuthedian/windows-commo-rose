@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using WindowsInput.Native;
-using System.Diagnostics;
+using Microsoft.Win32.TaskScheduler;
+using System.Security.Principal;
 
 namespace commo_rose
 {
@@ -119,18 +116,9 @@ namespace commo_rose
             Editpanel.Enabled = false;
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
-            
-            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            object value = subkey.GetValue(Program.app_name);
-            if (value != null && value.ToString() == Application.ExecutablePath)
-                yesToolStripMenuItem.Checked = true;
-            else
-                noToolStripMenuItem.Checked = true;
 
-            yesToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
-            noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
-                     
+            launch_startup_ToolStripMenu();
+                                 
             foreach (var item in Enum.GetNames(typeof(Action_type)))
             {
                 Action_typeBox.Items.Add(item);
@@ -859,16 +847,72 @@ namespace commo_rose
             }
         }
 
+        private void launch_startup_ToolStripMenu()
+        {
+            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            object value = subkey.GetValue(Program.app_name);
+            if (value != null && value.ToString() == Application.ExecutablePath)
+                yesNormalToolStripMenuItem.Checked = true;
+            else
+                noToolStripMenuItem.Checked = true;
+
+            yesNormalToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
+            noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
+            yesAdminToolStripMenuItem.Click += test_scheduler;
+        }
+        public bool IsElevated
+        {
+            get
+            {
+                return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
+        private void test_scheduler(object sender, EventArgs e)
+        {
+            if(!IsElevated)
+            {
+                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                proc.StartInfo.UseShellExecute = true;
+                proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+                proc.StartInfo.FileName = Application.ExecutablePath;
+                proc.StartInfo.Verb = "runas";
+                proc.Start();
+
+                Program.Close();
+                return;
+            }
+            
+
+            using (TaskService ts = new TaskService())
+            {
+                TaskDefinition td = ts.NewTask();
+                td.RegistrationInfo.Description = "Test task";
+                td.Principal.RunLevel = TaskRunLevel.Highest;
+
+                LogonTrigger logonTrigger = new LogonTrigger();
+                logonTrigger.Delay = TimeSpan.FromMinutes(1);
+                td.Triggers.Add(logonTrigger);
+
+                td.Actions.Add(new ExecAction(Application.ExecutablePath));
+
+                ts.RootFolder.RegisterTaskDefinition(@"Test", td);
+
+                // Remove the task we just created
+                //ts.RootFolder.DeleteTask("Test");
+            }
+        }
+
         private void yesNoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            yesToolStripMenuItem.Checked = !yesToolStripMenuItem.Checked;
+            yesNormalToolStripMenuItem.Checked = !yesNormalToolStripMenuItem.Checked;
             noToolStripMenuItem.Checked = !noToolStripMenuItem.Checked;
             RegistryKey rk;
             try
             {
                 rk = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                if (yesToolStripMenuItem.Checked)
+                if (yesNormalToolStripMenuItem.Checked)
                 {
                     rk.SetValue(Program.app_name, Application.ExecutablePath);
                 }
