@@ -290,7 +290,7 @@ namespace commo_rose
             CustomButton[] a = current_preset.buttons.Where(x => x.Id == currentButton.Id).ToArray();
             if (a.Length == 0)
             {
-                delete_current_button_from_panel();
+                delete_button_from_panel(currentButton);
             }
             else if (a.Length == 1)
             {
@@ -317,15 +317,11 @@ namespace commo_rose
                     if (a.Length == 0)
                     {
                         delete_button_from_panel(button);
-                        if(button == currentButton)
-                            currentButton = previousbuttons.Last();
                     }
                     else if(a.Length == 1)
                     {
                         CustomButton.OverWrite(button, a[0]);
                         button.property_watcher = false;
-                        if (button == currentButton)
-                            currentButton = button;
                     }
                     else if (a.Length > 1)
                     {
@@ -739,7 +735,7 @@ namespace commo_rose
             CustomButton[] a = current_preset.buttons.Where(x => x.Id == currentButton.Id).ToArray();
             if (a.Length == 0)
             {
-                delete_current_button_from_panel();
+                delete_button_from_panel(currentButton);
             }
             else if (a.Length == 1)
             {
@@ -749,7 +745,7 @@ namespace commo_rose
                     Saver.delete_button(current_preset.name, currentButton);
                     a[0].Parent = null;
                     current_preset.buttons.Remove(a[0]);
-                    delete_current_button_from_panel();
+                    delete_button_from_panel(currentButton);
                 }
             }
             else if (a.Length > 1)
@@ -758,22 +754,14 @@ namespace commo_rose
             }
         }
 
-        private void delete_current_button_from_panel()
-        {
-            throw new Exception();
-            currentButton.property_watcher = false;
-            Panel.Controls.Remove(currentButton);
-            previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == currentButton.Id);
-
-            currentButton = previousbuttons.Last();
-        }
-
         private void delete_button_from_panel(CustomButton button)
         {
-            throw new Exception();
             button.property_watcher = false;
             Panel.Controls.Remove(button);
-            previousbuttons.Where(x => x != null).ToList().RemoveAll(x => x.Id == button.Id);
+            previousbuttons = previousbuttons.Where(x => x == null || x.Id != button.Id).ToList();
+
+            if (button == currentButton)
+                currentButton = previousbuttons.Last();
         }
 
         public int get_new_id()
