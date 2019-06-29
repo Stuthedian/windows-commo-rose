@@ -98,6 +98,10 @@ namespace commo_rose
             uint process_id;
             GetWindowThreadProcessId(handle, out process_id);
             string process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+
+            if (process_name == System.Diagnostics.Process.GetCurrentProcess().ProcessName)
+                return;
+
             if (process_already_in_table(process_name))
                 return;
 
@@ -128,9 +132,12 @@ namespace commo_rose
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            Cursor = hand_cursor;
-            mouse_hook = new MouseOrKeyboardHook(Hook_target.Mouse, WindowsInput.Native.VirtualKeyCode.LBUTTON, 
-                () => { }, get_window_handle, true);
+            if(e.Button == MouseButtons.Left)
+            {
+                Cursor = hand_cursor;
+                mouse_hook = new MouseOrKeyboardHook(Hook_target.Mouse, WindowsInput.Native.VirtualKeyCode.LBUTTON, 
+                    () => { }, get_window_handle, true);
+            }
         }
     }
 }
