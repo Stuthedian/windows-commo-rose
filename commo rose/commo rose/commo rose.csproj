@@ -41,6 +41,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -76,11 +79,11 @@
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="ButtonsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ButtonsForm.Designer.cs">
+      <DependentUpon>ButtonsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CueTextbox.cs">
       <SubType>Component</SubType>
@@ -114,8 +117,8 @@
     <EmbeddedResource Include="CopyButtonDialog.resx">
       <DependentUpon>CopyButtonDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="ButtonsForm.resx">
+      <DependentUpon>ButtonsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PresetNameDialog.resx">
       <DependentUpon>PresetNameDialog.cs</DependentUpon>
@@ -153,6 +156,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\.settings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

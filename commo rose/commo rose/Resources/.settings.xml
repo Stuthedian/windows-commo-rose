@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings Hook_target="Keyboard" Hook_key="NUMPAD0">
+  <Presets>
+    <Preset Name="Desktop" default_backcolor="-8372160" default_textcolor="-16777216" default_font="Consolas; 14,25pt">
+      <Processes />
+      <Buttons>
+        <Button Id="0" Location.X="101" Location.Y="111" Text="Ctrl+C" action_type="Send" Parameters="Ctrl+C" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL </modifier_keys>
+              <ordinary_keys>VK_C </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+        <Button Id="1" Location.X="222" Location.Y="111" Text="Ctrl+V" action_type="Send" Parameters="Ctrl+V" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL </modifier_keys>
+              <ordinary_keys>VK_V </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+        <Button Id="2" Location.X="159" Location.Y="145" Text="Ctrl+A" action_type="Send" Parameters="Ctrl+A" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL </modifier_keys>
+              <ordinary_keys>VK_A </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+        <Button Id="3" Location.X="4" Location.Y="191" Text="task manager" action_type="Send" Parameters="ctrl+shift+esc" BackColor="-8372160" ForeColor="-16777216" Font="Consolas; 14,25pt" Width="150" Height="34">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL SHIFT </modifier_keys>
+              <ordinary_keys>ESCAPE </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+      </Buttons>
+    </Preset>
+    <Preset Name="Editor" default_backcolor="-128" default_textcolor="-8585091" default_font="FontAwesome; 14,25pt">
+      <Processes>
+        <Process Name="notepad" />
+      </Processes>
+      <Buttons>
+        <Button Id="0" Location.X="223" Location.Y="107" Text="Paste" action_type="Send" Parameters="Ctrl+V" BackColor="-128" ForeColor="-8585091" Font="FontAwesome; 14,25pt" Width="107" Height="35">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL </modifier_keys>
+              <ordinary_keys>VK_V </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+        <Button Id="1" Location.X="89" Location.Y="107" Text="Copy" action_type="Send" Parameters="Ctrl+C" BackColor="-128" ForeColor="-8585091" Font="FontAwesome; 14,25pt" Width="101" Height="34">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys>CONTROL </modifier_keys>
+              <ordinary_keys>VK_C </ordinary_keys>
+            </Action0>
+          </List_of_Actions>
+        </Button>
+        <Button Id="2" Location.X="152" Location.Y="148" Text="Clear line" action_type="Generic" Parameters="send(home) send(shift+end) send(del)" BackColor="-128" ForeColor="-8585091" Font="FontAwesome; 14,25pt" Width="127" Height="34">
+          <List_of_Actions>
+            <Action0 IAction_type="CustomButton_Send">
+              <modifier_keys />
+              <ordinary_keys>HOME </ordinary_keys>
+            </Action0>
+            <Action1 IAction_type="CustomButton_Send">
+              <modifier_keys>SHIFT </modifier_keys>
+              <ordinary_keys>END </ordinary_keys>
+            </Action1>
+            <Action2 IAction_type="CustomButton_Send">
+              <modifier_keys />
+              <ordinary_keys>DELETE </ordinary_keys>
+            </Action2>
+          </List_of_Actions>
+        </Button>
+      </Buttons>
+    </Preset>
+  </Presets>
+</Settings>

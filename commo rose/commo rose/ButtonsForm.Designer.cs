@@ -1,6 +1,6 @@
 ﻿namespace commo_rose
 {
-    partial class Form1
+    partial class ButtonsForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -79,8 +79,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.Text = "Form1";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.Panel = new System.Windows.Forms.Panel();
             this.CursorpictureBox = new System.Windows.Forms.PictureBox();
             this.ButtonTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -71,7 +71,7 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
             this.ApplyCancelpanel.SuspendLayout();
@@ -80,17 +80,17 @@
             this.PresetPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // Panel
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
-            this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
-            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.CursorpictureBox);
-            this.panel1.Location = new System.Drawing.Point(9, 66);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(405, 232);
-            this.panel1.TabIndex = 0;
+            this.Panel.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.Panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Panel.BackgroundImage")));
+            this.Panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Panel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.Panel.Controls.Add(this.CursorpictureBox);
+            this.Panel.Location = new System.Drawing.Point(9, 66);
+            this.Panel.Name = "Panel";
+            this.Panel.Size = new System.Drawing.Size(405, 232);
+            this.Panel.TabIndex = 0;
             // 
             // CursorpictureBox
             // 
@@ -476,7 +476,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(722, 307);
             this.Controls.Add(this.PresetPanel);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.Panel);
             this.Controls.Add(this.Editpanel);
             this.Controls.Add(this.ApplyCancelpanel);
             this.Controls.Add(this.Addbutton);
@@ -488,7 +488,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Settings_FormClosing);
-            this.panel1.ResumeLayout(false);
+            this.Panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).EndInit();
             this.SaveCancelAllpanel.ResumeLayout(false);
             this.ApplyCancelpanel.ResumeLayout(false);
@@ -545,6 +545,6 @@
         private System.Windows.Forms.Button BindPresetButton;
         private System.Windows.Forms.Button CopyPresetButton;
         private System.Windows.Forms.Button Copybutton;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel Panel;
     }
 }

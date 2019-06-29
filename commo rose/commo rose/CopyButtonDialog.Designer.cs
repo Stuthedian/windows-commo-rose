@@ -34,7 +34,7 @@
             this.PreservetextcolorcheckBox = new System.Windows.Forms.CheckBox();
             this.PreservefontcheckBox = new System.Windows.Forms.CheckBox();
             this.OKButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.Cancelbutton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // comboBox1
@@ -97,21 +97,21 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(110, 42);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 6;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.Cancelbutton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancelbutton.Location = new System.Drawing.Point(110, 42);
+            this.Cancelbutton.Name = "CancelButton";
+            this.Cancelbutton.Size = new System.Drawing.Size(75, 23);
+            this.Cancelbutton.TabIndex = 6;
+            this.Cancelbutton.Text = "Cancel";
+            this.Cancelbutton.UseVisualStyleBackColor = true;
+            this.Cancelbutton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // CopyButtonDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(324, 74);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.Cancelbutton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.PreservefontcheckBox);
             this.Controls.Add(this.PreservetextcolorcheckBox);
@@ -134,6 +134,6 @@
         private System.Windows.Forms.CheckBox PreservetextcolorcheckBox;
         private System.Windows.Forms.CheckBox PreservefontcheckBox;
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button Cancelbutton;
     }
 }

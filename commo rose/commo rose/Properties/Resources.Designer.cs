@@ -61,6 +61,23 @@ namespace commo_rose.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;Settings Hook_target=&quot;Keyboard&quot; Hook_key=&quot;NUMPAD0&quot;&gt;
+        ///  &lt;Presets&gt;
+        ///    &lt;Preset Name=&quot;Desktop&quot; default_backcolor=&quot;-8372160&quot; default_textcolor=&quot;-16777216&quot; default_font=&quot;Consolas; 14,25pt&quot;&gt;
+        ///      &lt;Processes /&gt;
+        ///      &lt;Buttons&gt;
+        ///        &lt;Button Id=&quot;0&quot; Location.X=&quot;101&quot; Location.Y=&quot;111&quot; Text=&quot;Ctrl+C&quot; action_type=&quot;Send&quot; Parameters=&quot;Ctrl+C&quot; BackColor=&quot;-8372160&quot; ForeColor=&quot;-16777216&quot; Width=&quot;92&quot; Height=&quot;31&quot; Font=&quot;Consolas; 14,25pt&quot;&gt;
+        ///          &lt;List_of_Actions&gt;
+        ///            &lt;A [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string _settings {
+            get {
+                return ResourceManager.GetString("_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap HandCursor {

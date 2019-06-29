@@ -172,11 +172,36 @@ namespace commo_rose
         private HookProc mouse_proc;
         private HookProc keyboard_proc;
 
-        public Hook_target hook_target;
-        public MouseButtons action_button_mouse { get; set; }
+        private Hook_target _hook_target;
+        public Hook_target hook_target
+        {
+            get { return _hook_target; }
+            set
+            {
+                ClearHook();
+                _hook_target = value;
+                if (hook_target == Hook_target.Keyboard)
+                {
+                    _hGlobalLlHook = NativeMethods.SetWindowsHookEx(HookType.WH_KEYBOARD_LL,
+                        keyboard_proc,
+                        Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+                }
+                else if (hook_target == Hook_target.Mouse)
+                {
+                    _hGlobalLlHook = NativeMethods.SetWindowsHookEx(HookType.WH_MOUSE_LL,
+                        mouse_proc,
+                        Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
+                }
+                if (_hGlobalLlHook == IntPtr.Zero)
+                {
+                    throw new Win32Exception("Unable to set hook");
+                }
+            }
+        }
+        public VirtualKeyCode action_button_mouse { get; set; }
         public VirtualKeyCode action_button_keyboard { get; set; }
 
-        public MouseOrKeyboardHook(action down, action up, bool pass)
+        public MouseOrKeyboardHook(Hook_target target, VirtualKeyCode action_button, action down, action up, bool pass)
         {
             on_key_down = down;
             on_key_up = up;
@@ -184,28 +209,18 @@ namespace commo_rose
             mouse_proc = LowLevelMouseProc;
             keyboard_proc = LowLevelKeyboardProc;
             pass_message = pass;
-        }
+            if (target == Hook_target.Keyboard)
+            {
+                action_button_keyboard = action_button;
+                action_button_mouse = VirtualKeyCode.MBUTTON;
+            }
+            else if (target == Hook_target.Mouse)
+            {
+                action_button_mouse = action_button;
+                action_button_keyboard = VirtualKeyCode.NUMPAD0;
+            }
 
-        public void set_hook_target(Hook_target target)
-        {
-            ClearHook();
             hook_target = target;
-            if (hook_target == Hook_target.Keyboard)
-            {
-                _hGlobalLlHook = NativeMethods.SetWindowsHookEx(HookType.WH_KEYBOARD_LL,
-                    keyboard_proc,
-                    Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
-            }
-            else if (hook_target == Hook_target.Mouse)
-            {
-                _hGlobalLlHook = NativeMethods.SetWindowsHookEx(HookType.WH_MOUSE_LL,
-                    mouse_proc,
-                    Marshal.GetHINSTANCE(Assembly.GetExecutingAssembly().GetModules()[0]), 0);
-            }
-            if (_hGlobalLlHook == IntPtr.Zero)
-            {
-                throw new Win32Exception("Unable to set hook");
-            }
         }
 
         ~MouseOrKeyboardHook()
@@ -301,35 +316,35 @@ namespace commo_rose
             return NativeMethods.CallNextHookEx(_hGlobalLlHook, nCode, wParam, lParam);
         }
 
-        private MouseMessage mouse_button_to_message_down(MouseButtons button)
+        private MouseMessage mouse_button_to_message_down(VirtualKeyCode button)
         {
-            if (button == MouseButtons.Middle)
+            if (button == VirtualKeyCode.MBUTTON)
                 return MouseMessage.WM_MBUTTONDOWN;
-            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+            else if (button == VirtualKeyCode.XBUTTON1 || button == VirtualKeyCode.XBUTTON2)
                 return MouseMessage.WM_XBUTTONDOWN;
-            else if (button == MouseButtons.Left)
+            else if (button == VirtualKeyCode.LBUTTON)
                 return MouseMessage.WM_LBUTTONDOWN;
             else throw new NotImplementedException();
         }
 
-        private MouseMessage mouse_button_to_message_up(MouseButtons button)
+        private MouseMessage mouse_button_to_message_up(VirtualKeyCode button)
         {
-            if (button == MouseButtons.Middle)
+            if (button == VirtualKeyCode.MBUTTON)
                 return MouseMessage.WM_MBUTTONUP;
-            else if (button == MouseButtons.XButton1 || button == MouseButtons.XButton2)
+            else if (button == VirtualKeyCode.XBUTTON1 || button == VirtualKeyCode.XBUTTON2)
                 return MouseMessage.WM_XBUTTONUP;
-            else if (button == MouseButtons.Left)
+            else if (button == VirtualKeyCode.LBUTTON)
                 return MouseMessage.WM_LBUTTONUP;
             else throw new NotImplementedException();
         }
 
-        private int mouse_xbutton_to_id(MouseButtons button)
+        private int mouse_xbutton_to_id(VirtualKeyCode button)
         {
             const int XBUTTON1 = 0x0001;
             const int XBUTTON2 = 0x0002;
-            if (button == MouseButtons.XButton1)
+            if (button == VirtualKeyCode.XBUTTON1)
                 return XBUTTON1;
-            else if (button == MouseButtons.XButton2)
+            else if (button == VirtualKeyCode.XBUTTON2)
                 return XBUTTON2;
             else throw new NotImplementedException();
         }

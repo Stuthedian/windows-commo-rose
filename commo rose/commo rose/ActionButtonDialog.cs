@@ -17,33 +17,33 @@ namespace commo_rose
             ExactSpelling = false, CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
         public static extern int MapVirtualKey(uint ScanCode, int MAPVK_VK_TO_VSC);
 
-        private Form1 main;
+        private MouseOrKeyboardHook hook;
         private bool ignore_message;
         private int LShift, RShift, Ctrl, Alt;
-        public ActionButtonDialog(Form1 main)
+        public ActionButtonDialog(MouseOrKeyboardHook hook)
         {
             InitializeComponent();
-            this.main = main;
+            this.hook = hook;
             MouseButtonsComboBox.Items.AddRange(new object[] {
-            MouseButtons.Middle.ToString(),
-            MouseButtons.XButton1.ToString(),
-            MouseButtons.XButton2.ToString() });
+            VirtualKeyCode.MBUTTON.ToString(),
+            VirtualKeyCode.XBUTTON1.ToString(),
+            VirtualKeyCode.XBUTTON2.ToString() });
 
-            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
+            if (hook.hook_target == Hook_target.Keyboard)
             {
                 MouseradioButton.Checked = false;
                 KeyboardradioButton.Checked = true;
                 MouseButtonsComboBox.Visible = false;
                 ScanKeyTextBox.Visible = true;
-                ScanKeyTextBox.Text = vk_to_appropriate_string(main.mouseOrKeyboardHook.action_button_keyboard);
+                ScanKeyTextBox.Text = vk_to_appropriate_string(hook.action_button_keyboard);
             }
-            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
+            else if (hook.hook_target == Hook_target.Mouse)
             {
                 MouseradioButton.Checked = true;
                 KeyboardradioButton.Checked = false;
                 MouseButtonsComboBox.Visible = true;
                 ScanKeyTextBox.Visible = false;
-                MouseButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
+                MouseButtonsComboBox.SelectedItem = hook.action_button_mouse.ToString();
             }
             MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
             MouseButtonsComboBox.SelectedIndexChanged += MouseButtonsComboBox_SelectedIndexChanged;
@@ -60,32 +60,29 @@ namespace commo_rose
 
         private void MouseradioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (main.mouseOrKeyboardHook.hook_target == Hook_target.Mouse)
+            if (hook.hook_target == Hook_target.Mouse)
             {
-                main.mouseOrKeyboardHook.hook_target = Hook_target.Keyboard;
-                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
-                ScanKeyTextBox.Text = vk_to_appropriate_string(main.mouseOrKeyboardHook.action_button_keyboard);
+                hook.hook_target = Hook_target.Keyboard;
+                ScanKeyTextBox.Text = vk_to_appropriate_string(hook.action_button_keyboard);
                 MouseButtonsComboBox.Visible = false;
                 ScanKeyTextBox.Visible = true;
+                Saver.save_hook(hook.hook_target, hook.action_button_keyboard);
             }
-            else if (main.mouseOrKeyboardHook.hook_target == Hook_target.Keyboard)
+            else if (hook.hook_target == Hook_target.Keyboard)
             {
-                main.mouseOrKeyboardHook.hook_target = Hook_target.Mouse;
-                main.mouseOrKeyboardHook.set_hook_target(main.mouseOrKeyboardHook.hook_target);
-                MouseButtonsComboBox.SelectedItem = main.mouseOrKeyboardHook.action_button_mouse.ToString();
+                hook.hook_target = Hook_target.Mouse;
+                MouseButtonsComboBox.SelectedItem = hook.action_button_mouse.ToString();
                 MouseButtonsComboBox.Visible = true;
                 ScanKeyTextBox.Visible = false;
+                Saver.save_hook(hook.hook_target, hook.action_button_mouse);
             }
-            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
-                main.mouseOrKeyboardHook.action_button_keyboard);
         }
 
         private void MouseButtonsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            main.mouseOrKeyboardHook.action_button_mouse =
-                    (MouseButtons)Enum.Parse(typeof(MouseButtons), MouseButtonsComboBox.SelectedItem.ToString());
-            Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
-                main.mouseOrKeyboardHook.action_button_keyboard);
+            hook.action_button_mouse =
+                    (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseButtonsComboBox.SelectedItem.ToString());
+            Saver.save_hook(hook.hook_target, hook.action_button_mouse);
         }
 
         protected override bool ProcessKeyPreview(ref Message m)
@@ -99,24 +96,24 @@ namespace commo_rose
                 bool extended = (int)((ulong)m.LParam & 0x01000000) != 0;
                 if (KeyCode == LShift)
                 {
-                    main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LSHIFT;
+                    hook.action_button_keyboard = VirtualKeyCode.LSHIFT;
                     ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LSHIFT);
                 }
                 else if (KeyCode == RShift)
                 {
-                    main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RSHIFT;
+                    hook.action_button_keyboard = VirtualKeyCode.RSHIFT;
                     ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RSHIFT);
                 }
                 else if (KeyCode == Ctrl)
                 {
                     if(extended)
                     {
-                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RCONTROL;
+                        hook.action_button_keyboard = VirtualKeyCode.RCONTROL;
                         ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RCONTROL);
                     }
                     else
                     {
-                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LCONTROL;
+                        hook.action_button_keyboard = VirtualKeyCode.LCONTROL;
                         ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LCONTROL);
                     }
                 }
@@ -124,18 +121,17 @@ namespace commo_rose
                 {
                     if (extended)
                     {
-                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.RMENU;
+                        hook.action_button_keyboard = VirtualKeyCode.RMENU;
                         ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.RMENU);
                     }
                     else
                     {
-                        main.mouseOrKeyboardHook.action_button_keyboard = VirtualKeyCode.LMENU;
+                        hook.action_button_keyboard = VirtualKeyCode.LMENU;
                         ScanKeyTextBox.Text = vk_to_appropriate_string(VirtualKeyCode.LMENU);
                     }
                 }
                 else throw new NotImplementedException();
-                Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse,
-                    main.mouseOrKeyboardHook.action_button_keyboard);
+                Saver.save_hook(hook.hook_target, hook.action_button_keyboard);
             }
             return base.ProcessKeyPreview(ref m);
         }
@@ -150,11 +146,10 @@ namespace commo_rose
             }
             else
             {
-                main.mouseOrKeyboardHook.action_button_keyboard = (VirtualKeyCode)e.KeyValue;
+                hook.action_button_keyboard = (VirtualKeyCode)e.KeyValue;
                 ScanKeyTextBox.Text = vk_to_appropriate_string((VirtualKeyCode)e.KeyValue);
                 ignore_message = true;
-                Saver.save_hook(main.mouseOrKeyboardHook.hook_target, main.mouseOrKeyboardHook.action_button_mouse, 
-                    main.mouseOrKeyboardHook.action_button_keyboard);
+                Saver.save_hook(hook.hook_target, hook.action_button_keyboard);
             }
         }
 

@@ -48,7 +48,7 @@ namespace commo_rose
         private void DataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             string name = e.Row.Cells[0].Value.ToString();
-            Saver.delete_process_name(current_preset.name, name);
+            Saver.delete_process(current_preset.name, name);
             current_preset.processes.Remove(name);
         }
 
@@ -129,9 +129,8 @@ namespace commo_rose
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             Cursor = hand_cursor;
-            mouse_hook = new MouseOrKeyboardHook(() => { }, get_window_handle, true);
-            mouse_hook.action_button_mouse = MouseButtons.Left;
-            mouse_hook.set_hook_target(Hook_target.Mouse);
+            mouse_hook = new MouseOrKeyboardHook(Hook_target.Mouse, WindowsInput.Native.VirtualKeyCode.LBUTTON, 
+                () => { }, get_window_handle, true);
         }
     }
 }

@@ -12,12 +12,12 @@ namespace commo_rose
 {
     public partial class PresetNameDialog : Form
     {
-        Settings settings;
+        List<Preset> presets;
         string oldName;
-        public PresetNameDialog(Settings settings)
+        public PresetNameDialog(List<Preset> presets)
         {
             InitializeComponent();
-            this.settings = settings; 
+            this.presets = presets; 
         }
 
         private void Okbutton_Click(object sender, EventArgs e)
@@ -28,7 +28,7 @@ namespace commo_rose
                 MessageBox.Show("Invalid preset name!");
                 return;
             }
-            if(oldName != name && settings.presets_array.Any(x => x.name == name))
+            if(oldName != name && presets.Any(x => x.name == name))
             {
                 MessageBox.Show("Preset name already in use!");
                 return;
