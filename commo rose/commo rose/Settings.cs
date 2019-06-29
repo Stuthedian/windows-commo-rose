@@ -15,6 +15,13 @@ namespace commo_rose
     public partial class Settings : Form
     {
         private const int WS_EX_COMPOSITED = 0x02000000;
+        public bool IsElevated
+        {
+            get
+            {
+                return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
 
         private ButtonsForm buttons_form;
         private ActionButtonDialog actionButtonForm;
@@ -861,16 +868,17 @@ namespace commo_rose
             noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
             yesAdminToolStripMenuItem.Click += test_scheduler;
         }
-        public bool IsElevated
-        {
-            get
-            {
-                return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-            }
-        }
+        
         private void test_scheduler(object sender, EventArgs e)
         {
-            if(!IsElevated)
+            string task_name = Program.app_name;
+            using (TaskService taskService = new TaskService())
+            {
+                if (taskService.RootFolder.Tasks.Any(x => x.Path == task_name))
+                    return;
+            }
+
+            if (!IsElevated)
             {
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
                 proc.StartInfo.UseShellExecute = true;
@@ -884,22 +892,21 @@ namespace commo_rose
             }
             
 
-            using (TaskService ts = new TaskService())
+            using (TaskService taskService = new TaskService())
             {
-                TaskDefinition td = ts.NewTask();
-                td.RegistrationInfo.Description = "Test task";
-                td.Principal.RunLevel = TaskRunLevel.Highest;
+                
+                TaskDefinition taskDefinition = taskService.NewTask();
+                taskDefinition.RegistrationInfo.Description = "Commo rose";
+                taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
 
                 LogonTrigger logonTrigger = new LogonTrigger();
                 logonTrigger.Delay = TimeSpan.FromMinutes(1);
-                td.Triggers.Add(logonTrigger);
+                taskDefinition.Triggers.Add(logonTrigger);
+                
+                taskDefinition.Actions.Add(new ExecAction(Application.ExecutablePath));
 
-                td.Actions.Add(new ExecAction(Application.ExecutablePath));
-
-                ts.RootFolder.RegisterTaskDefinition(@"Test", td);
-
-                // Remove the task we just created
-                //ts.RootFolder.DeleteTask("Test");
+                
+                taskService.RootFolder.RegisterTaskDefinition(task_name, taskDefinition);
             }
         }
 
