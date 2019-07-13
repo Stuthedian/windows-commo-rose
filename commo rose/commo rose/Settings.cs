@@ -865,7 +865,7 @@ namespace commo_rose
             }
         }
             
-        private void add_to_task_scheduler()
+        public void add_to_task_scheduler()
         {
             if (is_in_task_scheduler())
                 return;
@@ -875,7 +875,7 @@ namespace commo_rose
                     
             if (!is_elevated)
             {
-                restart_as_elevated();
+                restart_as_elevated("add");
                 return;
             }
             
@@ -896,14 +896,14 @@ namespace commo_rose
             }
         }
 
-        private void delete_from_task_scheduler()
+        public void delete_from_task_scheduler()
         {
             if (!is_in_task_scheduler())
                 return;
             bool is_elevated = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
             if (!is_elevated)
             {
-                restart_as_elevated();
+                restart_as_elevated("del");
                 return;
             }
             string task_name = Program.app_name;
@@ -926,12 +926,13 @@ namespace commo_rose
             return result;
         }
 
-        private void restart_as_elevated()
+        private void restart_as_elevated(string arg)
         {
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             proc.StartInfo.UseShellExecute = true;
             proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             proc.StartInfo.FileName = Application.ExecutablePath;
+            proc.StartInfo.Arguments = arg;
             proc.StartInfo.Verb = "runas";
             try { proc.Start(); }
             catch (System.ComponentModel.Win32Exception e)
@@ -945,7 +946,7 @@ namespace commo_rose
             Program.Close();
         }
 
-        private void update_ToolStripMenuItem()
+        public void update_ToolStripMenuItem()
         {
             if (is_in_task_scheduler())
             {
