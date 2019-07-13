@@ -145,7 +145,6 @@ namespace commo_rose
 
         public void Act()
         {
-            throw new Exception();
             try
             {
                 switch (action_type)
@@ -160,15 +159,11 @@ namespace commo_rose
                     case Action_type.Generic:
                         Thread thread = new Thread(() =>
                         {
-                            try
+                            foreach (IAction action in actions)
                             {
-                                foreach (IAction action in actions)
-                                {
-                                    action.exec();
-                                    Thread.Sleep(100);
-                                }
+                                action.exec();
+                                Thread.Sleep(100);
                             }
-                            catch (Exception e) { MessageBox.Show(e.Message); }//?!
                         });
                         thread.IsBackground = true;
                         thread.Start();
