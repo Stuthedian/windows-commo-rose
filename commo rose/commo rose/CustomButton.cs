@@ -136,7 +136,6 @@ namespace commo_rose
             destination.Font = (Font)source.Font.Clone();
             destination.Width = source.Width;
             destination.Height = source.Height;
-            //destination.Name = source.Name;
             destination.Id = source.Id;
             destination.Text = source.Text;
             destination.Location = source.Location;
@@ -146,6 +145,7 @@ namespace commo_rose
 
         public void Act()
         {
+            throw new Exception();
             try
             {
                 switch (action_type)
@@ -168,7 +168,7 @@ namespace commo_rose
                                     Thread.Sleep(100);
                                 }
                             }
-                            catch (Exception e) { MessageBox.Show(e.Message); }
+                            catch (Exception e) { MessageBox.Show(e.Message); }//?!
                         });
                         thread.IsBackground = true;
                         thread.Start();
@@ -232,7 +232,7 @@ namespace commo_rose
         public IEnumerable<VirtualKeyCode> modifier_keys;
         public IEnumerable<VirtualKeyCode> ordinary_keys;
 
-        private bool is_Vk_modifier_key(VirtualKeyCode vk)//Is correct?
+        private bool is_Vk_modifier_key(VirtualKeyCode vk)
         {
             if (vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT
                 || vk == VirtualKeyCode.LWIN)
