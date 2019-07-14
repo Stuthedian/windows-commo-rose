@@ -141,10 +141,13 @@ namespace commo_rose
 
         private void ExitMenuItem_Click(object sender, EventArgs e)
         {
-            //this.Close();
             Program.Close();
         }
 
+        private void ButtonsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Program.Close();
+        }
     }
 
     public class Preset

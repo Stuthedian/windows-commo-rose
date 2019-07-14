@@ -79,6 +79,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ButtonsForm";
             this.Text = "Commo rose";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ButtonsForm_FormClosed);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
