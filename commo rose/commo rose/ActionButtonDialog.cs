@@ -23,6 +23,7 @@ namespace commo_rose
         public ActionButtonDialog(MouseOrKeyboardHook hook)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             this.hook = hook;
             MouseButtonsComboBox.Items.AddRange(new object[] {
             VirtualKeyCode.MBUTTON.ToString(),

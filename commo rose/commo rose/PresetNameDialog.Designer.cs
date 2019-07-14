@@ -36,7 +36,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(34, 25);
+            this.textBox1.Location = new System.Drawing.Point(51, 25);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(120, 20);
             this.textBox1.TabIndex = 0;
@@ -44,7 +44,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(33, 9);
+            this.label1.Location = new System.Drawing.Point(50, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(123, 13);
             this.label1.TabIndex = 1;
@@ -52,7 +52,7 @@
             // 
             // Okbutton
             // 
-            this.Okbutton.Location = new System.Drawing.Point(12, 51);
+            this.Okbutton.Location = new System.Drawing.Point(29, 51);
             this.Okbutton.Name = "Okbutton";
             this.Okbutton.Size = new System.Drawing.Size(75, 23);
             this.Okbutton.TabIndex = 2;
@@ -63,27 +63,27 @@
             // Cancelbutton
             // 
             this.Cancelbutton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancelbutton.Location = new System.Drawing.Point(111, 51);
+            this.Cancelbutton.Location = new System.Drawing.Point(128, 51);
             this.Cancelbutton.Name = "Cancelbutton";
             this.Cancelbutton.Size = new System.Drawing.Size(75, 23);
             this.Cancelbutton.TabIndex = 3;
             this.Cancelbutton.Text = "Cancel";
             this.Cancelbutton.UseVisualStyleBackColor = true;
             // 
-            // PresetName
+            // PresetNameDialog
             // 
             this.AcceptButton = this.Okbutton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.Cancelbutton;
-            this.ClientSize = new System.Drawing.Size(196, 87);
+            this.ClientSize = new System.Drawing.Size(233, 87);
             this.Controls.Add(this.Cancelbutton);
             this.Controls.Add(this.Okbutton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "PresetName";
+            this.Name = "PresetNameDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Preset";
             this.ResumeLayout(false);

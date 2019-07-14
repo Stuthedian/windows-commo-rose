@@ -17,6 +17,7 @@ namespace commo_rose
         public PresetNameDialog(List<Preset> presets)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             this.presets = presets; 
         }
 

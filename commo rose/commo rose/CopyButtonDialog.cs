@@ -17,6 +17,7 @@ namespace commo_rose
         public CopyButtonDialog(Settings settings, ButtonsForm buttons_form)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             this.buttons_form = buttons_form;
             this.settings = settings;
         }

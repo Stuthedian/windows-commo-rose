@@ -155,10 +155,10 @@
     <None Include="Resources\hand.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icon.ico" />
+    <None Include="Resources\.settings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\.settings.xml" />
+    <Content Include="Resources\icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

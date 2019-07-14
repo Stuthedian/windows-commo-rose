@@ -95,11 +95,11 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // CancelButton
+            // Cancelbutton
             // 
             this.Cancelbutton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancelbutton.Location = new System.Drawing.Point(110, 42);
-            this.Cancelbutton.Name = "CancelButton";
+            this.Cancelbutton.Name = "Cancelbutton";
             this.Cancelbutton.Size = new System.Drawing.Size(75, 23);
             this.Cancelbutton.TabIndex = 6;
             this.Cancelbutton.Text = "Cancel";

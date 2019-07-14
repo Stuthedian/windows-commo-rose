@@ -44,7 +44,6 @@
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
             this.Copybutton = new System.Windows.Forms.Button();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -71,6 +70,7 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -233,14 +233,6 @@
             this.Copybutton.Text = "Copy button";
             this.Copybutton.UseVisualStyleBackColor = true;
             this.Copybutton.Click += new System.EventHandler(this.Copybutton_Click);
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Deletebutton
             // 
@@ -470,6 +462,14 @@
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Settings
             // 

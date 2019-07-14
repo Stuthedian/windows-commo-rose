@@ -72,13 +72,13 @@
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
-            // Form1
+            // ButtonsForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(405, 232);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "ButtonsForm";
+            this.Text = "Commo rose";
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

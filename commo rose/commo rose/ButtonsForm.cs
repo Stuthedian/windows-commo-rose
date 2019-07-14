@@ -49,6 +49,8 @@ namespace commo_rose
             FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false;
 
+            Icon = Properties.Resources.icon;
+
             form_handle = this.Handle;
             auto_switch = true;
 

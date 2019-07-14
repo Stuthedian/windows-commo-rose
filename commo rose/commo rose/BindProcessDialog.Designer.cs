@@ -83,7 +83,7 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Drag and release, while cursor \r\nremains on target window\r\n";
             // 
-            // BindProcess
+            // BindProcessDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -93,7 +93,7 @@
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "BindProcess";
+            this.Name = "BindProcessDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Bind";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

@@ -90,6 +90,7 @@ namespace commo_rose
         public Settings(List<Preset> presets, ButtonsForm buttons_form, MouseOrKeyboardHook hook)
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             actionButtonForm = new ActionButtonDialog(hook);
             presetName = new PresetNameDialog(presets);
             bindProcess = new BindProcessDialog();

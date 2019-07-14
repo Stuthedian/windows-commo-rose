@@ -25,6 +25,7 @@ namespace commo_rose
         public BindProcessDialog()
         {
             InitializeComponent();
+            Icon = Properties.Resources.icon;
             hand_cursor = new Cursor(Properties.Resources.HandCursor.GetHicon());
         }
 

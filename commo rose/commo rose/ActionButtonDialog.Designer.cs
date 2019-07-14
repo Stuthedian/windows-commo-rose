@@ -106,7 +106,7 @@
             this.ScanKeyTextBox.Enter += new System.EventHandler(this.ScanKeyTextBox_Enter);
             this.ScanKeyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScanKeyTextBox_KeyDown);
             // 
-            // ActionButtonForm
+            // ActionButtonDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -120,7 +120,7 @@
             this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "ActionButtonForm";
+            this.Name = "ActionButtonDialog";
             this.Text = "Action button";
             this.ResumeLayout(false);
             this.PerformLayout();
