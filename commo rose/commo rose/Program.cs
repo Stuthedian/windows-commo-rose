@@ -14,6 +14,10 @@ namespace commo_rose
         private static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll", SetLastError = true)]
         static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
 
         public const string app_name = "Commo rose";
 
@@ -41,12 +45,28 @@ namespace commo_rose
 
             Application.Run();
         }
-
+        
         public static Preset get_preset()
         {
             uint process_id;
             GetWindowThreadProcessId(GetForegroundWindow(), out process_id);
+            var proc = System.Diagnostics.Process.GetProcessById((int)process_id);
             string foreground_process_name = System.Diagnostics.Process.GetProcessById((int)process_id).ProcessName;
+
+            if (foreground_process_name == "ApplicationFrameHost")
+            {
+                EnumChildWindows(proc.MainWindowHandle, (hwnd, lParam) =>
+                {
+                    uint proc_id;
+                    GetWindowThreadProcessId(hwnd, out proc_id);
+                    System.Diagnostics.Process process = System.Diagnostics.Process.GetProcessById((int)proc_id);
+                    if (process.ProcessName != "ApplicationFrameHost")
+                    {
+                        foreground_process_name = process.ProcessName;
+                    }
+                    return true;
+                }, IntPtr.Zero);
+            }
 
             foreach (Preset preset in presets)
             {
@@ -58,7 +78,7 @@ namespace commo_rose
 
             return desktop_preset;
         }
-
+        
         public static void show_settings_window()
         {
             if (!settings.Visible)
