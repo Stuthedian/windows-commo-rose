@@ -61,8 +61,12 @@ namespace commo_rose
             Opacity = 0.0;
             ShowWindow(form_handle, SW_SHOWNOACTIVATE);
 
-            if(Environment.OSVersion.Version.Major == 10)
-                VirtualDesktop.Desktop.PinWindow(form_handle);
+            try
+            {
+                if (Environment.OSVersion.Version.Major == 10)
+                    VirtualDesktop.Desktop.PinWindow(form_handle);
+            }
+            catch (Exception) { }
         }
 
         
