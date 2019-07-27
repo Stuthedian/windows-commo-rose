@@ -570,7 +570,8 @@ namespace commo_rose
         private static VirtualKeyCode capture_to_VK(string capture)
         {
             if (capture.Length == 1 && 
-                ((capture[0] >= 'a' && capture[0] <= 'z') || (capture[0] >= 'A' && capture[0] <= 'Z')))
+                ((capture[0] >= 'a' && capture[0] <= 'z') || (capture[0] >= 'A' && capture[0] <= 'Z')
+                || (Char.IsDigit(capture, 0))))
             {
                 return (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), "VK_" + capture.ToUpper()[0]);
             }
