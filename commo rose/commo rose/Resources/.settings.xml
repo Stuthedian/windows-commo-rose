@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Settings Hook_target="Keyboard" Hook_key="NUMPAD0">
   <Presets>
-    <Preset Name="Desktop" default_backcolor="-8372160" default_textcolor="-16777216" default_font="Consolas; 14,25pt">
+    <Preset Name="Desktop" default_backcolor="-16733965" default_textcolor="-3866866" default_font="Consolas; 14,25pt">
       <Processes />
       <Buttons>
-        <Button Id="0" Location.X="101" Location.Y="111" Text="Ctrl+C" action_type="Send" Parameters="Ctrl+C" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+        <Button Id="0" Location.X="101" Location.Y="111" Text="Ctrl+C" action_type="Send" Parameters="Ctrl+C" BackColor="-16733965" ForeColor="-3866866" Width="92" Height="31" Font="Consolas; 14,25pt">
           <List_of_Actions>
             <Action0 IAction_type="CustomButton_Send">
               <modifier_keys>CONTROL </modifier_keys>
@@ -12,7 +12,7 @@
             </Action0>
           </List_of_Actions>
         </Button>
-        <Button Id="1" Location.X="222" Location.Y="111" Text="Ctrl+V" action_type="Send" Parameters="Ctrl+V" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+        <Button Id="1" Location.X="226" Location.Y="103" Text="Ctrl+V" action_type="Send" Parameters="Ctrl+V" BackColor="-16733965" ForeColor="-3866866" Width="92" Height="31" Font="Consolas; 14,25pt">
           <List_of_Actions>
             <Action0 IAction_type="CustomButton_Send">
               <modifier_keys>CONTROL </modifier_keys>
@@ -20,7 +20,7 @@
             </Action0>
           </List_of_Actions>
         </Button>
-        <Button Id="2" Location.X="159" Location.Y="145" Text="Ctrl+A" action_type="Send" Parameters="Ctrl+A" BackColor="-8372160" ForeColor="-16777216" Width="92" Height="31" Font="Consolas; 14,25pt">
+        <Button Id="2" Location.X="193" Location.Y="146" Text="Ctrl+A" action_type="Send" Parameters="Ctrl+A" BackColor="-16733965" ForeColor="-3866866" Width="92" Height="31" Font="Consolas; 14,25pt">
           <List_of_Actions>
             <Action0 IAction_type="CustomButton_Send">
               <modifier_keys>CONTROL </modifier_keys>
@@ -28,7 +28,7 @@
             </Action0>
           </List_of_Actions>
         </Button>
-        <Button Id="3" Location.X="4" Location.Y="191" Text="task manager" action_type="Send" Parameters="ctrl+shift+esc" BackColor="-8372160" ForeColor="-16777216" Font="Consolas; 14,25pt" Width="150" Height="34">
+        <Button Id="3" Location.X="131" Location.Y="65" Text="Task manager" action_type="Send" Parameters="ctrl+shift+esc" BackColor="-16733965" ForeColor="-3866866" Font="Consolas; 14,25pt" Width="150" Height="34">
           <List_of_Actions>
             <Action0 IAction_type="CustomButton_Send">
               <modifier_keys>CONTROL SHIFT </modifier_keys>
