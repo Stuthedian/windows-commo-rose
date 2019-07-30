@@ -232,7 +232,7 @@ namespace commo_rose
         public IEnumerable<VirtualKeyCode> modifier_keys;
         public IEnumerable<VirtualKeyCode> ordinary_keys;
 
-        private bool is_Vk_modifier_key(VirtualKeyCode vk)//Is correct?
+        private bool is_Vk_modifier_key(VirtualKeyCode vk)
         {
             if (vk == VirtualKeyCode.CONTROL || vk == VirtualKeyCode.LMENU || vk == VirtualKeyCode.SHIFT
                 || vk == VirtualKeyCode.LWIN)

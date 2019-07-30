@@ -20,10 +20,11 @@ namespace commo_rose
         public static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
 
         public const string app_name = "Commo rose";
+        public const string default_preset_name = "Default";
 
         private static MouseOrKeyboardHook mouseOrKeyboardHook;
         private static List<Preset> presets;
-        public static Preset desktop_preset { get; private set; }
+        public static Preset default_preset { get; private set; }
 
         private static ButtonsForm buttons_form;
         private static Settings settings;
@@ -38,7 +39,7 @@ namespace commo_rose
             Hook_target target;
             VirtualKeyCode virtualKey;
             (presets, target, virtualKey) = Saver.load_settings();
-            desktop_preset = presets.Where(x => x.name == "Desktop").Single();
+            default_preset = presets.Where(x => x.name == default_preset_name).Single();
 
             mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, buttons_form.on_form_show, buttons_form.on_form_hide, false);
             settings = new Settings(presets, buttons_form, mouseOrKeyboardHook);
@@ -76,7 +77,7 @@ namespace commo_rose
                 }
             }
 
-            return desktop_preset;
+            return default_preset;
         }
         
         public static void show_settings_window()

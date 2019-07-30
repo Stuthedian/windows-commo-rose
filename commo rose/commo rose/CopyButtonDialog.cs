@@ -34,7 +34,7 @@ namespace commo_rose
             {
                 comboBox1.Items.Add(item.name);
             }
-            comboBox1.SelectedItem = "Desktop";
+            comboBox1.SelectedItem = Program.default_preset_name;
             base.ShowDialog();
         }
 

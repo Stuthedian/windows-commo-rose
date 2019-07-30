@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Settings Hook_target="Keyboard" Hook_key="NUMPAD0">
   <Presets>
-    <Preset Name="Desktop" default_backcolor="-16733965" default_textcolor="-3866866" default_font="Consolas; 14,25pt">
+    <Preset Name="Default" default_backcolor="-16733965" default_textcolor="-3866866" default_font="Consolas; 14,25pt">
       <Processes />
       <Buttons>
         <Button Id="0" Location.X="101" Location.Y="111" Text="Ctrl+C" action_type="Send" Parameters="Ctrl+C" BackColor="-16733965" ForeColor="-3866866" Width="92" Height="31" Font="Consolas; 14,25pt">

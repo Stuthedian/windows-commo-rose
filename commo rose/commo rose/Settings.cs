@@ -97,7 +97,7 @@ namespace commo_rose
             copyButtonDialog = new CopyButtonDialog(this, buttons_form);
             this.presets = presets;
             this.buttons_form = buttons_form;
-            current_preset = Program.desktop_preset;
+            current_preset = Program.default_preset;
             RenamePresetButton.Enabled = false;
             DeletePresetButton.Enabled = false;
             BindPresetButton.Enabled = false;
@@ -911,39 +911,29 @@ namespace commo_rose
 
         private void DeletePresetButton_Click(object sender, EventArgs e)
         {
-            if (current_preset.name != "Desktop")
+            if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete [" + current_preset.name 
+                +"] preset?", "Warning",
+            MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
             {
-                if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete [" + current_preset.name 
-                    +"] preset?", "Warning",
-                MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
-                {
-                    Saver.delete_preset(current_preset.name);
-                    presets.Remove(current_preset);
-                    PresetComboBox.Items.Remove(current_preset.name);
-                    PresetComboBox.SelectedItem = "Desktop";
-                }
+                Saver.delete_preset(current_preset.name);
+                presets.Remove(current_preset);
+                PresetComboBox.Items.Remove(current_preset.name);
+                PresetComboBox.SelectedItem = Program.default_preset_name;
             }
-            else
-                MessageBox.Show("Desktop preset can't be deleted", "Error!");
         }
 
         private void RenamePresetButton_Click(object sender, EventArgs e)
         {
-            if (current_preset.name != "Desktop")
+            if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
             {
-                if (DialogResult.OK == presetName.ShowDialog(current_preset.name))
-                {
-                    string newName = presetName.textBox1.Text.Trim();
-                    Saver.update_preset_name(current_preset.name, newName);
-                    PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
-                    PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
-                    PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
-                    presets.Find(x => x.name == current_preset.name).name = newName;
-                    current_preset.name = newName;
-                }
+                string newName = presetName.textBox1.Text.Trim();
+                Saver.update_preset_name(current_preset.name, newName);
+                PresetComboBox.SelectedIndexChanged -= PresetComboBox_SelectedIndexChanged;
+                PresetComboBox.Items[PresetComboBox.SelectedIndex] = newName;
+                PresetComboBox.SelectedIndexChanged += PresetComboBox_SelectedIndexChanged;
+                presets.Find(x => x.name == current_preset.name).name = newName;
+                current_preset.name = newName;
             }
-            else
-                MessageBox.Show("Desktop preset can't be renamed", "Error!");
         }
 
         private void PresetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -951,7 +941,7 @@ namespace commo_rose
             current_preset = presets.Where(x => x.name == PresetComboBox.SelectedItem.ToString()).Single();
             buttons_form.change_preset_if_auto_switch_disabled(current_preset);
 
-            if(current_preset == Program.desktop_preset)
+            if(current_preset == Program.default_preset)
             {
                 RenamePresetButton.Enabled = false;
                 DeletePresetButton.Enabled = false;
@@ -980,10 +970,7 @@ namespace commo_rose
 
         private void BindButton_Click(object sender, EventArgs e)
         {
-            if (current_preset.name != "Desktop")
-                bindProcess.ShowDialog(current_preset);
-            else
-                MessageBox.Show("Desktop preset can't be bound to a process", "Error!");
+            bindProcess.ShowDialog(current_preset);
         }
 
         private void CopyPresetButton_Click(object sender, EventArgs e)
