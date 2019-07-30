@@ -17,6 +17,7 @@ namespace commo_rose
             ExactSpelling = false, CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
         public static extern int MapVirtualKey(uint ScanCode, int MAPVK_VK_TO_VSC);
 
+        private const string mmb = "Middle Mouse Button", mb4 = "Mouse Button 4", mb5 = "Mouse Button 5";
         private MouseOrKeyboardHook hook;
         private bool ignore_message;
         private int LShift, RShift, Ctrl, Alt;
@@ -25,10 +26,7 @@ namespace commo_rose
             InitializeComponent();
             Icon = Properties.Resources.icon;
             this.hook = hook;
-            MouseButtonsComboBox.Items.AddRange(new object[] {
-            VirtualKeyCode.MBUTTON.ToString(),
-            VirtualKeyCode.XBUTTON1.ToString(),
-            VirtualKeyCode.XBUTTON2.ToString() });
+            MouseButtonsComboBox.Items.AddRange(new object[] { mmb, mb4, mb5 });
 
             if (hook.hook_target == Hook_target.Keyboard)
             {
@@ -44,7 +42,7 @@ namespace commo_rose
                 KeyboardradioButton.Checked = false;
                 MouseButtonsComboBox.Visible = true;
                 ScanKeyTextBox.Visible = false;
-                MouseButtonsComboBox.SelectedItem = hook.action_button_mouse.ToString();
+                MouseButtonsComboBox.SelectedItem = vk_to_appropriate_string(hook.action_button_mouse);
             }
             MouseradioButton.CheckedChanged += MouseradioButton_CheckedChanged;
             MouseButtonsComboBox.SelectedIndexChanged += MouseButtonsComboBox_SelectedIndexChanged;
@@ -72,7 +70,7 @@ namespace commo_rose
             else if (hook.hook_target == Hook_target.Keyboard)
             {
                 hook.hook_target = Hook_target.Mouse;
-                MouseButtonsComboBox.SelectedItem = hook.action_button_mouse.ToString();
+                MouseButtonsComboBox.SelectedItem = vk_to_appropriate_string(hook.action_button_mouse);
                 MouseButtonsComboBox.Visible = true;
                 ScanKeyTextBox.Visible = false;
                 Saver.save_hook(hook.hook_target, hook.action_button_mouse);
@@ -81,8 +79,7 @@ namespace commo_rose
 
         private void MouseButtonsComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            hook.action_button_mouse =
-                    (VirtualKeyCode)Enum.Parse(typeof(VirtualKeyCode), MouseButtonsComboBox.SelectedItem.ToString());
+            hook.action_button_mouse = string_to_mouse_vk(MouseButtonsComboBox.SelectedItem.ToString());
             Saver.save_hook(hook.hook_target, hook.action_button_mouse);
         }
 
@@ -250,10 +247,31 @@ namespace commo_rose
                 case VirtualKeyCode.VOLUME_MUTE:
                 case VirtualKeyCode.VOLUME_UP:
                     return "Volume " + vk.ToString()[7] + vk.ToString().Substring(8).ToLower();
+                case VirtualKeyCode.MBUTTON:
+                    return mmb;
+                case VirtualKeyCode.XBUTTON1:
+                    return mb4;
+                case VirtualKeyCode.XBUTTON2:
+                    return mb5;
                 default:break;
             }
             
             return vk.ToString().ToUpper()[0] + vk.ToString().Substring(1).Replace('_', ' ').ToLower();
+        }
+
+        private VirtualKeyCode string_to_mouse_vk(string str)
+        {
+            switch (str)
+            {
+                case mmb:
+                    return VirtualKeyCode.MBUTTON;
+                case mb4:
+                    return VirtualKeyCode.XBUTTON1;
+                case mb5:
+                    return VirtualKeyCode.XBUTTON2;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

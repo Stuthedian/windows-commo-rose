@@ -40,9 +40,9 @@
             // 
             this.MouseButtonsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MouseButtonsComboBox.FormattingEnabled = true;
-            this.MouseButtonsComboBox.Location = new System.Drawing.Point(142, 33);
+            this.MouseButtonsComboBox.Location = new System.Drawing.Point(122, 34);
             this.MouseButtonsComboBox.Name = "MouseButtonsComboBox";
-            this.MouseButtonsComboBox.Size = new System.Drawing.Size(100, 21);
+            this.MouseButtonsComboBox.Size = new System.Drawing.Size(140, 21);
             this.MouseButtonsComboBox.TabIndex = 12;
             // 
             // label4
@@ -102,8 +102,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(289, 101);
             this.Controls.Add(this.ScanKeyTextBox);
-            this.Controls.Add(this.FakeLabel);
             this.Controls.Add(this.MouseButtonsComboBox);
+            this.Controls.Add(this.FakeLabel);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.KeyboardradioButton);
             this.Controls.Add(this.MouseradioButton);
