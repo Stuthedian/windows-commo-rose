@@ -32,7 +32,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.KeyboardradioButton = new System.Windows.Forms.RadioButton();
             this.MouseradioButton = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
             this.FakeLabel = new System.Windows.Forms.Label();
             this.ScanKeyTextBox = new commo_rose.CueTextbox();
             this.SuspendLayout();
@@ -77,15 +76,6 @@
             this.MouseradioButton.Text = "Mouse";
             this.MouseradioButton.UseVisualStyleBackColor = true;
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(147, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Action button key";
-            // 
             // FakeLabel
             // 
             this.FakeLabel.AutoSize = true;
@@ -117,7 +107,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.KeyboardradioButton);
             this.Controls.Add(this.MouseradioButton);
-            this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "ActionButtonDialog";
@@ -133,7 +122,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton KeyboardradioButton;
         private System.Windows.Forms.RadioButton MouseradioButton;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label FakeLabel;
         private CueTextbox ScanKeyTextBox;
     }
