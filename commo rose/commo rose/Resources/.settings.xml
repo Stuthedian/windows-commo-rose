@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Settings Hook_target="Keyboard" Hook_key="NUMPAD0">
+<Settings Hook_target="Mouse" Hook_key="MBUTTON">
   <Presets>
     <Preset Name="Default" default_backcolor="-16733965" default_textcolor="-3866866" default_font="Consolas; 14,25pt">
       <Processes />
