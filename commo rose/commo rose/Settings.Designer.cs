@@ -335,25 +335,27 @@
             this.yesToolStripMenuItem,
             this.noToolStripMenuItem});
             this.launchAtStartupToolStripMenuItem.Name = "launchAtStartupToolStripMenuItem";
-            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.launchAtStartupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.launchAtStartupToolStripMenuItem.Text = "Launch at startup";
             // 
             // yesToolStripMenuItem
             // 
             this.yesToolStripMenuItem.Name = "yesToolStripMenuItem";
-            this.yesToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
+            this.yesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.yesToolStripMenuItem.Text = "Yes";
+            this.yesToolStripMenuItem.Click += new System.EventHandler(this.YesToolStripMenuItem_Click);
             // 
             // noToolStripMenuItem
             // 
             this.noToolStripMenuItem.Name = "noToolStripMenuItem";
-            this.noToolStripMenuItem.Size = new System.Drawing.Size(91, 22);
+            this.noToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.noToolStripMenuItem.Text = "No";
+            this.noToolStripMenuItem.Click += new System.EventHandler(this.NoToolStripMenuItem_Click);
             // 
             // actionButtonToolStripMenuItem
             // 
             this.actionButtonToolStripMenuItem.Name = "actionButtonToolStripMenuItem";
-            this.actionButtonToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.actionButtonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.actionButtonToolStripMenuItem.Text = "Action button";
             this.actionButtonToolStripMenuItem.Click += new System.EventHandler(this.actionButtonToolStripMenuItem_Click);
             // 
@@ -531,7 +533,6 @@
         private System.Windows.Forms.ToolStripMenuItem defaultBackcolorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem launchAtStartupToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultTextcolorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultFontToolStripMenuItem;
@@ -546,5 +547,6 @@
         private System.Windows.Forms.Button CopyPresetButton;
         private System.Windows.Forms.Button Copybutton;
         private System.Windows.Forms.Panel Panel;
+        private System.Windows.Forms.ToolStripMenuItem yesToolStripMenuItem;
     }
 }

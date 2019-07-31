@@ -136,7 +136,6 @@ namespace commo_rose
             destination.Font = (Font)source.Font.Clone();
             destination.Width = source.Width;
             destination.Height = source.Height;
-            //destination.Name = source.Name;
             destination.Id = source.Id;
             destination.Text = source.Text;
             destination.Location = source.Location;
@@ -160,15 +159,11 @@ namespace commo_rose
                     case Action_type.Generic:
                         Thread thread = new Thread(() =>
                         {
-                            try
+                            foreach (IAction action in actions)
                             {
-                                foreach (IAction action in actions)
-                                {
-                                    action.exec();
-                                    Thread.Sleep(100);
-                                }
+                                action.exec();
+                                Thread.Sleep(100);
                             }
-                            catch (Exception e) { MessageBox.Show(e.Message); }
                         });
                         thread.IsBackground = true;
                         thread.Start();

@@ -30,7 +30,7 @@ namespace commo_rose
         private static Settings settings;
 
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -43,6 +43,19 @@ namespace commo_rose
 
             mouseOrKeyboardHook = new MouseOrKeyboardHook(target, virtualKey, buttons_form.on_form_show, buttons_form.on_form_hide, false);
             settings = new Settings(presets, buttons_form, mouseOrKeyboardHook);
+
+            if(args.Length > 0)
+            {
+                if (args[0] == "add")
+                {
+                    settings.add_to_task_scheduler();
+                }
+                else if (args[0] == "del")
+                {
+                    settings.delete_from_task_scheduler();
+                }
+                settings.update_ToolStripMenuItem();
+            }
 
             Application.Run();
         }

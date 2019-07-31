@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using WindowsInput.Native;
-using System.Diagnostics;
+using Microsoft.Win32.TaskScheduler;
+using System.Security.Principal;
 
 namespace commo_rose
 {
     public partial class Settings : Form
     {
         private const int WS_EX_COMPOSITED = 0x02000000;
-
+        
         private ButtonsForm buttons_form;
         private ActionButtonDialog actionButtonForm;
         private PresetNameDialog presetName;
@@ -120,18 +117,9 @@ namespace commo_rose
             Editpanel.Enabled = false;
             update_ApplyAllCancelAllpanel(false);
             update_ApplyCancelpanel(false);
-            
-            RegistryKey subkey = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
-            object value = subkey.GetValue(Program.app_name);
-            if (value != null && value.ToString() == Application.ExecutablePath)
-                yesToolStripMenuItem.Checked = true;
-            else
-                noToolStripMenuItem.Checked = true;
 
-            yesToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
-            noToolStripMenuItem.Click += yesNoToolStripMenuItem_Click;
-                     
+            update_ToolStripMenuItem();
+                                 
             foreach (var item in Enum.GetNames(typeof(Action_type)))
             {
                 Action_typeBox.Items.Add(item);
@@ -861,28 +849,116 @@ namespace commo_rose
             }
         }
 
-        private void yesNoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            yesToolStripMenuItem.Checked = !yesToolStripMenuItem.Checked;
-            noToolStripMenuItem.Checked = !noToolStripMenuItem.Checked;
-            RegistryKey rk;
-            try
+            if(!noToolStripMenuItem.Checked)
             {
-                rk = Registry.CurrentUser.OpenSubKey
-                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                if (yesToolStripMenuItem.Checked)
-                {
-                    rk.SetValue(Program.app_name, Application.ExecutablePath);
-                }
-                else
-                {
-                    rk.DeleteValue(Program.app_name, false);
-                }
-                rk.Close();
+                delete_from_task_scheduler();
+                update_ToolStripMenuItem();
             }
-            catch (Exception ex)
+        }
+
+        private void YesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!yesToolStripMenuItem.Checked)
             {
-                MessageBox.Show(ex.Message);
+                add_to_task_scheduler();
+                update_ToolStripMenuItem();
+            }
+        }
+            
+        public void add_to_task_scheduler()
+        {
+            if (is_in_task_scheduler())
+                return;
+
+            string task_name = Program.app_name;
+            bool is_elevated = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+                    
+            if (!is_elevated)
+            {
+                restart_as_elevated("add");
+                return;
+            }
+            
+
+            using (TaskService taskService = new TaskService())
+            {
+                
+                TaskDefinition taskDefinition = taskService.NewTask();
+                taskDefinition.RegistrationInfo.Description = "Commo rose";
+                taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
+
+                LogonTrigger logonTrigger = new LogonTrigger();
+                logonTrigger.Delay = TimeSpan.FromMinutes(1);
+                taskDefinition.Triggers.Add(logonTrigger);
+                
+                taskDefinition.Actions.Add(new ExecAction(Application.ExecutablePath));
+                taskService.RootFolder.RegisterTaskDefinition(task_name, taskDefinition);
+            }
+        }
+
+        public void delete_from_task_scheduler()
+        {
+            if (!is_in_task_scheduler())
+                return;
+            bool is_elevated = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+            if (!is_elevated)
+            {
+                restart_as_elevated("del");
+                return;
+            }
+            string task_name = Program.app_name;
+            using (TaskService taskService = new TaskService())
+            {
+                taskService.RootFolder.DeleteTask(task_name);
+            }
+        }
+
+        private bool is_in_task_scheduler()
+        {
+            bool result = false;
+            string task_name = Program.app_name;
+            using (TaskService taskService = new TaskService())
+            {
+                if (taskService.RootFolder.Tasks.Any(x => x.Name == task_name))
+                    result = true;
+            }
+
+            return result;
+        }
+
+        private void restart_as_elevated(string arg)
+        {
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+            proc.StartInfo.FileName = Application.ExecutablePath;
+            proc.StartInfo.Arguments = arg;
+            proc.StartInfo.Verb = "runas";
+            try { proc.Start(); }
+            catch (System.ComponentModel.Win32Exception e)
+            {
+                const int ERROR_CANCELLED = 0x000004C7;
+                if (e.NativeErrorCode == ERROR_CANCELLED)
+                    return;
+                else throw;
+            }
+        
+            Program.Close();
+        }
+
+        public void update_ToolStripMenuItem()
+        {
+            if (is_in_task_scheduler())
+            {
+                yesToolStripMenuItem.Checked = true;
+                noToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                noToolStripMenuItem.Checked = true;
+                yesToolStripMenuItem.Checked = false;
             }
         }
 
