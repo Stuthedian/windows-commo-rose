@@ -44,6 +44,7 @@
             this.Cancelbutton = new System.Windows.Forms.Button();
             this.Editpanel = new System.Windows.Forms.Panel();
             this.Copybutton = new System.Windows.Forms.Button();
+            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Deletebutton = new System.Windows.Forms.Button();
             this.Fontbutton = new System.Windows.Forms.Button();
             this.TextColorpanel = new System.Windows.Forms.Panel();
@@ -70,7 +71,6 @@
             this.DeletePresetButton = new System.Windows.Forms.Button();
             this.AddPresetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.ButtonParametersBox = new commo_rose.CueTextbox();
             this.Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CursorpictureBox)).BeginInit();
             this.SaveCancelAllpanel.SuspendLayout();
@@ -177,11 +177,11 @@
             // 
             // Addbutton
             // 
-            this.Addbutton.Location = new System.Drawing.Point(629, 248);
+            this.Addbutton.Location = new System.Drawing.Point(617, 248);
             this.Addbutton.Name = "Addbutton";
-            this.Addbutton.Size = new System.Drawing.Size(75, 23);
+            this.Addbutton.Size = new System.Drawing.Size(87, 23);
             this.Addbutton.TabIndex = 18;
-            this.Addbutton.Text = "Add button";
+            this.Addbutton.Text = "Add performer";
             this.Addbutton.UseVisualStyleBackColor = true;
             this.Addbutton.Click += new System.EventHandler(this.Addbutton_Click);
             // 
@@ -229,9 +229,17 @@
             this.Copybutton.Name = "Copybutton";
             this.Copybutton.Size = new System.Drawing.Size(96, 23);
             this.Copybutton.TabIndex = 21;
-            this.Copybutton.Text = "Copy button";
+            this.Copybutton.Text = "Copy performer";
             this.Copybutton.UseVisualStyleBackColor = true;
             this.Copybutton.Click += new System.EventHandler(this.Copybutton_Click);
+            // 
+            // ButtonParametersBox
+            // 
+            this.ButtonParametersBox.Cue = null;
+            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
+            this.ButtonParametersBox.Name = "ButtonParametersBox";
+            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
+            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Deletebutton
             // 
@@ -239,7 +247,7 @@
             this.Deletebutton.Name = "Deletebutton";
             this.Deletebutton.Size = new System.Drawing.Size(96, 23);
             this.Deletebutton.TabIndex = 19;
-            this.Deletebutton.Text = "Delete button";
+            this.Deletebutton.Text = "Delete performer";
             this.Deletebutton.UseVisualStyleBackColor = true;
             this.Deletebutton.Click += new System.EventHandler(this.Deletebutton_Click);
             // 
@@ -461,14 +469,6 @@
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Current preset";
-            // 
-            // ButtonParametersBox
-            // 
-            this.ButtonParametersBox.Cue = null;
-            this.ButtonParametersBox.Location = new System.Drawing.Point(6, 67);
-            this.ButtonParametersBox.Name = "ButtonParametersBox";
-            this.ButtonParametersBox.Size = new System.Drawing.Size(179, 20);
-            this.ButtonParametersBox.TabIndex = 20;
             // 
             // Settings
             // 

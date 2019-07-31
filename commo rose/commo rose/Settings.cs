@@ -474,7 +474,7 @@ namespace commo_rose
                 {
                     VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
                     if (KeyCode == VirtualKeyCode.NONAME)
-                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                        return "Performer [" + customButton.Text + "] — Syntax error in send command"
                             + ": unknown key name — " + capture.Value;
                     else
                         vk.Add(KeyCode);
@@ -483,7 +483,7 @@ namespace commo_rose
                 {
                     VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
                     if (KeyCode == VirtualKeyCode.NONAME)
-                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                        return "Performer [" + customButton.Text + "] — Syntax error in send command"
                             + ": unknown key name — " + capture.Value;
                     else
                         vk.Add(KeyCode);
@@ -492,7 +492,7 @@ namespace commo_rose
                 {
                     VirtualKeyCode KeyCode = capture_to_VK(capture.Value);
                     if (KeyCode == VirtualKeyCode.NONAME)
-                        return "Button [" + customButton.Text + "] — Syntax error in send command"
+                        return "Performer [" + customButton.Text + "] — Syntax error in send command"
                             + ": unknown key name — " + capture.Value;
                     else
                         vk.Add(KeyCode);
@@ -503,7 +503,7 @@ namespace commo_rose
             }
             else
             {
-                return "Button [" + customButton.Text + "] — Syntax error in send command";
+                return "Performer [" + customButton.Text + "] — Syntax error in send command";
             }
         }
 
@@ -512,7 +512,7 @@ namespace commo_rose
             CustomButton_Process customButton_Process;
             string[] a = input_text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
             if (a.Length == 0)
-                return "Button [" + customButton.Text + "] — Syntax error in " 
+                return "Performer [" + customButton.Text + "] — Syntax error in " 
                     + customButton.action_type.ToString() + " command";
                 
             else if (a.Length == 1)
@@ -563,7 +563,7 @@ namespace commo_rose
             }
             else
             {
-                return "Button [" + customButton.Text + "] — Syntax error in generic command";
+                return "Performer [" + customButton.Text + "] — Syntax error in generic command";
             }
         }
 
@@ -703,7 +703,7 @@ namespace commo_rose
         {
             CustomButton b = new CustomButton();
             b.Id = get_new_id();
-            b.Text = "button";
+            b.Text = "performer";
             b.BackColor = current_preset.default_backcolor;
             b.ForeColor = current_preset.default_textcolor;
             b.Font = current_preset.default_font;
@@ -741,7 +741,7 @@ namespace commo_rose
             }
             else if (a.Length == 1)
             {
-                if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete this button?", "Warning",
+                if (DialogResult.OK == MessageBox.Show("Are you sure you want to delete this performer?", "Warning",
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Question))
                 {
                     Saver.delete_button(current_preset.name, currentButton);
