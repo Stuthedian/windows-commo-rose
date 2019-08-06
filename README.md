@@ -1,4 +1,6 @@
-# windows-commo-rose
+# Windows commo rose
+Windows commo rose — a simple application that helps you do tasks using only your mouse.
+Pressing action button activates *commo rose* — basically a set of rectangles(performers) around cursor where each of them contains useful command.
 
 ## Use case scenarios
 ### Working with clipboard
@@ -33,3 +35,11 @@ Finally, associate preset with notepad.To do this click "Bind to a process"
 Let's test out our preset.
 
 ![](images/Notepad_commemt_out.gif)
+
+## Note about binding
+If a process of currently focused window haven't been bound to any preset application will use default preset. If the process bound to several presets one of them would be used(but which one is undefined).
+
+## Troubleshooting
+*Commo rose doesn't show up when focus is on certain windows.*
+
+It may happen if process of that window is elevated process and commo rose launched without administrator privileges. To resolve issue just restart application as administrator.
