@@ -29,7 +29,7 @@ Slightly complicated performer to comment out current line.
 
 Actual "commenting" is done by this sequence of operations: send(home) runSilent(cmd /c echo|set /p=//| clip) send(ctrl+v)
 
-Finally, associate preset with notepad.To do this click "Bind to a process"
+Finally, associate preset with notepad. To do this click "Bind to a process"
 ![](images/Bind_process.gif)
 
 Let's test out our preset.
