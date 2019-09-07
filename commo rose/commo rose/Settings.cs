@@ -890,7 +890,7 @@ namespace commo_rose
                 taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
 
                 LogonTrigger logonTrigger = new LogonTrigger();
-                logonTrigger.Delay = TimeSpan.FromMinutes(1);
+                logonTrigger.Delay = TimeSpan.FromSeconds(15);
                 taskDefinition.Triggers.Add(logonTrigger);
                 
                 taskDefinition.Actions.Add(new ExecAction(Application.ExecutablePath));
