@@ -1,5 +1,5 @@
 # Windows commo rose
-Windows commo rose — a simple application that helps you do tasks using only your mouse.
+Windows commo rose — simple application that helps you do tasks using only your mouse.
 Pressing action button activates *commo rose* — basically a set of rectangles(performers) around cursor where each of them contains useful command.
 
 ## Use case scenarios
